@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(find node_modules/next/dist/docs -name *proxy* -o -name *middleware*)",
+      "Bash(echo 'not found' ls node_modules/next-intl/proxy*)",
+      "Bash(python -c \"import sys, json; d=json.load\\(sys.stdin\\); [print\\(k,'''':'''',d[''''exports''''][k]\\) for k in list\\(d.get\\(''''exports'''',{}\\).keys\\(\\)\\)[:20]]\")",
+      "Bash(curl -s http://localhost:3000/en)",
+      "Bash(cp src/middleware.ts src/proxy.ts)",
+      "Bash(rm src/middleware.ts)",
+      "Bash(taskkill /PID 23000 /F)",
+      "Bash(cmd /c \"taskkill /PID 23000 /F\")",
+      "Bash(cmd /c \"taskkill /IM node.exe /F\")",
+      "Bash(netstat -ano)",
+      "Bash(cmd /c \"netstat -ano | findstr :3000\")",
+      "Bash(cmd /c \"taskkill /PID 23000 /F 2>&1\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(powershell -Command \"Stop-Process -Id 23000 -Force -ErrorAction SilentlyContinue; Write-Host ''done''\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Wid\\Documents\\widmaer_org\\novaduel\\.next"
+    ]
+  }
+}
