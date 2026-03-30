@@ -1,0 +1,14 @@
+{
+  "duel": {
+    "p1": { "name": "K. Mbappé",  "club": "Real Madrid", "pos": "ATT", "init": "KM", "g90": 0.88, "duels": 54, "passes": 81, "slug": "kylian-mbappe" },
+    "p2": { "name": "E. Haaland", "club": "Man City",    "pos": "ATT", "init": "EH", "g90": 1.12, "duels": 48, "passes": 79, "slug": "erling-haaland" },
+    "views": "89k vues · il y a 2h"
+  },
+  "trends": [
+    { "rank": "01", "label": "Messi vs Ronaldo",       "meta": "124k · 1h" },
+    { "rank": "02", "label": "Vinicius vs Bellingham", "meta": "52k · 3h"  },
+    { "rank": "03", "label": "Salah vs Saka",          "meta": "41k · 6h"  },
+    { "rank": "04", "label": "Kane vs Lewandowski",    "meta": "38k · 8h"  },
+    { "rank": "05", "label": "Rodri vs De Bruyne",     "meta": "31k · 12h" }
+  ]
+}

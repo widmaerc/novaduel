@@ -1,0 +1,61 @@
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  content: ['./src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        primary:          '#004782',
+        'primary-c':      '#185fa5',
+        'primary-fixed':  '#d4e3ff',
+        'primary-light':  '#EFF6FF',
+        'primary-dim':    '#a4c9ff',
+        secondary:        '#325f99',
+        'sec-c':          '#93bdfd',
+        tertiary:         '#92000f',
+        'tertiary-c':     '#b91a20',
+        surface:          '#f8f9fa',
+        sc:               '#edeeef',
+        'sc-low':         '#f3f4f5',
+        'sc-high':        '#e7e8e9',
+        'sc-highest':     '#e1e3e4',
+        'sc-lowest':      '#ffffff',
+        'on-s':           '#191c1d',
+        'on-sv':          '#424751',
+        outline:          '#727782',
+        'out-v':          '#c2c6d2',
+      },
+      fontFamily: {
+        headline: ['var(--font-manrope)', 'sans-serif'],
+        body:     ['var(--font-inter)',   'sans-serif'],
+      },
+      keyframes: {
+        fadeUp: {
+          from: { opacity: '0', transform: 'translateY(18px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
+        barIn: {
+          from: { width: '0' },
+        },
+        checkPop: {
+          '0%':   { transform: 'scale(0)' },
+          '70%':  { transform: 'scale(1.2)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        countIn: {
+          from: { opacity: '0', transform: 'scale(.85)' },
+          to:   { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        'fade-up':  'fadeUp .55s ease both',
+        'bar-in':   'barIn .9s .4s ease both',
+        'check-pop': 'checkPop .3s ease both',
+        'count-in': 'countIn .6s .3s ease both',
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

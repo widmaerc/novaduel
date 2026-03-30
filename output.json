@@ -1,0 +1,179 @@
+{
+  "data": {
+    "id": 216268,
+    "sport_id": 1,
+    "league_id": 271,
+    "season_id": 1273,
+    "stage_id": 1086,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 23332,
+    "state_id": 5,
+    "venue_id": 618,
+    "name": "Esbjerg vs OB",
+    "starting_at": "2006-03-25 16:00:00",
+    "result_info": "Esbjerg won after full-time.",
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": false,
+    "has_premium_odds": false,
+    "starting_at_timestamp": 1143302400,
+    "participants": [
+      {
+        "id": 1371,
+        "sport_id": 1,
+        "country_id": 320,
+        "venue_id": 618,
+        "gender": "male",
+        "name": "Esbjerg",
+        "short_code": "ESB",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/27/1371.png",
+        "founded": 1924,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-03-21 12:00:00",
+        "meta": {
+          "location": "home",
+          "winner": true,
+          "position": null
+        }
+      },
+      {
+        "id": 1789,
+        "sport_id": 1,
+        "country_id": 320,
+        "venue_id": 214349,
+        "gender": "male",
+        "name": "Odense BK",
+        "short_code": "ODE",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/29/1789.png",
+        "founded": 1889,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-03-20 18:00:00",
+        "meta": {
+          "location": "away",
+          "winner": false,
+          "position": null
+        }
+      }
+    ],
+    "statistics": [],
+    "state": {
+      "id": 5,
+      "state": "FT",
+      "name": "Full Time",
+      "short_name": "FT",
+      "developer_name": "FT"
+    },
+    "scores": [
+      {
+        "id": 1090707,
+        "fixture_id": 216268,
+        "type_id": 2,
+        "participant_id": 1789,
+        "score": {
+          "goals": 0,
+          "participant": "away"
+        },
+        "description": "2ND_HALF"
+      },
+      {
+        "id": 1090704,
+        "fixture_id": 216268,
+        "type_id": 1,
+        "participant_id": 1371,
+        "score": {
+          "goals": 0,
+          "participant": "home"
+        },
+        "description": "1ST_HALF"
+      },
+      {
+        "id": 1090705,
+        "fixture_id": 216268,
+        "type_id": 1,
+        "participant_id": 1789,
+        "score": {
+          "goals": 0,
+          "participant": "away"
+        },
+        "description": "1ST_HALF"
+      },
+      {
+        "id": 1090708,
+        "fixture_id": 216268,
+        "type_id": 1525,
+        "participant_id": 1371,
+        "score": {
+          "goals": 1,
+          "participant": "home"
+        },
+        "description": "CURRENT"
+      },
+      {
+        "id": 1090709,
+        "fixture_id": 216268,
+        "type_id": 1525,
+        "participant_id": 1789,
+        "score": {
+          "goals": 0,
+          "participant": "away"
+        },
+        "description": "CURRENT"
+      },
+      {
+        "id": 1090706,
+        "fixture_id": 216268,
+        "type_id": 2,
+        "participant_id": 1371,
+        "score": {
+          "goals": 1,
+          "participant": "home"
+        },
+        "description": "2ND_HALF"
+      }
+    ],
+    "league": {
+      "id": 271,
+      "sport_id": 1,
+      "country_id": 320,
+      "name": "Superliga",
+      "active": true,
+      "short_code": "DNK SL",
+      "image_path": "https://cdn.sportmonks.com/images/soccer/leagues/271.png",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2026-03-22 19:00:00",
+      "category": 2,
+      "has_jerseys": false
+    }
+  },
+  "subscription": [
+    {
+      "meta": [],
+      "plans": [
+        {
+          "plan": "Football Free Plan",
+          "sport": "Football",
+          "category": "Standard"
+        },
+        {
+          "plan": "Cricket Free Plan",
+          "sport": "Cricket",
+          "category": "Standard"
+        }
+      ],
+      "add_ons": [],
+      "widgets": []
+    }
+  ],
+  "rate_limit": {
+    "resets_in_seconds": 1442,
+    "remaining": 2997,
+    "requested_entity": "Fixture"
+  },
+  "timezone": "UTC"
+}

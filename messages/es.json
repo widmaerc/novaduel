@@ -1,0 +1,418 @@
+{
+  "Common": {
+    "nav": {
+      "home": "Inicio",
+      "compare": "Comparar",
+      "players": "Jugadores",
+      "teams": "Equipos",
+      "ai": "Análisis IA",
+      "ai_badge": "Beta",
+      "search_placeholder": "Buscar un jugador...",
+      "subscribe": "Suscribirse"
+    },
+    "footer": {
+      "tagline": "LA PROFUNDIDAD DE LOS DATOS.",
+      "tagline2": "Analítica de Rendimiento Fútbol Élite.",
+      "explore": "Explorar",
+      "api": "API Avanzada",
+      "partners": "Socios de Datos",
+      "legal": "Legal",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "support": "Soporte",
+      "languages": "Idiomas",
+      "support_center": "Centro de Soporte",
+      "copyright": "© 2026 NovaDuel Analytics. Todos los derechos reservados."
+    },
+    "stats": {
+      "attack": "Ataque",
+      "defense": "Defensa",
+      "goalkeeping": "Portería",
+      "physical": "Físico",
+      "technique": "Técnica",
+      "goals": "Goles",
+      "assists": "Asistencias",
+      "matches": "Partidos",
+      "rating": "Nota",
+      "pass_acc": "Precisión de Pases",
+      "xg": "xG (goles esperados)",
+      "form": "Forma",
+      "min_per_goal": "Min. / gol",
+      "yellow_cards": "Tarjetas Amarillas",
+      "shots_on_target": "Tiros a puerta / partido",
+      "duels_won": "Duelos ganados %",
+      "dribbles_match": "Regates / partido",
+      "matches_played_abbr": "PJ",
+      "goals_assists_abbr": "G / A",
+      "goals_match": "Goles / partido",
+      "minutes_per_goal": "Min. / gol",
+      "pass_accuracy": "Precisión pases",
+      "passing": "Pases",
+      "dribbles": "Regates",
+      "red_cards": "Tarjetas rojas",
+      "minutes": "Minutos",
+      "win": "Victoria",
+      "draw": "Empate",
+      "loss": "Derrota",
+      "header": {
+        "rating": "Nota",
+        "matches": "PJ",
+        "goals_assists": "G",
+        "assists": "A",
+        "yellow": "TA",
+        "red": "TR",
+        "competition": "Competición"
+      }
+    },
+    "radar": {
+      "title": "Radar de habilidades",
+      "passing": "PASES",
+      "finishing": "REMATE",
+      "dribbling": "REGATE",
+      "physical": "FÍSICO",
+      "vision": "VISIÓN"
+    },
+    "units": {
+      "years": "años",
+      "cm": "cm",
+      "kg": "kg",
+      "meters": "m",
+      "views": "vistas",
+      "remaining": "{count} restantes",
+      "number_abbr": "N°"
+    },
+    "positions": {
+      "all": "Todos",
+      "att": "DEL",
+      "mid": "MED",
+      "def": "DEF",
+      "gk": "POR",
+      "att_full": "Delantero",
+      "mid_full": "Centrocampista",
+      "def_full": "Defensa",
+      "gk_full": "Portero",
+      "placeholder": "Posición"
+    },
+    "buttons": {
+      "compare": "Comparar",
+      "view_profile": "Ver ficha",
+      "load_more": "Cargar más",
+      "subscribe": "Suscribirse",
+      "save": "Guardar",
+      "share": "Compartir",
+      "launch_compare": "Iniciar comparación",
+      "analyze_cta": "Análisis →",
+      "explore_cta": "Explorar →"
+    },
+    "labels": {
+      "not_available": "Análisis no disponible",
+      "elite_badge": "Élite Mundial",
+      "global_rating": "Nota Global",
+      "pro_scouting": "Pro Scouting",
+      "pro_scouting_sub": "Desbloquea mapas de calor avanzados y datos de contacto.",
+      "pro_scouting_cta": "Pasar a NovaDuel Pro",
+      "hot_badge": "🔥 Duelo Caliente",
+      "trends": "Tendencias",
+      "season": "Temporada",
+      "competition": "Competición",
+      "all_competitions": "Todas",
+      "database": "Base de Datos",
+      "player": "Jugador",
+      "team": "Equipo"
+    },
+    "profile": {
+      "born": "Nacido el",
+      "age": "Edad",
+      "height": "Altura",
+      "foot": "Pie",
+      "club": "Club",
+      "avg_rating": "Nota media",
+      "form": "Forma",
+      "view_full": "Ver ficha completa",
+      "nationality": "Nacionalidad",
+      "legend_symbol": "(†)"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "badge": "Análisis Fútbol Élite",
+      "title": "Compara.\nAnaliza.\nDomina.",
+      "subtitle": "Estadísticas avanzadas, comparaciones IA y datos en tiempo real para todos los jugadores del mundo.",
+      "seo_h2": "Analiza a Messi, Ronaldo, Mbappé, Haaland y más de 2 500 jugadores",
+      "card1_label": "NOTACIÓN GLOBAL",
+      "card2_label": "KPI RENDIMIENTO",
+      "hot_badge": "HOT",
+      "live_badge": "EN VIVO"
+    },
+    "seo": {
+      "title": "Comparación Jugadores Fútbol — Stats Avanzadas, Goles, Asistencias, Notas & Análisis IA",
+      "description": "Compara jugadores de fútbol con estadísticas avanzadas: goles, asistencias, notas, xG, regates y análisis IA. Premier League, Liga, Bundesliga, Ligue 1, Serie A y más."
+    },
+    "search": {
+      "badge": "Datos en Vivo · Análisis IA",
+      "title": "Comparación de Jugadores\nde Fútbol —\nEstadísticas en Tiempo Real",
+      "subtitle": "Estadísticas avanzadas, goles, asistencias, notas y análisis IA para cada jugador. Premier League, Liga, Bundesliga, Ligue 1, Serie A y más.",
+      "placeholder": "Buscar un jugador — ej: Messi, Ronaldo...",
+      "placeholder_a": "Jugador A — ej: Messi",
+      "placeholder_b": "Jugador B — ej: Ronaldo",
+      "cta": "DUELO →",
+      "cta_mobile": "INICIAR DUELO →",
+      "trends": "Tendencias:",
+      "seo_h2": "Compara a Messi, Ronaldo, Mbappé, Haaland y más de 2 500 jugadores"
+    },
+    "featured": {
+      "title": "Duelos en Tendencia",
+      "sub": "Las comparaciones más vistas esta semana",
+      "popular_title": "Duelos Populares",
+      "top_scorers": "Máximos Goleadores",
+      "top_passers": "Máximos Asistentes"
+    },
+    "performance": {
+      "title": "AUMENTO DE RENDIMIENTO SEMANAL",
+      "subtitle": "Índice de Rendimiento — Delta de 7 días",
+      "analyse_cta": "Analizar perfil",
+      "stats_labels": {
+        "off_eff": "Eficacia Ofensiva",
+        "goals_match": "Goles / Partido",
+        "dribbles": "Éxito en Regates",
+        "chances": "Ocasiones Creadas",
+        "speed": "Velocidad Punta",
+        "impact": "Impacto Global"
+      }
+    },
+    "leagues": {
+      "label": "COMPETICIONES DISPONIBLES",
+      "title": "LIGAS CUBIERTAS",
+      "loading": "Cargando ligas..."
+    },
+    "editorial": {
+      "label": "PROFUNDIDAD DE DATOS",
+      "title": "Profundidad de datos sin igual.",
+      "cta": "EXPLORA TODOS LOS DATOS",
+      "time": {
+        "yesterday": "Ayer",
+        "two_hours_ago": "hace 2 horas"
+      }
+    },
+    "newsletter": {
+      "title": "CONSIGUE LA VENTAJA.",
+      "subtitle": "Informes semanales, análisis del mercado de fichajes, predicciones IA exclusivas. Únete a 50k+ profesionales.",
+      "placeholder": "tu@email.com",
+      "cta": "Suscribirse",
+      "success": "✓ Estás suscrito/a — ¡hasta pronto!"
+    },
+    "stats": {
+      "players": "jugadores disponibles",
+      "leagues": "ligas cubiertas",
+      "updates": "actualizaciones / día",
+      "accuracy": "precisión de datos"
+    },
+    "live_matches": {
+      "title": "Partidos en directo",
+      "table": {
+        "league": "Competición",
+        "match": "Encuentro y Resultado",
+        "status": "Estado"
+      },
+      "see_all": "Ver todo"
+    },
+    "featured_duel": {
+      "title": "Duelo destacado",
+      "hot_badge": "🔥 Duelo Caliente",
+      "see_all": "Ver todo",
+      "stat1": "Goles / 90 min",
+      "stat2": "Duelos ganados",
+      "stat3": "Precisión de pases",
+      "views": "vistas",
+      "analyse_cta": "Analizar duelo",
+      "trends_title": "TENDENCIAS",
+      "explore_cta": "Explorar duelos"
+    },
+    "top_players": {
+      "label": "Clasificaciones",
+      "title": "Top Performers",
+      "see_all": "Todos los jugadores →",
+      "scorers_title": "Top Goleadores",
+      "goals_unit": "Goles",
+      "assisters_title": "Top Asistentes",
+      "assists_unit": "Asistencias"
+    }
+  },
+  "PlayersPage": {
+    "title": "Jugadores",
+    "count": "{total} jugadores disponibles",
+    "search_placeholder": "Buscar un jugador — ej: Ronaldo, Messi…",
+    "no_results": "Sin resultados para \"{query}\"",
+    "table": {
+      "player": "Jugador",
+      "team": "Equipo",
+      "position": "Posición",
+      "rating": "Nota",
+      "goals": "G",
+      "assists": "A",
+      "matches": "Partidos",
+      "no_players": "No se encontraron jugadores"
+    },
+    "filters": {
+      "sort_rating": "Nota ↓",
+      "sort_goals": "Goles ↓",
+      "sort_assists": "Asistencias ↓",
+      "sort_matches": "Partidos ↓",
+      "sort_name": "Nombre A→Z"
+    }
+  },
+  "PlayerPage": {
+    "seo": {
+      "title": "Perfil completo de {name}: estadísticas {season}, historial de carrera, análisis exclusivo de IA.",
+      "suffix": "Stats, Goles, Asistencias | NovaDuel"
+    },
+    "breadcrumb": {
+      "home": "Inicio",
+      "players": "Jugadores"
+    },
+    "profile": {
+      "nationality": "Nacionalidad",
+      "age": "Edad",
+      "height": "Altura",
+      "foot": "Pie preferido",
+      "number": "Número",
+      "contract": "Contrato",
+      "birth": "Nacimiento",
+      "value": "Valor de mercado",
+      "quick_scout_title": "Ficha Rápida",
+      "position": "Posición"
+    },
+    "stats": {
+      "title": "Estadísticas Detalladas",
+      "kpi_goals": "Goles",
+      "kpi_assists": "Asist.",
+      "kpi_matches": "Partidos",
+      "kpi_passes": "Pases %",
+      "yellow_cards": "Tarjetas amarillas"
+    },
+    "ai": {
+      "title": "Análisis Exclusivo IA",
+      "badge": "NovaDuel AI"
+    },
+    "career": {
+      "title": "Historial de Carrera",
+      "all": "Todo",
+      "league": "Liga",
+      "cups": "Copas",
+      "report": "Informe Completo"
+    },
+    "sections": {
+      "skill_matrix": "Matriz de Habilidades",
+      "tactical_roles": "Roles Tácticos",
+      "strengths_weaknesses": "Fortalezas y Debilidades",
+      "similar_profiles": "Perfiles Similares"
+    }
+  },
+  "Comparison": {
+    "seo": {
+      "title": "Comparativa {name1} vs {name2}: Stats, Radar y Veredicto IA",
+      "description": "El duelo definitivo: {name1} contra {name2}. Análisis completo de rendimiento, estadísticas avanzadas e insights predictivos de IA."
+    },
+    "seo_index": {
+      "title": "Comparador de Jugadores Fútbol — Stats, Radar & Veredicto IA",
+      "description": "Compara cualquier jugador de fútbol: goles, asistencias, notas, radar de habilidades y veredicto IA. Messi, Ronaldo, Mbappé, Haaland y más de 2 500 jugadores."
+    },
+    "label": "Comparador",
+    "title": "Compara dos jugadores",
+    "sub": "Estadísticas, radar de habilidades y veredicto IA en segundos.",
+    "popular_title": "Comparaciones populares",
+    "views": "vistas",
+    "featured_players": "Jugadores destacados",
+    "placeholder": "Buscar...",
+    "add_player": "Añadir Jugador",
+    "cta": "Comparar ahora",
+    "comparing": "Comparando...",
+    "search": {
+      "placeholder_a": "Jugador 1",
+      "placeholder_b": "Jugador 2",
+      "loading": "Cargando...",
+      "no_results": "Ningún jugador coincide con « {query} »",
+      "database_info": "Solo los jugadores de la base están disponibles",
+      "players_in_db": "jugadores en base",
+      "results": "resultados",
+      "mode_players": "Jugadores",
+      "mode_teams": "Equipos"
+    },
+    "breadcrumb": {
+      "comparisons": "Comparaciones"
+    },
+    "stats": {
+      "title": "Tablero comparativo",
+      "lowerIsBetterHint": "Menos = Mejor"
+    },
+    "hero": {
+      "winner": "Ganador",
+      "career_badge": "Carrera",
+      "tabs": {
+        "full": "Carrera completa",
+        "world_cup": "Copa del Mundo",
+        "league": "Liga nacional",
+        "cups": "Copas",
+        "national": "Selección"
+      }
+    },
+    "palmares": {
+      "title": "Palmarés y Veredicto",
+      "subtitle": "Palmarés y veredicto IA",
+      "footer": "Basado en estadísticas de carrera y análisis IA"
+    },
+    "insight": {
+      "title": "Análisis IA",
+      "badge": "NovaDuel AI",
+      "consistency": "Regularidad",
+      "expl": "Explicación IA",
+      "passing": "Pases",
+      "explosivity": "Explosividad"
+    },
+    "verdict": {
+      "title": "Veredicto Global",
+      "winner": "Ganador",
+      "best_scorer": "Mejor goleador",
+      "best_passer": "Mejor pasador"
+    },
+    "competitions": {
+      "title": "Rendimiento por Competición"
+    },
+    "similar": {
+      "title": "Perfiles Similares"
+    },
+    "winner": "✓ Ganador",
+    "less_is_better": "Menos = Mejor",
+    "perf_title": "Análisis de Rendimiento",
+    "ai": {
+      "title": "NovaDuel AI Insight",
+      "badge": "Claude · IA",
+      "verdict": "Veredicto Global"
+    },
+    "share": "Compartir este duelo",
+    "related": "Duelos relacionados",
+    "new_compare": "Nueva comparación →"
+  },
+  "Leagues": {
+    "title": "LIGAS DISPONIBLES",
+    "label": "Competiciones",
+    "active": "Activa",
+    "inactive": "Inactiva"
+  },
+  "Radar": {
+    "speed": "VELOCIDAD",
+    "dribble": "REGATE",
+    "passes": "PASES",
+    "tech": "TÉCNICA",
+    "finish": "REMATE",
+    "creativity": "Creatividad",
+    "vision": "Visión"
+  },
+  "NotFound": {
+    "title": "404 - Página no encontrada",
+    "description": "Lo sentimos, no pudimos encontrar el jugador o la comparación que buscas. ¿Tal vez un fichaje de última hora?",
+    "go_home": "Volver al inicio",
+    "search_button": "Buscar",
+    "search_placeholder": "Nueva búsqueda..."
+  }
+}

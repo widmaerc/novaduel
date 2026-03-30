@@ -1,0 +1,475 @@
+﻿
+> novaduel@0.1.0 lint
+> eslint
+
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\scripts\seed-players.ts
+  145:72   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  145:136  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\compare\[slug]\loading.tsx
+  4:9  warning  't' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\compare\[slug]\page.tsx
+   80:10  warning  'Sk' is defined but never used                   @typescript-eslint/no-unused-vars
+  109:9   warning  'isMissingA' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  111:9   warning  'isMissingB' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\layout.tsx
+  38:9  warning  Block is not recommended. See: https://nextjs.org/docs/messages/google-font-display                                                                              @next/next/google-font-display
+  38:9  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\match\[id]\page.tsx
+   63:21  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+   78:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+   97:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  111:26  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  111:53  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\player\[slug]\loading.tsx
+  4:9  warning  't' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\players\page.tsx
+   38:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @next/next/no-img-element
+   85:30  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\players\page.tsx:85:30
+  83 |   // Autocomplete search
+  84 |   useEffect(() => {
+> 85 |     if (dQuery.length < 2) { setSearchR([]); return }
+     |                              ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  86 |     setSearchL(true)
+  87 |     fetch(`/api/players/search?q=${encodeURIComponent(dQuery)}`)
+  88 |       .then(r => r.json())  react-hooks/set-state-in-effect
+  104:21  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\[locale]\players\page.tsx:104:21
+  102 |   }, [])
+  103 |
+> 104 |   useEffect(() => { loadPlayers(1, position, sort, true); setPage(1) }, [position, sort, loadPlayers])
+      |                     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  105 |
+  106 |   function loadMore() {
+  107 |     const next = page + 1                                                    react-hooks/set-state-in-effect
+  182:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @next/next/no-img-element
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\actions.ts
+  13:23  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  15:9   error  'pos' is never reassigned. Use 'const' instead  prefer-const
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\api\debug\player-raw\route.ts
+  45:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\api\livescores\normalize.ts
+  19:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  25:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\app\api\topplayers\route.ts
+  25:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\Nav.tsx
+  104:16  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\ComparisonHero.tsx
+   78:11  warning  'accent' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  119:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\ComparisonHero.tsx:119:12
+  117 |       <div className="flex items-center gap-2 px-3 py-4 sm:px-5 sm:py-5 sm:gap-3">
+  118 |         <div className="flex-1 min-w-0">
+> 119 |           <PlayerCard player={playerA} side="left" />
+      |            ^^^^^^^^^^ This component is created during render
+  120 |         </div>
+  121 |         <div className="flex flex-col items-center gap-1 flex-shrink-0 px-1">
+  122 |           <div className="font-headline font-black text-[14px] sm:text-[16px] italic text-[#727782]">VS</div>
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\ComparisonHero.tsx:75:3
+   73 |   function handleTab(tab: string) { setInternalTab(tab); onTabChange?.(tab) }
+   74 |
+>  75 |   function PlayerCard({ player, side }: { player: Player; side: 'left' | 'right' }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  76 |     const isRight  = side === 'right'
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  77 |     const isWinner = player.slug === winnerSlug
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 112 |     )
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 113 |   }
+      | ^^^^ The component is created during render here
+  114 |
+  115 |   return (
+  116 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">  react-hooks/static-components
+  128:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\ComparisonHero.tsx:128:12
+  126 |         </div>
+  127 |         <div className="flex-1 min-w-0">
+> 128 |           <PlayerCard player={playerB} side="right" />
+      |            ^^^^^^^^^^ This component is created during render
+  129 |         </div>
+  130 |       </div>
+  131 |       <SeasonFilterTabs tabs={SEASON_TABS} active={activeTab} onChange={handleTab} />
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\ComparisonHero.tsx:75:3
+   73 |   function handleTab(tab: string) { setInternalTab(tab); onTabChange?.(tab) }
+   74 |
+>  75 |   function PlayerCard({ player, side }: { player: Player; side: 'left' | 'right' }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  76 |     const isRight  = side === 'right'
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  77 |     const isWinner = player.slug === winnerSlug
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 112 |     )
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 113 |   }
+      | ^^^^ The component is created during render here
+  114 |
+  115 |   return (
+  116 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                                                                                                                                              react-hooks/static-components
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx
+   34:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:34:12
+  32 |         <div className="p-3 sm:p-4 border-r border-[#f3f4f5]">
+  33 |           <div className="text-[10px] font-black uppercase tracking-[.08em] text-[#004782] mb-2.5">{playerA.common_name}</div>
+> 34 |           <TrophyList trophees={tropheesA} accent="#004782" />
+     |            ^^^^^^^^^^ This component is created during render
+  35 |         </div>
+  36 |         <div className="p-3 sm:p-4">
+  37 |           <div className="text-[10px] font-black uppercase tracking-[.08em] text-[#92000f] mb-2.5">{playerB.common_name}</div>
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:10:3
+   8 |
+   9 | export function PalmaresCard({ playerA, playerB, tropheesA, tropheesB }: PalmaresCardProps) {
+> 10 |   function TrophyList({ trophees, accent }: { trophees: Trophy[]; accent: string }) {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 11 |     return (
+     | ^^^^^^^^^^^^
+> 12 |       <div className="flex flex-col gap-2">
+     ΓÇª
+     | ^^^^^^^^^^^^
+> 21 |     )
+     | ^^^^^^^^^^^^
+> 22 |   }
+     | ^^^^ The component is created during render here
+  23 |
+  24 |   return (
+  25 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">  react-hooks/static-components
+   38:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:38:12
+  36 |         <div className="p-3 sm:p-4">
+  37 |           <div className="text-[10px] font-black uppercase tracking-[.08em] text-[#92000f] mb-2.5">{playerB.common_name}</div>
+> 38 |           <TrophyList trophees={tropheesB} accent="#92000f" />
+     |            ^^^^^^^^^^ This component is created during render
+  39 |         </div>
+  40 |       </div>
+  41 |       <div className="px-4 py-2.5 bg-amber-50/60 border-t border-amber-100 flex items-start gap-2">
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:10:3
+   8 |
+   9 | export function PalmaresCard({ playerA, playerB, tropheesA, tropheesB }: PalmaresCardProps) {
+> 10 |   function TrophyList({ trophees, accent }: { trophees: Trophy[]; accent: string }) {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 11 |     return (
+     | ^^^^^^^^^^^^
+> 12 |       <div className="flex flex-col gap-2">
+     ΓÇª
+     | ^^^^^^^^^^^^
+> 21 |     )
+     | ^^^^^^^^^^^^
+> 22 |   }
+     | ^^^^ The component is created during render here
+  23 |
+  24 |   return (
+  25 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                                                               react-hooks/static-components
+  109:10  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:109:10
+  107 |       </div>
+  108 |       <div className="px-4 py-2">
+> 109 |         <Badge label="Meilleur buteur"  slug={verdictScorer}    />
+      |          ^^^^^ This component is created during render
+  110 |         <Badge label="Meilleur passeur" slug={verdictAssist}    />
+  111 |         <Badge label="Physique"         slug={verdictPhysical}  />
+  112 |         <Badge label="Technique"        slug={verdictTechnical} />
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:67:3
+  65 |   const winner  = players.find(p => p.slug === winnerSlug)
+  66 |
+> 67 |   function Badge({ label, slug }: { label: string; slug: string }) {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |     const p = players.find(x => x.slug === slug)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |     const isA = p?.slug === playerA.slug
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |     )
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 78 |   }
+     | ^^^^ The component is created during render here
+  79 |
+  80 |   return (
+  81 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                              react-hooks/static-components
+  110:10  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:110:10
+  108 |       <div className="px-4 py-2">
+  109 |         <Badge label="Meilleur buteur"  slug={verdictScorer}    />
+> 110 |         <Badge label="Meilleur passeur" slug={verdictAssist}    />
+      |          ^^^^^ This component is created during render
+  111 |         <Badge label="Physique"         slug={verdictPhysical}  />
+  112 |         <Badge label="Technique"        slug={verdictTechnical} />
+  113 |       </div>
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:67:3
+  65 |   const winner  = players.find(p => p.slug === winnerSlug)
+  66 |
+> 67 |   function Badge({ label, slug }: { label: string; slug: string }) {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |     const p = players.find(x => x.slug === slug)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |     const isA = p?.slug === playerA.slug
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |     )
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 78 |   }
+     | ^^^^ The component is created during render here
+  79 |
+  80 |   return (
+  81 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                              react-hooks/static-components
+  111:10  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:111:10
+  109 |         <Badge label="Meilleur buteur"  slug={verdictScorer}    />
+  110 |         <Badge label="Meilleur passeur" slug={verdictAssist}    />
+> 111 |         <Badge label="Physique"         slug={verdictPhysical}  />
+      |          ^^^^^ This component is created during render
+  112 |         <Badge label="Technique"        slug={verdictTechnical} />
+  113 |       </div>
+  114 |     </div>
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:67:3
+  65 |   const winner  = players.find(p => p.slug === winnerSlug)
+  66 |
+> 67 |   function Badge({ label, slug }: { label: string; slug: string }) {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |     const p = players.find(x => x.slug === slug)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |     const isA = p?.slug === playerA.slug
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |     )
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 78 |   }
+     | ^^^^ The component is created during render here
+  79 |
+  80 |   return (
+  81 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                                                     react-hooks/static-components
+  112:10  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:112:10
+  110 |         <Badge label="Meilleur passeur" slug={verdictAssist}    />
+  111 |         <Badge label="Physique"         slug={verdictPhysical}  />
+> 112 |         <Badge label="Technique"        slug={verdictTechnical} />
+      |          ^^^^^ This component is created during render
+  113 |       </div>
+  114 |     </div>
+  115 |   )
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:67:3
+  65 |   const winner  = players.find(p => p.slug === winnerSlug)
+  66 |
+> 67 |   function Badge({ label, slug }: { label: string; slug: string }) {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |     const p = players.find(x => x.slug === slug)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |     const isA = p?.slug === playerA.slug
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |     )
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 78 |   }
+     | ^^^^ The component is created during render here
+  79 |
+  80 |   return (
+  81 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                                                                                                                    react-hooks/static-components
+  165:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @next/next/no-img-element
+  192:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @next/next/no-img-element
+  225:8   error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:225:8
+  223 |         </div>
+  224 |       </div>
+> 225 |       <Section player={playerA} stats={statsA} accent="#004782" />
+      |        ^^^^^^^ This component is created during render
+  226 |       <div className="border-t-2 border-[#c2c6d2]" />
+  227 |       <Section player={playerB} stats={statsB} accent="#92000f" />
+  228 |     </div>
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:143:3
+  141 |   const colsSm     = '1fr 52px 36px 36px 36px 32px 32px'
+  142 |
+> 143 |   function Section({ player, stats, accent }: { player: Player; stats: CompetitionStat[]; accent: string }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 144 |     return (
+      | ^^^^^^^^^^^^
+> 145 |       <>
+      ΓÇª
+      | ^^^^^^^^^^^^
+> 207 |     )
+      | ^^^^^^^^^^^^
+> 208 |   }
+      | ^^^^ The component is created during render here
+  209 |
+  210 |   return (
+  211 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                                                                                                                                                                                                      react-hooks/static-components
+  227:8   error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:227:8
+  225 |       <Section player={playerA} stats={statsA} accent="#004782" />
+  226 |       <div className="border-t-2 border-[#c2c6d2]" />
+> 227 |       <Section player={playerB} stats={statsB} accent="#92000f" />
+      |        ^^^^^^^ This component is created during render
+  228 |     </div>
+  229 |   )
+  230 | }
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\compare\PalmaresVerdictCompetition.tsx:143:3
+  141 |   const colsSm     = '1fr 52px 36px 36px 36px 32px 32px'
+  142 |
+> 143 |   function Section({ player, stats, accent }: { player: Player; stats: CompetitionStat[]; accent: string }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 144 |     return (
+      | ^^^^^^^^^^^^
+> 145 |       <>
+      ΓÇª
+      | ^^^^^^^^^^^^
+> 207 |     )
+      | ^^^^^^^^^^^^
+> 208 |   }
+      | ^^^^ The component is created during render here
+  209 |
+  210 |   return (
+  211 |     <div className="glass-card glass-glow-blue rounded-xl overflow-hidden">                                                                                                                                                                                                                                            react-hooks/static-components
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\Editorial.tsx
+  36:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  59:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\FeaturedDuel.tsx
+  46:21  warning  'isTablet' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\HeroSearch.tsx
+   20:9   warning  'px' is assigned a value but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  150:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  157:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\Leagues.tsx
+  25:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\LiveMatches.tsx
+  56:41  error    Error: Cannot access variable before it is declared
+
+`fetchLatest` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\LiveMatches.tsx:56:41
+  54 |         if (emptyCount.current >= MAX_EMPTY && polling.current) {
+  55 |           clearInterval(polling.current);
+> 56 |           polling.current = setInterval(fetchLatest, POLL_INTERVAL * 3);
+     |                                         ^^^^^^^^^^^ `fetchLatest` accessed before it is declared
+  57 |         }
+  58 |         return;
+  59 |       }
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\LiveMatches.tsx:45:3
+  43 |
+  44 |   // Phase 2 ΓÇö merge only changed fixtures, backoff on consecutive empty
+> 45 |   const fetchLatest = useCallback(async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |     try {
+     | ^^^^^^^^^
+> 47 |       const res = await fetch('/api/livescores/latest');
+     ΓÇª
+     | ^^^^^^^^^
+> 74 |     } catch { /* keep existing data */ }
+     | ^^^^^^^^^
+> 75 |   }, []);
+     | ^^^^^^^^^^ `fetchLatest` is declared here
+  76 |
+  77 |   useEffect(() => {
+  78 |     fetchInplay().then(() => {  react-hooks/immutability
+  84:9   warning  'px' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\components\home\TopPlayersLists.tsx
+   35:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  149:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\lib\compareHelpers.ts
+  10:29  warning  '_player' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\lib\data.ts
+   11:7   warning  'SEASON_ID' is assigned a value but never used                                                         @typescript-eslint/no-unused-vars
+   49:58  warning  'f' is defined but never used                                                                          @typescript-eslint/no-unused-vars
+  114:31  error    Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+  256:21  warning  'error' is assigned a value but never used                                                             @typescript-eslint/no-unused-vars
+  374:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\lib\sportmonks.ts
+  172:35  error    Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+  173:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  175:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  181:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  207:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  223:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\Wid\Documents\widmaer_org\player-comparator\novaduel\src\lib\sync.ts
+  192:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  235:11  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  346:51  error    Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+
+Γ£û 70 problems (36 errors, 34 warnings)
+  1 error and 8 warnings potentially fixable with the `--fix` option.
+

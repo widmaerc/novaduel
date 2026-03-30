@@ -1,0 +1,269 @@
+[
+  {
+    "id": 10000001,
+    "sport_id": 1,
+    "league_id": 8,
+    "season_id": 23614,
+    "stage_id": 77457705,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 340001,
+    "state_id": 4,
+    "venue_id": 1456,
+    "name": "Real Madrid vs Barcelona",
+    "starting_at": "2024-10-26 19:00:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": true,
+    "starting_at_timestamp": 1729969200,
+    "scores": [
+      {
+        "id": 20000001,
+        "fixture_id": 10000001,
+        "type_id": 1525,
+        "participant_id": 3468,
+        "score": { "goals": 2, "participant": "home" },
+        "description": "CURRENT"
+      },
+      {
+        "id": 20000002,
+        "fixture_id": 10000001,
+        "type_id": 1525,
+        "participant_id": 83,
+        "score": { "goals": 1, "participant": "away" },
+        "description": "CURRENT"
+      }
+    ],
+    "periods": [
+      {
+        "id": 30000001,
+        "fixture_id": 10000001,
+        "type_id": 2,
+        "started": 1729969200,
+        "ended": null,
+        "minutes": 67,
+        "seconds": 14,
+        "ticking": true,
+        "sort_order": 2
+      }
+    ],
+    "league": {
+      "id": 8,
+      "sport_id": 1,
+      "country_id": 32,
+      "name": "LaLiga",
+      "active": true,
+      "short_code": "LL",
+      "image_path": "",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2024-10-26 21:00:00"
+    }
+  },
+  {
+    "id": 10000002,
+    "sport_id": 1,
+    "league_id": 8,
+    "season_id": 23614,
+    "stage_id": 77457705,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 340001,
+    "state_id": 2,
+    "venue_id": 214,
+    "name": "Liverpool vs Manchester City",
+    "starting_at": "2024-10-26 16:30:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": true,
+    "starting_at_timestamp": 1729956600,
+    "scores": [
+      {
+        "id": 20000003,
+        "fixture_id": 10000002,
+        "type_id": 1525,
+        "participant_id": 9,
+        "score": { "goals": 0, "participant": "home" },
+        "description": "CURRENT"
+      },
+      {
+        "id": 20000004,
+        "fixture_id": 10000002,
+        "type_id": 1525,
+        "participant_id": 43,
+        "score": { "goals": 0, "participant": "away" },
+        "description": "CURRENT"
+      }
+    ],
+    "periods": [
+      {
+        "id": 30000002,
+        "fixture_id": 10000002,
+        "type_id": 1,
+        "started": 1729956600,
+        "ended": null,
+        "minutes": 23,
+        "seconds": 44,
+        "ticking": true,
+        "sort_order": 1
+      }
+    ],
+    "league": {
+      "id": 8,
+      "sport_id": 1,
+      "country_id": 462,
+      "name": "Premier League",
+      "active": true,
+      "short_code": "PL",
+      "image_path": "",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2024-10-26 18:30:00"
+    }
+  },
+  {
+    "id": 10000003,
+    "sport_id": 1,
+    "league_id": 2,
+    "season_id": 23660,
+    "stage_id": 77457900,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 340002,
+    "state_id": 3,
+    "venue_id": 512,
+    "name": "PSG vs Bayern Munich",
+    "starting_at": "2024-10-26 21:00:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": true,
+    "starting_at_timestamp": 1729976400,
+    "scores": [
+      {
+        "id": 20000005,
+        "fixture_id": 10000003,
+        "type_id": 1525,
+        "participant_id": 569,
+        "score": { "goals": 1, "participant": "home" },
+        "description": "CURRENT"
+      },
+      {
+        "id": 20000006,
+        "fixture_id": 10000003,
+        "type_id": 1525,
+        "participant_id": 157,
+        "score": { "goals": 2, "participant": "away" },
+        "description": "CURRENT"
+      }
+    ],
+    "periods": [
+      {
+        "id": 30000003,
+        "fixture_id": 10000003,
+        "type_id": 3,
+        "started": 1729978800,
+        "ended": null,
+        "minutes": 45,
+        "seconds": 0,
+        "ticking": false,
+        "sort_order": 3
+      }
+    ],
+    "league": {
+      "id": 2,
+      "sport_id": 1,
+      "country_id": 0,
+      "name": "Champions League",
+      "active": true,
+      "short_code": "UCL",
+      "image_path": "",
+      "type": "league",
+      "sub_type": "international_cup",
+      "last_played_at": "2024-10-26 23:00:00"
+    }
+  },
+  {
+    "id": 10000004,
+    "sport_id": 1,
+    "league_id": 384,
+    "season_id": 23700,
+    "stage_id": 77458100,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 340003,
+    "state_id": 1,
+    "venue_id": 760,
+    "name": "Juventus vs AC Milan",
+    "starting_at": "2024-10-26 21:00:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": false,
+    "starting_at_timestamp": 1729976400,
+    "scores": [],
+    "periods": [],
+    "league": {
+      "id": 384,
+      "sport_id": 1,
+      "country_id": 251,
+      "name": "Serie A",
+      "active": true,
+      "short_code": "SA",
+      "image_path": "",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2024-10-26 23:00:00"
+    }
+  },
+  {
+    "id": 10000005,
+    "sport_id": 1,
+    "league_id": 82,
+    "season_id": 23710,
+    "stage_id": 77458200,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 340004,
+    "state_id": 1,
+    "venue_id": 390,
+    "name": "Borussia Dortmund vs RB Leipzig",
+    "starting_at": "2024-10-26 20:30:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": false,
+    "starting_at_timestamp": 1729974600,
+    "scores": [],
+    "periods": [],
+    "league": {
+      "id": 82,
+      "sport_id": 1,
+      "country_id": 11,
+      "name": "Bundesliga",
+      "active": true,
+      "short_code": "BL",
+      "image_path": "",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2024-10-26 22:30:00"
+    }
+  }
+]

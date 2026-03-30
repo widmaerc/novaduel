@@ -6,10 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx scripts/seed-players.ts",
+    "seed:real": "tsx scripts/seed-players.ts",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "@supabase/supabase-js": "^2.100.1",
+    "@upstash/redis": "^1.37.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.7.0",
     "next": "16.2.1",
+    "next-intl": "^4.8.3",
+    "next-sitemap": "^4.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -19,9 +29,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }

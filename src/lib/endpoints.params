@@ -1,0 +1,288 @@
+# =============================================================
+# Sportmonks v3 — Référence complète des endpoints
+# =============================================================
+# BASE Football : https://api.sportmonks.com/v3/football
+# BASE Core     : https://api.sportmonks.com/v3/core
+# Auth          : ?api_token=YOUR_TOKEN
+# Includes      : ?include=teams;country;statistics
+# Filtres       : ?filters=fixtureSeasonId:{id}
+# Pagination    : ?per_page=25&page=1
+# Paramètres    : {id}, {name}, {date}, {seasonId}, etc.
+# =============================================================
+
+
+# ── LIVESCORES ───────────────────────────────────────────────
+LIVESCORES_INPLAY          = /football/livescores/inplay
+LIVESCORES_ALL             = /football/livescores
+LIVESCORES_LATEST          = /football/livescores/latest
+
+
+# ── FIXTURES ─────────────────────────────────────────────────
+FIXTURES_ALL               = /football/fixtures
+FIXTURE_BY_ID              = /football/fixtures/{id}
+FIXTURES_BY_IDS            = /football/fixtures/multi/{ids}
+FIXTURES_BY_DATE           = /football/fixtures/date/{date}
+FIXTURES_BY_DATE_RANGE     = /football/fixtures/between/{startDate}/{endDate}
+FIXTURES_BY_DATE_RANGE_TEAM= /football/fixtures/between/{startDate}/{endDate}/{teamId}
+FIXTURES_HEAD_TO_HEAD      = /football/fixtures/head-to-head/{team1Id}/{team2Id}
+FIXTURES_SEARCH            = /football/fixtures/search/{name}
+FIXTURES_UPCOMING_MARKET   = /football/fixtures/upcoming/markets/{marketId}
+FIXTURES_UPCOMING_TV       = /football/fixtures/upcoming/tv-stations/{tvStationId}
+FIXTURES_PAST_TV           = /football/fixtures/past/tv-stations/{tvStationId}
+FIXTURES_LATEST            = /football/fixtures/latest
+FIXTURES_BY_PLAYER         = /football/fixtures/players/{playerId}
+
+
+# ── PLAYERS ──────────────────────────────────────────────────
+PLAYERS_ALL                = /football/players
+PLAYER_BY_ID               = /football/players/{id}
+PLAYERS_BY_COUNTRY         = /football/players/countries/{countryId}
+PLAYERS_SEARCH             = /football/players/search/{name}
+PLAYERS_LATEST             = /football/players/latest
+
+
+# ── TEAMS ────────────────────────────────────────────────────
+TEAMS_ALL                  = /football/teams
+TEAM_BY_ID                 = /football/teams/{id}
+TEAMS_BY_COUNTRY           = /football/teams/countries/{countryId}
+TEAMS_BY_SEASON            = /football/teams/seasons/{seasonId}
+TEAMS_SEARCH               = /football/teams/search/{name}
+
+
+# ── LEAGUES ──────────────────────────────────────────────────
+LEAGUES_ALL                = /football/leagues
+LEAGUES_LIVE               = /football/leagues/live
+LEAGUES_BY_DATE            = /football/leagues/date/{date}
+LEAGUES_BY_COUNTRY         = /football/leagues/countries/{countryId}
+LEAGUES_SEARCH             = /football/leagues/search/{name}
+LEAGUES_BY_TEAM            = /football/leagues/teams/{teamId}
+LEAGUES_CURRENT_BY_TEAM    = /football/leagues/teams/{teamId}/current
+
+
+# ── SEASONS ──────────────────────────────────────────────────
+SEASONS_ALL                = /football/seasons
+SEASON_BY_ID               = /football/seasons/{id}
+SEASONS_BY_TEAM            = /football/seasons/teams/{teamId}
+SEASONS_SEARCH             = /football/seasons/search/{name}
+
+
+# ── STANDINGS ────────────────────────────────────────────────
+STANDINGS_ALL              = /football/standings
+STANDINGS_BY_SEASON        = /football/standings/seasons/{seasonId}
+STANDINGS_BY_ROUND         = /football/standings/rounds/{roundId}
+STANDINGS_CORRECTION       = /football/standings/corrections/seasons/{seasonId}
+STANDINGS_LIVE_BY_LEAGUE   = /football/standings/live/leagues/{leagueId}
+
+
+# ── TOPSCORERS ───────────────────────────────────────────────
+TOPSCORERS_BY_SEASON       = /football/topscorers/seasons/{seasonId}
+TOPSCORERS_BY_STAGE        = /football/topscorers/stages/{stageId}
+#
+# Filtres disponibles (param: filters=seasontopscorerTypes:{id})
+#   208 = Buts
+#   209 = Passes décisives
+#
+# Includes utiles : player;participant;type
+# Exemple : /topscorers/seasons/25536?filters=seasontopscorerTypes:208&include=player;participant
+
+
+# ── STATISTICS ───────────────────────────────────────────────
+STATISTICS_BY_SEASON       = /football/statistics/seasons/{seasonId}
+STATISTICS_BY_STAGE        = /football/statistics/stages/{stageId}
+STATISTICS_BY_ROUND        = /football/statistics/rounds/{roundId}
+
+
+# ── SCHEDULES ────────────────────────────────────────────────
+SCHEDULES_BY_SEASON        = /football/schedules/seasons/{seasonId}
+SCHEDULES_BY_TEAM          = /football/schedules/teams/{teamId}
+SCHEDULES_BY_SEASON_TEAM   = /football/schedules/seasons/{seasonId}/teams/{teamId}
+
+
+# ── STAGES ───────────────────────────────────────────────────
+STAGES_ALL                 = /football/stages
+STAGE_BY_ID                = /football/stages/{id}
+STAGES_BY_SEASON           = /football/stages/seasons/{seasonId}
+STAGES_SEARCH              = /football/stages/search/{name}
+
+
+# ── ROUNDS ───────────────────────────────────────────────────
+ROUNDS_ALL                 = /football/rounds
+ROUND_BY_ID                = /football/rounds/{id}
+ROUNDS_BY_SEASON           = /football/rounds/seasons/{seasonId}
+ROUNDS_SEARCH              = /football/rounds/search/{name}
+
+
+# ── SQUADS ───────────────────────────────────────────────────
+SQUAD_BY_TEAM              = /football/squads/teams/{teamId}
+SQUAD_EXTENDED_BY_TEAM     = /football/squads/teams/{teamId}/extended
+SQUAD_BY_TEAM_SEASON       = /football/squads/seasons/{seasonId}/teams/{teamId}
+
+
+# ── COACHES ──────────────────────────────────────────────────
+COACHES_ALL                = /football/coaches
+COACH_BY_ID                = /football/coaches/{id}
+COACHES_BY_COUNTRY         = /football/coaches/countries/{countryId}
+COACHES_SEARCH             = /football/coaches/search/{name}
+COACHES_LATEST             = /football/coaches/latest
+
+
+# ── REFEREES ─────────────────────────────────────────────────
+REFEREES_ALL               = /football/referees
+REFEREE_BY_ID              = /football/referees/{id}
+REFEREES_BY_COUNTRY        = /football/referees/countries/{countryId}
+REFEREES_BY_SEASON         = /football/referees/seasons/{seasonId}
+REFEREES_SEARCH            = /football/referees/search/{name}
+
+
+# ── TRANSFERS ────────────────────────────────────────────────
+TRANSFERS_ALL              = /football/transfers
+TRANSFER_BY_ID             = /football/transfers/{id}
+TRANSFERS_LATEST           = /football/transfers/latest
+TRANSFERS_BY_DATE_RANGE    = /football/transfers/between/{startDate}/{endDate}
+TRANSFERS_BY_TEAM          = /football/transfers/teams/{teamId}
+TRANSFERS_BY_PLAYER        = /football/transfers/players/{playerId}
+
+
+# ── TRANSFER RUMOURS ─────────────────────────────────────────
+TRANSFER_RUMOURS_ALL       = /football/transfer-rumours
+TRANSFER_RUMOUR_BY_ID      = /football/transfer-rumours/{id}
+TRANSFER_RUMOURS_DATE_RANGE= /football/transfer-rumours/between/{startDate}/{endDate}
+TRANSFER_RUMOURS_BY_TEAM   = /football/transfer-rumours/teams/{teamId}
+TRANSFER_RUMOURS_BY_PLAYER = /football/transfer-rumours/players/{playerId}
+
+
+# ── VENUES ───────────────────────────────────────────────────
+VENUES_ALL                 = /football/venues
+VENUE_BY_ID                = /football/venues/{id}
+VENUES_BY_SEASON           = /football/venues/seasons/{seasonId}
+VENUES_SEARCH              = /football/venues/search/{name}
+
+
+# ── TV STATIONS ──────────────────────────────────────────────
+TV_STATIONS_ALL            = /football/tv-stations
+TV_STATION_BY_ID           = /football/tv-stations/{id}
+TV_STATIONS_BY_FIXTURE     = /football/tv-stations/fixtures/{fixtureId}
+
+
+# ── STATES ───────────────────────────────────────────────────
+STATES_ALL                 = /football/states
+STATE_BY_ID                = /football/states/{id}
+
+
+# ── TYPES ────────────────────────────────────────────────────
+TYPES_ALL                  = /football/types
+TYPE_BY_ID                 = /football/types/{id}
+TYPES_BY_ENTITY            = /football/types/entities/{entity}
+
+
+# ── NEWS ─────────────────────────────────────────────────────
+NEWS_PRE_MATCH             = /football/news/pre-match
+NEWS_PRE_MATCH_BY_SEASON   = /football/news/pre-match/seasons/{seasonId}
+NEWS_PRE_MATCH_UPCOMING    = /football/news/pre-match/upcoming
+NEWS_POST_MATCH            = /football/news/post-match
+NEWS_POST_MATCH_BY_SEASON  = /football/news/post-match/seasons/{seasonId}
+
+
+# ── COMMENTARIES ─────────────────────────────────────────────
+COMMENTARIES_ALL           = /football/commentaries
+COMMENTARIES_BY_FIXTURE    = /football/commentaries/fixtures/{fixtureId}
+
+
+# ── RIVALS ───────────────────────────────────────────────────
+RIVALS_ALL                 = /football/rivals
+RIVALS_BY_TEAM             = /football/rivals/teams/{teamId}
+
+
+# ── EXPECTED (xG) ────────────────────────────────────────────
+EXPECTED_BY_TEAM           = /football/expected/teams/{teamId}
+EXPECTED_BY_PLAYER         = /football/expected/players/{playerId}
+
+
+# ── EXPECTED LINEUPS (Premium) ───────────────────────────────
+EXPECTED_LINEUP_BY_TEAM    = /football/expected-lineups/teams/{teamId}
+EXPECTED_LINEUP_BY_PLAYER  = /football/expected-lineups/players/{playerId}
+
+
+# ── PREDICTIONS ──────────────────────────────────────────────
+PREDICTIONS_ALL            = /football/predictions/probabilities
+PREDICTIONS_BY_LEAGUE      = /football/predictions/predictability/leagues/{leagueId}
+PREDICTIONS_BY_FIXTURE     = /football/predictions/probabilities/fixtures/{fixtureId}
+PREDICTIONS_VALUE_BETS     = /football/predictions/value-bets
+PREDICTIONS_VALUE_BETS_FIXTURE = /football/predictions/value-bets/fixtures/{fixtureId}
+
+
+# ── ODDS PRE-MATCH ───────────────────────────────────────────
+ODDS_ALL                   = /football/odds
+ODDS_BY_FIXTURE            = /football/odds/fixtures/{fixtureId}
+ODDS_BY_FIXTURE_BOOKMAKER  = /football/odds/fixtures/{fixtureId}/bookmakers/{bookmakerId}
+ODDS_BY_FIXTURE_MARKET     = /football/odds/fixtures/{fixtureId}/markets/{marketId}
+ODDS_LATEST                = /football/odds/latest
+
+
+# ── ODDS INPLAY ──────────────────────────────────────────────
+ODDS_INPLAY_ALL            = /football/odds/inplay
+ODDS_INPLAY_BY_FIXTURE     = /football/odds/inplay/fixtures/{fixtureId}
+ODDS_INPLAY_FIXTURE_BK     = /football/odds/inplay/fixtures/{fixtureId}/bookmakers/{bookmakerId}
+ODDS_INPLAY_FIXTURE_MKT    = /football/odds/inplay/fixtures/{fixtureId}/markets/{marketId}
+ODDS_INPLAY_LATEST         = /football/odds/inplay/latest
+
+
+# ── ODDS PREMIUM ─────────────────────────────────────────────
+ODDS_PREMIUM_ALL           = /football/odds/premium
+ODDS_PREMIUM_BY_FIXTURE    = /football/odds/premium/fixtures/{fixtureId}
+ODDS_PREMIUM_FIXTURE_BK    = /football/odds/premium/fixtures/{fixtureId}/bookmakers/{bookmakerId}
+ODDS_PREMIUM_FIXTURE_MKT   = /football/odds/premium/fixtures/{fixtureId}/markets/{marketId}
+ODDS_PREMIUM_RANGE         = /football/odds/premium/updated/between/{startTime}/{endTime}
+ODDS_PREMIUM_HIST_RANGE    = /football/odds/premium/historical/between/{startTime}/{endTime}
+ODDS_PREMIUM_HIST_ALL      = /football/odds/premium/historical
+
+
+# ── MARKETS ──────────────────────────────────────────────────
+MARKETS_ALL                = /football/markets
+MARKETS_PREMIUM            = /football/markets/premium
+MARKET_BY_ID               = /football/markets/{id}
+MARKETS_SEARCH             = /football/markets/search/{name}
+
+
+# ── BOOKMAKERS ───────────────────────────────────────────────
+BOOKMAKERS_ALL             = /football/bookmakers
+BOOKMAKERS_PREMIUM         = /football/bookmakers/premium
+BOOKMAKER_BY_ID            = /football/bookmakers/{id}
+BOOKMAKERS_SEARCH          = /football/bookmakers/search/{name}
+BOOKMAKERS_BY_FIXTURE      = /football/bookmakers/fixtures/{fixtureId}
+BOOKMAKERS_MATCH_ID_MAP    = /football/bookmakers/match-id-mappings/fixtures/{fixtureId}
+
+
+# ── MATCH FACTS (Beta) ───────────────────────────────────────
+MATCH_FACTS_ALL            = /football/match-facts
+MATCH_FACTS_BY_FIXTURE     = /football/match-facts/fixtures/{fixtureId}
+MATCH_FACTS_DATE_RANGE     = /football/match-facts/between/{startDate}/{endDate}
+MATCH_FACTS_BY_LEAGUE      = /football/match-facts/leagues/{leagueId}
+
+
+# ── TEAM RANKINGS (Beta) ─────────────────────────────────────
+TEAM_RANKINGS_ALL          = /football/team-rankings
+TEAM_RANKINGS_BY_TEAM      = /football/team-rankings/teams/{teamId}
+TEAM_RANKINGS_BY_DATE      = /football/team-rankings/date/{date}
+
+
+# ── TEAM OF THE WEEK (Beta) ──────────────────────────────────
+TOTW_ALL                   = /football/team-of-the-week
+TOTW_BY_ROUND              = /football/team-of-the-week/rounds/{roundId}
+TOTW_LATEST                = /football/team-of-the-week/latest
+
+
+# =============================================================
+# CORE (https://api.sportmonks.com/v3/core)
+# =============================================================
+
+COUNTRIES_ALL              = /core/countries
+COUNTRY_BY_ID              = /core/countries/{id}
+COUNTRIES_SEARCH           = /core/countries/search/{name}
+CONTINENTS_ALL             = /core/continents
+CONTINENT_BY_ID            = /core/continents/{id}
+REGIONS_ALL                = /core/regions
+REGION_BY_ID               = /core/regions/{id}
+CITIES_ALL                 = /core/cities
+CITY_BY_ID                 = /core/cities/{id}
+TIMEZONES_ALL              = /core/timezones

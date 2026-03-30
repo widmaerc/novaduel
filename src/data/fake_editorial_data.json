@@ -1,0 +1,30 @@
+{
+  "header": {
+    "label": "Hub Éditorial",
+    "title": "LA PROFONDEUR\nDES DONNÉES.",
+    "description": "Nos analystes décryptent les métriques complexes utilisées par les scouts. De l'impact attendu à la domination spatiale.",
+    "cta": "Voir tous les Insights"
+  },
+  "articles": [
+    {
+      "id": 1,
+      "tag": "Analyse Technique",
+      "tagColor": "#004782",
+      "bg": "linear-gradient(135deg,rgba(0,71,130,.12),rgba(0,71,130,.05))",
+      "icon": "xG",
+      "iconColor": "rgba(0,71,130,.2)",
+      "title": "Pourquoi les Progressive Carries sont la seule métrique qui compte en 2026",
+      "excerpt": "L'évolution du rôle d'avant-centre profond et comment les données spatiales transforment les évaluations du marché des transferts..."
+    },
+    {
+      "id": 2,
+      "tag": "L'Avantage IA",
+      "tagColor": "#92000f",
+      "bg": "linear-gradient(135deg,rgba(146,0,15,.1),rgba(146,0,15,.04))",
+      "icon": "AI",
+      "iconColor": "rgba(146,0,15,.2)",
+      "title": "Prédire le risque de blessure grâce aux heatmaps biométriques",
+      "excerpt": "Comment l'IA de NovaDuel utilise le suivi squelettique pour prédire les tensions musculaires 3 matchs avant qu'elles surviennent..."
+    }
+  ]
+}
