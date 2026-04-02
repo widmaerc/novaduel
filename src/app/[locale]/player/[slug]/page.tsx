@@ -173,11 +173,11 @@ export default async function PlayerPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-[1440px] mx-auto px-10 pb-20 relative overflow-hidden">
+      <main className="max-w-[1440px] mx-auto px-6 lg:px-10 pb-16 relative overflow-hidden">
         <div className="hero-mesh" />
 
         {/* ── HERO ─────────────────────────────────────────── */}
-        <section className="relative z-10 grid grid-cols-[420px_1fr] gap-12 items-end py-12 pb-14 border-b border-slate-200/40 mb-12">
+        <section className="relative z-10 grid grid-cols-[420px_1fr] gap-12 items-end py-4 pb-6 border-b border-slate-200/40 mb-3">
 
           {/* Left: player visual */}
           <div className="relative">
@@ -307,7 +307,7 @@ export default async function PlayerPage({ params }: Props) {
         </section>
 
         {/* ── BENTO GRID ──────────────────────────────────── */}
-        <div className="grid grid-cols-[280px_1fr_280px] gap-5 items-start">
+        <div className="grid grid-cols-[280px_1fr_280px] gap-3 items-start">
 
           {/* ─ LEFT SIDEBAR ─ */}
           <div className="flex flex-col gap-4">

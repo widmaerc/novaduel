@@ -199,8 +199,8 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
   return (
     <>
       {/* ── Filter bar ──────────────────────────────────────────────── */}
-      <div className="glass-card bg-white/20 p-3 mb-0 overflow-hidden border-white/40">
-        <div className="-mx-4 -mt-3 px-4 py-2 mb-3 bg-slate-50/40 border-b border-slate-100/50 flex items-center gap-2">
+      <div className="glass-card bg-white/20 p-1.5 mb-0 overflow-hidden border-white/40">
+        <div className="-mx-4 -mt-1.5 px-4 py-1.5 mb-2 bg-slate-50/40 border-b border-slate-100/50 flex items-center gap-2">
           <span className="material-symbols-outlined text-[18px] text-primary">filter_list</span>
           <span className="label-caps !text-slate-900 font-semibold">
             {tp('filters.title')}
@@ -278,7 +278,7 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
 
         {/* Context badge */}
         {(stats || loading) && (
-          <div className="mt-5 flex items-center gap-2">
+          <div className="mt-4 flex items-center gap-2">
             {loading ? (
               <span className="text-[10px] font-bold text-slate-400 animate-pulse uppercase tracking-wider">{tp('filters.loading')}...</span>
             ) : stats ? (
@@ -299,15 +299,15 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
       </div>
 
       {/* ── KPI Cards ───────────────────────────────────────────────── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2">
         {[
           { label: tp('stats.kpi_goals'),   value: isMissingData ? 'N/D' : s.goals,   sub: `${goalsPerMatch} / ${tc('units.match')}`, color: 'group-hover:text-emerald-500', bar: 'bg-emerald-500/30' },
           { label: tp('stats.kpi_assists'),  value: isMissingData ? 'N/D' : s.assists, sub: `${assistsPerMatch} / ${tc('units.match')}`, color: 'group-hover:text-blue-500', bar: 'bg-blue-500/30' },
           { label: tp('stats.kpi_matches'),  value: isMissingData ? 'N/D' : s.matches, sub: seasonDisplay, color: 'group-hover:text-slate-900', bar: 'bg-slate-400/30' },
           { label: tc('stats.rating'),       value: isMissingData ? 'N/D' : (s.rating ? Number(s.rating).toFixed(1) : '—'), sub: '/ 10', color: 'group-hover:text-primary', bar: 'bg-primary/30' },
         ].map((kpi) => (
-          <div key={kpi.label} className="glass-card p-3 text-center relative overflow-hidden group hover:scale-[1.02] transition-all border-white/60 bg-white/40 backdrop-blur-sm">
-            {loading && <div className="absolute inset-0 bg-white/40 backdrop-blur-sm z-10 flex items-center justify-center" />}
+          <div key={kpi.label} className="glass-card p-2.5 text-center relative overflow-hidden group hover:scale-[1.02] transition-all border-white/60 bg-white/40 backdrop-blur-sm">
+            {loading && <div className="absolute inset-0 bg-white/10 backdrop-blur-sm z-10 flex items-center justify-center" />}
             <div className="label-caps mb-2 opacity-60 text-[9px] tracking-[0.15em]">{kpi.label}</div>
             <div className={`count font-hl font-extrabold text-[32px] leading-none text-slate-900 transition-all ${kpi.color} drop-shadow-sm ${loading ? 'opacity-10' : ''}`}>{kpi.value}</div>
             <div className="label-caps text-[9px] mt-2 opacity-40 lowercase font-medium">{kpi.sub}</div>
@@ -317,15 +317,15 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
       </div>
 
       {/* ── Stats bars ──────────────────────────────────────────────── */}
-      <div className="glass-card p-4 overflow-hidden border-white/60 bg-white/30 backdrop-blur-md">
-        <div className="-mx-4 -mt-4 px-4 py-2.5 mb-4 bg-slate-50/50 border-b border-slate-100/50 flex items-center justify-between">
+      <div className="glass-card p-2.5 overflow-hidden border-white/60 bg-white/30 backdrop-blur-md">
+        <div className="-mx-4 -mt-2.5 px-4 py-1.5 mb-2.5 bg-slate-50/50 border-b border-slate-100/50 flex items-center justify-between">
           <h3 className="label-caps !text-slate-900 !text-[11px] !font-bold tracking-tight">{tp('stats.section_title')}</h3>
           <span className="label-caps !text-primary !text-[9px] opacity-60 font-bold">{tc('labels.performance_index')}</span>
         </div>
         <div className="flex flex-col gap-2.5 relative">
           {loading && <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl z-10" />}
           {statsBars.map((bar) => (
-            <div key={bar.label} className="flex items-center gap-4 group/bar">
+            <div key={bar.label} className="flex items-center gap-4 group/bar py-0.5">
               <span className="label-caps !text-slate-500 w-[160px] shrink-0 !text-[10px] group-hover/bar:!text-slate-900 transition-colors tracking-widest">{bar.label}</span>
               <div className="flex-1 h-2.5 bg-slate-100/50 rounded-full overflow-hidden shadow-inner p-[1.5px] border border-slate-200/20">
                 <div className={`bar-grow h-full ${bar.color} rounded-full transition-all duration-1000 ease-out`} style={{ width: `${bar.pct}%` }} />
