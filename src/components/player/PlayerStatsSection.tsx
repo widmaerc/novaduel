@@ -155,42 +155,42 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
       label: tc('stats.goals_match'),     
       value: isMissingData ? 'N/D' : goalsPerMatch,            
       pct: Math.min(100, (s.goals / Math.max(s.matches, 1)) * 100),
-      color: 'bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]' 
+      color: 'bg-emerald-500' 
     },
     { 
       label: tc('stats.assists'),         
       value: isMissingData ? 'N/D' : assistsPerMatch,           
       pct: Math.min(100, (s.assists / Math.max(s.matches, 1)) * 100),
-      color: 'bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.3)]'
+      color: 'bg-blue-600'
     },
     { 
       label: tc('stats.pass_acc'),        
       value: isMissingData ? 'N/D' : `${s.pass_accuracy}%`,     
       pct: s.pass_accuracy,
-      color: 'bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.2)]'
+      color: 'bg-blue-500'
     },
     { 
       label: tc('stats.dribbles_match'),  
       value: isMissingData ? 'N/D' : String(s.dribbles),        
       pct: Math.min(100, s.dribbles * 20),
-      color: 'bg-orange-400 shadow-[0_0_12px_rgba(251,146,60,0.3)]'
+      color: 'bg-amber-400'
     },
     { 
       label: tc('stats.duels_won'),       
       value: isMissingData ? 'N/D' : `${s.duels_won}%`,         
       pct: s.duels_won,
-      color: 'bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.3)]'
+      color: 'bg-amber-500'
     },
     { 
       label: tc('stats.shots_on_target'), value: isMissingData ? 'N/D' : String(s.shots_on_target), 
       pct: Math.min(100, s.shots_on_target * 25),
-      color: 'bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.3)]'
+      color: 'bg-emerald-400'
     },
     { 
       label: tc('stats.minutes'),         
       value: isMissingData ? 'N/D' : String(s.minutes),         
       pct: Math.min(100, (s.minutes / 3420) * 100),
-      color: 'bg-slate-400 shadow-[0_0_12px_rgba(148,163,184,0.2)]'
+      color: 'bg-slate-500'
     },
   ]
 

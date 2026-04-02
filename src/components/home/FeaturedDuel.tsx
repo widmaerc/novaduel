@@ -132,17 +132,16 @@ export default function FeaturedDuel({ featuredDuel = null, trends = [] }: { fea
                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em]">{duelViews.toLocaleString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'fr-FR')} {t('views')}</span>
                </div>
                 <a href={localizedHref(locale, `/compare/${duelSlug}`)} 
-                   className="ai-gradient text-white font-hl font-black px-12 py-5 rounded-2xl hover:scale-[1.02] transition-all text-xs uppercase tracking-[0.2em] whitespace-nowrap shadow-xl shadow-primary/25 active:scale-95">
+                   className="bg-primary text-white font-hl font-black px-12 py-5 rounded-2xl hover:scale-[1.02] transition-all text-xs uppercase tracking-[0.2em] whitespace-nowrap shadow-xl shadow-primary/25 active:scale-95">
                   {t('analyse_cta')}
                 </a>
             </div>
           </div>
 
           {/* Trends sidebar */}
-          <div className="bg-slate-900 bg-gradient-to-br from-slate-900 to-[#1e40af] rounded-[2.5rem] p-10 flex flex-col shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.1),transparent_50%)]" />
-            <h3 className="font-hl font-black text-[10px] text-white/50 uppercase tracking-[0.3em] mb-12 flex items-center gap-2 relative z-10">
-               <span className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/80">
+          <div className="bg-slate-950 rounded-[2.5rem] p-10 flex flex-col shadow-2xl relative overflow-hidden">
+            <h3 className="font-hl font-black text-[10px] text-white/40 uppercase tracking-[0.3em] mb-12 flex items-center gap-2 relative z-10">
+               <span className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60">
                  <span className="material-symbols-outlined text-[18px]">trending_up</span>
                </span> 
                {t('trends_title')}
@@ -150,11 +149,11 @@ export default function FeaturedDuel({ featuredDuel = null, trends = [] }: { fea
             <div className="flex flex-col gap-10 flex-1 relative z-10 px-2">
               {trends.slice(0, 5).map((tr, i) => (
                 <a key={tr.slug} href={localizedHref(locale, `/compare/${tr.slug}`)} className="flex items-start gap-5 group transition-all hover:translate-x-2">
-                  <span className="font-hl font-black text-4xl text-white/10 italic group-hover:text-primary-dim transition-colors pt-1 leading-none w-8 text-center">{i + 1}</span>
-                  <div className="flex-1 min-w-0">
+                  <span className="font-hl font-black text-4xl text-white/5 italic group-hover:text-primary transition-colors pt-1 leading-none w-8 text-center">{i + 1}</span>
+                  <div className="min-w-0">
                     <div className="font-hl font-black text-sm text-white truncate group-hover:text-blue-100 transition-colors uppercase tracking-tight">{tr.labelA} vs {tr.labelB}</div>
-                    <div className="text-[10px] font-bold text-white/30 uppercase mt-2 tracking-widest flex items-center gap-2">
-                      <span className="w-1 h-1 rounded-full bg-white/20" />
+                    <div className="text-[10px] font-bold text-white/20 uppercase mt-2 tracking-widest flex items-center gap-2">
+                      <span className="w-1 h-1 rounded-full bg-white/10" />
                       {tr.views.toLocaleString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'fr-FR')} {t('views')}
                     </div>
                   </div>
@@ -162,7 +161,7 @@ export default function FeaturedDuel({ featuredDuel = null, trends = [] }: { fea
               ))}
             </div>
             <a href={localizedHref(locale, '/compare')}
-               className="mt-12 w-full py-5 bg-white/10 backdrop-blur-md border border-white/10 text-white font-hl font-black px-10 rounded-2xl hover:bg-white/20 transition-all text-xs uppercase tracking-[0.2em] text-center active:scale-95 relative z-10">
+               className="mt-12 w-full py-5 bg-white/5 border border-white/10 text-white font-hl font-black px-10 rounded-2xl hover:bg-white/10 transition-all text-xs uppercase tracking-[0.2em] text-center active:scale-95 relative z-10">
               {t('explore_cta')}
             </a>
           </div>

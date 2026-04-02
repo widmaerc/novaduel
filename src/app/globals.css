@@ -94,42 +94,40 @@
     border-color: #cbd5e1;
   }
 
-  /* ── Gradients ── */
+  /* ── Solid Brand Colors ── */
   .ai-gradient {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    background-color: var(--color-primary);
     color: white;
   }
   .text-gradient {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-primary);
   }
 
   /* ── Radar Visualization ── */
   .radar-area-current {
-    fill: rgba(30, 64, 175, 0.15);
+    fill: rgba(30, 64, 175, 0.25);
     stroke: #1e40af;
-    stroke-width: 2;
+    stroke-width: 2.5;
   }
   .radar-area-potential {
     fill: none;
-    stroke: #3b82f6;
+    stroke: #64748b;
     stroke-width: 1.5;
-    stroke-dasharray: 4 2;
+    stroke-dasharray: 4 3;
   }
 
   /* ── Backgrounds ── */
   .grid-bg {
-    background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
+    background-color: #f8fafc;
+    background-image: radial-gradient(#e2e8f0 0.8px, transparent 0.8px);
     background-size: 32px 32px;
   }
   .hero-mesh {
-    background-image:
-      radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.05) 0, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.05) 0, transparent 50%),
-      radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
-    background-size: auto, auto, 24px 24px;
+    background-color: #f8fafc;
+    background-image: 
+      radial-gradient(#e2e8f0 0.8px, transparent 0.8px);
+    background-size: 24px 24px;
+    border-bottom: 1px solid #f1f5f9;
   }
 
   /* ── Animations ── */

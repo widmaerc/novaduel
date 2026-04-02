@@ -13,9 +13,9 @@ type PlayerData = typeof PLAYERS[number];
 function PlayerCard({ player }: { player: PlayerData }) {
   const t = useTranslations('HomePage.performance');
   return (
-    <div className="glass-card bg-white/40 border border-white/60 rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+    <div className="glass-card bg-white border border-slate-200 rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-primary/20 hover:shadow-2xl transition-all duration-300">
       <div className="absolute top-0 right-0 p-4">
-        <div className="ai-gradient text-white font-mono font-bold text-[10px] px-3 py-1 rounded-full shadow-sm">
+        <div className="bg-primary text-white font-mono font-bold text-[10px] px-3 py-1 rounded-full">
           {player.delta}
         </div>
       </div>
