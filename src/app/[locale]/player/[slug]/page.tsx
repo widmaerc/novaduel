@@ -105,7 +105,7 @@ export default async function PlayerPage({ params }: Props) {
   };
 
   const formColor = (r: string) =>
-    r === 'V' || r === 'W' ? '#22c55e' : r === 'N' || r === 'D' ? '#f59e0b' : '#ef4444';
+    r === 'V' || r === 'W' ? '#22c55e' : r === 'N' || r === 'D' ? '#94a3b8' : '#ef4444';
 
   const jsonLd = {
     '@context': 'https://schema.org',

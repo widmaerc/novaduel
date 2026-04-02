@@ -31,7 +31,7 @@
       "physical": "Physique",
       "technique": "Technique",
       "goals": "Buts",
-      "assists": "Assists",
+      "assists": "Passes D.",
       "matches": "Matchs",
       "rating": "Note",
       "pass_acc": "Précision passes",
@@ -63,9 +63,9 @@
         "red": "CR",
         "competition": "Compétition",
         "played": "J",
-        "won": "G",
+        "won": "V",
         "drawn": "N",
-        "lost": "P"
+        "lost": "D"
       }
     },
     "radar": {
@@ -83,7 +83,8 @@
       "meters": "m",
       "views": "vues",
       "remaining": "{count} restants",
-      "number_abbr": "N°"
+      "number_abbr": "N°",
+      "match": "Match"
     },
     "positions": {
       "all": "Tous",
@@ -106,7 +107,8 @@
       "share": "Partager",
       "launch_compare": "Lancer une comparaison",
       "analyze_cta": "Analyse →",
-      "explore_cta": "Explorer →"
+      "explore_cta": "Explorer →",
+      "launch_engine": "LANCER LE MOTEUR"
     },
     "labels": {
       "not_available": "Analyse non disponible",
@@ -124,7 +126,11 @@
       "player": "Joueur",
       "team": "Équipe",
       "loading": "Chargement…",
-      "standings": "Classement"
+      "standings": "Classement",
+      "total_players": "Total Joueurs",
+      "scouting_base": "Base de Scouting",
+      "seasons": "Saisons",
+      "performance_index": "Indice de Performance"
     },
     "profile": {
       "born": "Né le",
@@ -151,13 +157,13 @@
       "live_badge": "EN DIRECT"
     },
     "seo": {
-      "title": "Comparaison Joueurs Football — Stats Avancées, Buts, Assists, Notes & Analyse IA",
-      "description": "Comparez les joueurs de football avec des stats avancées : buts, assists, notes, xG, dribbles et analyse IA. Premier League, Liga, Bundesliga, Ligue 1, Serie A et plus."
+      "title": "Comparaison Joueurs Football — Stats Avancées, Buts, Passes D., Notes & Analyse IA",
+      "description": "Comparez les joueurs de football avec des stats avancées : buts, passes D., notes, xG, dribbles et analyse IA. Premier League, Liga, Bundesliga, Ligue 1, Serie A et plus."
     },
     "search": {
       "badge": "Données Live · Analyse IA",
       "title": "Comparaison de joueurs\nde football —\nStats en temps réel",
-      "subtitle": "Statistiques avancées, buts, assists, notes et analyse IA pour chaque joueur. Premier League, Liga, Bundesliga, Ligue 1, Serie A et plus.",
+      "subtitle": "Statistiques avancées, buts, passes D., notes et analyse IA pour chaque joueur. Premier League, Liga, Bundesliga, Ligue 1, Serie A et plus.",
       "placeholder": "Rechercher un joueur — ex: Messi, Ronaldo...",
       "placeholder_a": "Joueur A — ex: Messi",
       "placeholder_b": "Joueur B — ex: Ronaldo",
@@ -172,6 +178,13 @@
       "popular_title": "Duels les plus populaires",
       "top_scorers": "Top Buteurs",
       "top_passers": "Top Passeurs"
+    },
+    "Duel": {
+      "title": "DUEL EN DIRECT",
+      "trending_title": "TENDANCES",
+      "cta": "Crée ton propre duel",
+      "description": "Compare n'importe quels joueurs parmi plus de 150 000 profils mis à jour quotidiennement.",
+      "analyse_cta": "Analyser le duel"
     },
     "performance": {
       "title": "HAUSSE DE PERFORMANCE HEBDO",
@@ -196,7 +209,7 @@
       "title": "Une profondeur de données inégalée.",
       "cta": "EXPLORER TOUTES LES DONNÉES",
       "methodology_title": "Notre méthodologie",
-      "methodology_body": "NovaDuel agrège en temps réel les statistiques de plus de 2 500 joueurs issus de 9 ligues majeures — Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, Saudi Pro League, Ligue des Champions et Europa League. Chaque fiche joueur est enrichie par notre modèle IA basé sur Claude d'Anthropic, qui croise buts, assists, xG, dribbles, duels gagnés et précision des passes pour produire une analyse narrative exclusive. Les données sont mises à jour quotidiennement via l'API-Football et mises en cache pour garantir des temps de réponse instantanés.",
+      "methodology_body": "NovaDuel agrège en temps réel les statistiques de plus de 2 500 joueurs issus de 9 ligues majeures — Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, Saudi Pro League, Ligue des Champions et Europa League. Chaque fiche joueur est enrichie par notre modèle IA basé sur Claude d'Anthropic, qui croise buts, passes D., xG, dribbles, duels gagnés et précision des passes pour produire une analyse narrative exclusive. Les données sont mises à jour quotidiennement via l'API-Football et mises en cache pour garantir des temps de réponse instantanés.",
       "time": {
         "yesterday": "Hier",
         "two_hours_ago": "il y a 2 heures"
@@ -243,7 +256,7 @@
       "scorers_title": "Top Buteurs",
       "goals_unit": "Buts",
       "assisters_title": "Top Passeurs",
-      "assists_unit": "Assists",
+      "assists_unit": "Passes D.",
       "in_form_title": "Joueurs en forme"
     }
   },
@@ -265,7 +278,7 @@
     "filters": {
       "sort_rating": "Note ↓",
       "sort_goals": "Buts ↓",
-      "sort_assists": "Assists ↓",
+      "sort_assists": "Passes D. ↓",
       "sort_matches": "Matchs ↓",
       "sort_name": "Nom A→Z"
     }
@@ -342,7 +355,7 @@
     },
     "seo_index": {
       "title": "Comparateur de Joueurs Football — Stats, Radar & Verdict IA",
-      "description": "Comparez tous les joueurs de football : buts, assists, notes, radar de compétences et verdict IA. Messi, Ronaldo, Mbappé, Haaland et 2 500+ joueurs."
+      "description": "Comparez tous les joueurs de football : buts, passes D., notes, radar de compétences et verdict IA. Messi, Ronaldo, Mbappé, Haaland et 2 500+ joueurs."
     },
     "label": "Comparateur",
     "title": "Comparez deux joueurs",

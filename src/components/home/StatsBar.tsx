@@ -14,9 +14,10 @@ export default function StatsBar({ playersCount = 0, leaguesCount = 0 }: StatsBa
   const fmt = (n: number) => n > 0 ? `${n.toLocaleString('fr-FR')}+` : '2 500+';
   const fmtLeagues = (n: number) => n > 0 ? `${n}+` : '48 000+';
 
+  const tc = useTranslations('Common.labels');
   const stats = [
-    { value: fmt(playersCount),      label: t('players') },
-    { value: fmtLeagues(leaguesCount), label: t('leagues') },
+    { value: fmt(playersCount),      label: tc('total_players') },
+    { value: fmtLeagues(leaguesCount), label: tc('scouting_base') },
     { value: '3',                    label: t('updates') },
     { value: '100%',                 label: t('accuracy') },
   ];

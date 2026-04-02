@@ -152,10 +152,12 @@ export default function ComparisonHero({
           <PlayerCard player={playerA} side="left" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} />
         </div>
 
-        <div className="flex flex-col items-center gap-3 shrink-0 order-3 md:order-2 px-6">
-          <div className="relative">
-            <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-150 animate-pulse" />
-            <div className="relative font-hl font-black text-3xl md:text-4xl italic text-slate-100 text-gradient tracking-tighter z-10 drop-shadow-sm select-none">VS</div>
+        <div className="flex flex-col items-center gap-3 shrink-0 order-3 md:order-2 px-6 relative">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 animate-pulse group-hover:bg-primary/30 transition-all" />
+            <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-slate-900 flex items-center justify-center border-4 border-white shadow-2xl z-10 transform -rotate-12 group-hover:rotate-0 transition-all duration-500">
+              <span className="font-hl font-black text-white text-xl md:text-2xl italic tracking-tighter">VS</span>
+            </div>
           </div>
           <div className="px-4 py-1.5 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
             <span className="label-caps !text-[9px] !text-slate-400 whitespace-nowrap">

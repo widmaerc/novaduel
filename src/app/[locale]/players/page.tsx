@@ -136,7 +136,7 @@ export default function PlayersPage() {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8 md:py-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <span className="label-caps !text-primary !font-extrabold !mb-2 block">Scouting Base</span>
+              <span className="label-caps !text-primary !font-extrabold !mb-2 block">{tc('labels.scouting_base')}</span>
               <h1 className="font-hl font-extrabold text-3xl sm:text-4xl lg:text-5xl text-slate-900 leading-none tracking-tight">
                 {t('title').split(' ').map((word, i) => (
                   <span key={i} className={i === 1 ? 'text-primary' : ''}>{word} </span>
@@ -164,7 +164,7 @@ export default function PlayersPage() {
                 </svg>
               </div>
               <div>
-                <div className="label-caps !text-[9px] !text-slate-400">Total Players</div>
+                <div className="label-caps !text-[9px] !text-slate-400">{tc('labels.total_players')}</div>
                 <div className="font-hl font-black text-xl text-slate-900">{total.toLocaleString()}</div>
               </div>
             </div>

@@ -161,7 +161,7 @@ export default function LiveMatches() {
                         <span>{m.sa}</span>
                       </div>
                    ) : (
-                      <div className="font-hl font-black text-sm text-gray-500 tracking-tighter">VS</div>
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-900 text-white text-[8px] font-black shadow-sm group-hover:bg-primary transition-colors shrink-0">VS</span>
                    )}
                  </div>
 

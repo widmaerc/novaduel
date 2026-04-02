@@ -83,7 +83,8 @@
       "meters": "m",
       "views": "views",
       "remaining": "{count} remaining",
-      "number_abbr": "No."
+      "number_abbr": "No.",
+      "match": "Match"
     },
     "positions": {
       "all": "All",
@@ -106,7 +107,8 @@
       "share": "Share",
       "launch_compare": "Start a comparison",
       "analyze_cta": "Analysis →",
-      "explore_cta": "Explore →"
+      "explore_cta": "Explore →",
+      "launch_engine": "LAUNCH ENGINE"
     },
     "labels": {
       "not_available": "Analysis not available",
@@ -124,7 +126,11 @@
       "player": "Player",
       "team": "Team",
       "loading": "Loading…",
-      "standings": "Standings"
+      "standings": "Standings",
+      "total_players": "Total Players",
+      "scouting_base": "Scouting Base",
+      "seasons": "Seasons",
+      "performance_index": "Performance Index"
     },
     "profile": {
       "born": "Born on",
@@ -172,6 +178,13 @@
       "popular_title": "Popular Duels",
       "top_scorers": "Top Scorers",
       "top_passers": "Top Passers"
+    },
+    "Duel": {
+      "title": "LIVE DUEL",
+      "trending_title": "TRENDING",
+      "cta": "Create your own duel",
+      "description": "Compare any player among more than 150,000 profiles updated daily.",
+      "analyse_cta": "Analyze Duel"
     },
     "performance": {
       "title": "WEEKLY PERFORMANCE SURGE",

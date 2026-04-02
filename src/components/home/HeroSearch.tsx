@@ -17,6 +17,8 @@ const CARDS = [
 export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
   const t = useTranslations('HomePage.hero');
   const ts = useTranslations('HomePage.search');
+  const td = useTranslations('HomePage.Duel');
+  const tc = useTranslations('Common');
   const params = useParams();
   const locale = (params?.locale as string) ?? 'fr';
 
@@ -70,15 +72,15 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
 
           <div className="space-y-3 md:space-y-4 lg:space-y-3">
             <h2 className="label-caps tracking-[0.25em] opacity-60 uppercase whitespace-pre-line text-[10px] sm:text-[11px]">
-              {ts('seo_h2')}
+               {td('title')}
             </h2>
             <p className="text-slate-500 text-sm md:text-lg lg:text-base xl:text-lg leading-relaxed max-w-lg font-medium">
-              {ts('subtitle')}
+              {td('description')}
             </p>
           </div>
 
           <div className="pt-6 md:pt-8 lg:pt-6 max-w-3xl">
-            <CompareSearchBar locale={locale} ctaLabel={ts('cta')} hideMode inlineButton isHero />
+            <CompareSearchBar locale={locale} ctaLabel={tc('buttons.launch_engine')} hideMode inlineButton isHero />
           </div>
 
           {trends.length > 0 && (
@@ -94,7 +96,7 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
                     className="group bg-white border border-slate-200 text-slate-600 px-6 py-2.5 rounded-full hover:border-primary hover:text-primary transition-all text-[11px] md:text-[13px] font-bold shadow-sm whitespace-nowrap flex items-center gap-2.5 hover:shadow-xl hover:-translate-y-1"
                   >
                     <span>{labelA}</span>
-                    <span className="text-[9px] text-slate-300 group-hover:text-primary/40 font-black">VS</span>
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-900 text-white text-[7px] font-black shadow-sm group-hover:bg-primary transition-colors shrink-0">VS</span>
                     <span>{labelB}</span>
                   </Link>
                 ))}

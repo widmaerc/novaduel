@@ -56,12 +56,13 @@ function PlayerCard({ player, index }: { player: PlayerData, index: number }) {
 
 export default function PerformanceSurge() {
   const t = useTranslations('HomePage.performance');
+  const tc = useTranslations('Common.labels');
 
   return (
     <section id="performance-surge" className="max-w-7xl mx-auto w-full px-6 md:px-12 pt-8 pb-8 md:pt-12 md:pb-12">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
-          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">{t('subtitle')}</div>
+          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">{tc('performance_index')} — 7-day delta</div>
           <h2 className="font-sans font-extrabold text-3xl md:text-5xl text-slate-900 uppercase tracking-tighter">
             {t('title')}
           </h2>

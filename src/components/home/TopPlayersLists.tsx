@@ -26,23 +26,23 @@ function parseScorers(data: any[]): TopPlayer[] {
 
 function Row({ rank, name, team, val, slug, initials, isLast, unit, locale }: TopPlayer & { isLast: boolean; unit: string; locale: string }) {
   const c = AV_COLORS[(rank - 1) % AV_COLORS.length];
-  const barColor = rank === 1 ? 'bg-green-500' : rank <= 3 ? 'bg-green-400' : 'bg-green-300';
+  const barColor = rank === 1 ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)]' : rank <= 3 ? 'bg-green-400' : 'bg-slate-300';
   const href = slug ? localizedHref(locale, `/player/${slug}`) : '#';
   
   return (
-    <Link href={href} className={`flex items-center gap-3 md:gap-4 px-4 py-2 hover:bg-gray-50 transition-colors ${!isLast ? 'border-b border-gray-50' : ''}`}>
-      <span className="text-xs text-gray-400 w-4 text-center shrink-0">{rank}</span>
-      <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center font-hl font-bold text-xs ${c.bg} ${c.text} shrink-0 shadow-sm`}>
+    <Link href={href} className="flex items-center gap-3 md:gap-4 px-4 py-2.5 hover:bg-slate-50/50 transition-all no-underline group">
+      <span className="font-hl font-black text-xs text-slate-400 w-5 text-center shrink-0 group-hover:text-primary transition-colors">{rank}</span>
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-hl font-bold text-xs ${c.bg} ${c.text} shrink-0 shadow-sm border border-white group-hover:scale-110 transition-all`}>
         {initials ?? name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm text-slate-700 font-bold truncate">{name}</div>
-        <div className="text-[10px] md:text-xs text-gray-500 mt-0.5 truncate">{team}</div>
+        <div className="text-[14px] text-slate-900 font-extrabold font-hl truncate group-hover:text-primary transition-colors leading-tight tracking-tight">{name}</div>
+        <div className="text-[9px] font-bold text-slate-500 mt-0.5 truncate tracking-wider">{team}</div>
       </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <div className={`w-1 h-6 rounded-sm ${barColor}`} />
-        <span className="font-hl font-bold text-base md:text-lg text-dark">
-          {val}<span className="text-[10px] md:text-xs font-semibold text-gray-400 ml-1">{unit}</span>
+      <div className="flex items-center gap-2.5 shrink-0 pl-1">
+        <div className={`w-1 h-5 rounded-full ${barColor}`} />
+        <span className="font-hl font-black text-base text-slate-900 flex items-baseline gap-1">
+          {val}<span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">{unit}</span>
         </span>
       </div>
     </Link>
@@ -52,17 +52,17 @@ function Row({ rank, name, team, val, slug, initials, isLast, unit, locale }: To
 function LeagueSelect({ leagues, value, onChange }: { leagues: League[]; value: string; onChange: (v: string) => void }) {
   if (leagues.length === 0) return null;
   return (
-    <div className="relative inline-flex items-center shrink-0 max-w-[140px] md:max-w-none">
+    <div className="relative inline-flex items-center shrink-0 max-w-[150px]">
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="appearance-none bg-gray-50 border border-gray-100 rounded-full pl-3 pr-8 py-1.5 text-[10px] md:text-xs font-bold text-primary cursor-pointer outline-none font-sans w-full truncate"
+        className="appearance-none bg-white border border-slate-200 hover:border-primary/50 transition-colors rounded-lg pl-3 pr-8 py-1.5 text-[10px] font-bold text-slate-700 cursor-pointer outline-none w-full shadow-sm"
       >
         {leagues.map(l => (
-          <option key={l.id} value={String(l.id)} className="bg-white text-dark">{l.name}</option>
+          <option key={l.id} value={String(l.id)} className="bg-white text-slate-900">{l.name}</option>
         ))}
       </select>
-      <svg className="absolute right-2.5 pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" color="#60a5fa">
+      <svg className="absolute right-2.5 pointer-events-none text-slate-400" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
         <path d="m6 9 6 6 6-6"/>
       </svg>
     </div>
@@ -75,13 +75,13 @@ function ListCard({ title, players, unit, locale, leagues, selectedLeague, onLea
 }) {
   return (
     <div className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-      <div className="px-4 py-2.5 border-b border-gray-50 flex items-center justify-between gap-2">
-        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-dark truncate">
+      <div className="px-4 py-3 md:px-5 md:py-3.5 border-b border-gray-50 flex items-center justify-between gap-2 bg-slate-50/30">
+        <span className="label-caps !text-slate-900 !text-[10px] font-black font-hl tracking-[0.15em] truncate">
           {title}
         </span>
         <LeagueSelect leagues={leagues} value={selectedLeague} onChange={onLeagueChange} />
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col divide-y divide-gray-50">
         {players.map((p, i) => (
           <Row key={p.rank} {...p} isLast={i === players.length - 1} unit={unit} locale={locale} />
         ))}

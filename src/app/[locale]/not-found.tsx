@@ -51,6 +51,7 @@ export default function NotFound() {
             ctaLabel={t('search_button')}
             hideMode
             isHero={true}
+            isNotFound={true}
           />
         </div>
 

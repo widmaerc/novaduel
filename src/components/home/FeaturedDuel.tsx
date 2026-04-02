@@ -63,9 +63,9 @@ function MirrorStat({ label, v1, v2, lowerIsBetter = false, emoji, unit = '' }: 
         </div>
 
         {/* Value Right - Always Red */}
-        <div className="flex items-center justify-end gap-1.5 w-16 shrink-0">
+        <div className="flex items-center gap-1.5 w-16 shrink-0 justify-end text-right">
           {w2 && !w1 && <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />}
-          <span className={`font-hl font-black text-xl text-right transition-colors ${w2 ? 'text-red-600' : 'text-red-400 opacity-60'}`}>
+          <span className={`font-hl font-black text-xl transition-colors ${w2 ? 'text-red-600' : 'text-red-400 opacity-60'}`}>
             {display2}
           </span>
         </div>
@@ -98,7 +98,7 @@ function PlayerHead({ p, locale, isB = false }: { p: Player; locale: string; isB
   );
 }
 
-export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: any; trends: any }) {
+export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: any; trends: any[] }) {
   const t = useTranslations('HomePage.Duel');
   const tc = useTranslations('Common');
   const params = useParams();
@@ -146,26 +146,26 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
 
   const STATS: Record<StatCategory, any[]> = {
     attack: [
-      { label: 'Buts', v1: p1.goals, v2: p2.goals, emoji: '⚽' },
-      { label: 'Assists', v1: p1.assists, v2: p2.assists, emoji: '🎯' },
-      { label: 'Matchs', v1: p1.matches, v2: p2.matches, emoji: '📋' },
-      { label: 'xG', v1: '0.0', v2: '0.0', emoji: '📈' },
-      { label: 'Dribbles', v1: p1.dribbles, v2: p2.dribbles, emoji: '🔄' },
-      { label: 'Min./But', v1: p1.goals > 0 ? Math.round(p1.minutes / p1.goals) : 0, v2: p2.goals > 0 ? Math.round(p2.minutes / p2.goals) : 0, lowerIsBetter: true, emoji: '⏱' },
+      { label: tc('stats.goals'), v1: p1.goals, v2: p2.goals, emoji: '⚽' },
+      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists, emoji: '🎯' },
+      { label: tc('stats.matches'), v1: p1.matches, v2: p2.matches, emoji: '📋' },
+      { label: tc('stats.xg'), v1: '0.0', v2: '0.0', emoji: '📈' },
+      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles, emoji: '🔄' },
+      { label: tc('stats.minutes_per_goal'), v1: p1.goals > 0 ? Math.round(p1.minutes / p1.goals) : 0, v2: p2.goals > 0 ? Math.round(p2.minutes / p2.goals) : 0, lowerIsBetter: true, emoji: '⏱' },
     ],
     passing: [
-      { label: 'Précision passes', v1: p1.pass_accuracy, v2: p2.pass_accuracy, unit: '%', emoji: '📊' },
-      { label: 'Assists', v1: p1.assists, v2: p2.assists, emoji: '🎯' },
-      { label: 'Dribbles', v1: p1.dribbles, v2: p2.dribbles, emoji: '🔄' },
+      { label: tc('stats.pass_accuracy'), v1: p1.pass_accuracy, v2: p2.pass_accuracy, unit: '%', emoji: '📊' },
+      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists, emoji: '🎯' },
+      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles, emoji: '🔄' },
     ],
     defense: [
-      { label: 'Duels Gagnés', v1: p1.duels_won, v2: p2.duels_won, unit: '%', emoji: '🤺' },
-      { label: 'Cartons J.', v1: p1.yellow_cards, v2: p2.yellow_cards, lowerIsBetter: true, emoji: '🟨' },
-      { label: 'Cartons R.', v1: p1.red_cards, v2: p2.red_cards, lowerIsBetter: true, emoji: '🟥' },
+      { label: tc('stats.duels_won'), v1: p1.duels_won, v2: p2.duels_won, unit: '%', emoji: '🤺' },
+      { label: tc('stats.yellow_cards'), v1: p1.yellow_cards, v2: p2.yellow_cards, lowerIsBetter: true, emoji: '🟨' },
+      { label: tc('stats.red_cards'), v1: p1.red_cards, v2: p2.red_cards, lowerIsBetter: true, emoji: '🟥' },
     ],
     physical: [
-      { label: 'Tirs cadrés/m.', v1: p1.shots_on_target, v2: p2.shots_on_target, emoji: '⚡' },
-      { label: 'Minutes', v1: p1.minutes, v2: p2.minutes, emoji: '⏱' },
+      { label: tc('stats.shots_on_target'), v1: p1.shots_on_target, v2: p2.shots_on_target, emoji: '⚡' },
+      { label: tc('stats.minutes'), v1: p1.minutes, v2: p2.minutes, emoji: '⏱' },
     ]
   };
 
@@ -180,7 +180,7 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
             <div className="px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
                <span className="text-[10px] label-caps text-amber-600 font-bold tracking-widest flex items-center gap-1.5">
                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                 LIVE DUEL
+                 {tc('labels.hot_badge')}
                </span>
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
                   <button key={c} onClick={() => setActiveTab(c)}
                     className={`px-5 py-2.5 rounded-xl text-[10px] label-caps transition-all whitespace-nowrap font-black ${
                       activeTab === c ? 'bg-white text-primary shadow-md border border-slate-200/30' : 'text-slate-500 hover:text-slate-700'}`}>
-                    {c === 'attack' ? 'Attaque' : c === 'passing' ? 'Passes' : c === 'defense' ? 'Défense' : 'Physique'}
+                    {tc(`stats.${c}`)}
                   </button>
                 ))}
               </div>
@@ -222,7 +222,7 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
               <Link href={compareUrl} className="group/btn relative transition-all duration-300 transform active:scale-95 no-underline">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full blur opacity-30 group-hover/btn:opacity-50 transition duration-300" />
                 <button className="relative px-10 py-4 bg-slate-900 text-white rounded-full font-hl font-black text-sm label-caps flex items-center gap-3 border border-slate-800 shadow-xl group-hover/btn:bg-slate-800 group-hover/btn:shadow-blue-900/10 transition-all">
-                  {t('cta') || 'Analyser le duel'}
+                  {t('analyse_cta') || 'Analyser le duel'}
                   <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
@@ -232,26 +232,29 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
           </div>
         </div>
 
-        {/* Sidebar Trends */}
         <div className="lg:col-span-4 flex flex-col gap-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="font-hl font-black text-xl text-dark tracking-tight">TRENDING DUELS</h2>
+            <h2 className="font-hl font-black text-xl text-dark tracking-tight">{t('trending_title')}</h2>
           </div>
           
           <div className="flex flex-col gap-3">
-             {trends.map((t: any, idx: number) => (
-               <Link key={t.slug} href={localizedHref(locale, `/compare/${t.slug}`)} className="no-underline">
+             {trends.map((trend: any, idx: number) => (
+               <Link key={trend.slug} href={localizedHref(locale, `/compare/${trend.slug}`)} className="no-underline">
                  <div className="bg-white/60 hover:bg-white p-4 rounded-[1.5rem] border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all group flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 min-w-0">
                       <span className="text-[10px] font-hl font-black text-slate-300 group-hover:text-primary/40 transition-colors">#{idx + 1}</span>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-hl font-bold text-[14px] text-slate-700 truncate">{t.labelA} vs {t.labelB}</span>
+                        <div className="font-hl font-bold text-[14px] text-slate-800 truncate mb-1 space-x-2 flex items-center">
+                          <span className="truncate">{trend.labelA}</span>
+                          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-900 text-white text-[7px] font-black shadow-sm group-hover:bg-primary transition-colors shrink-0">VS</span>
+                          <span className="truncate">{trend.labelB}</span>
+                        </div>
                         <div className="flex items-center gap-2 mt-1">
                           <div className="flex -space-x-1.5">
-                             <div className="w-5 h-5 rounded-md bg-blue-50 border border-white text-[8px] flex items-center justify-center font-bold text-blue-600 shrink-0 shadow-sm">{t.playerA?.initials}</div>
-                             <div className="w-5 h-5 rounded-md bg-red-50 border border-white text-[8px] flex items-center justify-center font-bold text-red-600 shrink-0 shadow-sm">{t.playerB?.initials}</div>
+                             <div className="w-5 h-5 rounded-md bg-blue-50 border border-white text-[8px] flex items-center justify-center font-bold text-blue-600 shrink-0 shadow-sm">{trend.playerA?.initials}</div>
+                             <div className="w-5 h-5 rounded-md bg-red-50 border border-white text-[8px] flex items-center justify-center font-bold text-red-600 shrink-0 shadow-sm">{trend.playerB?.initials}</div>
                           </div>
-                           <span className="text-[9px] label-caps !text-slate-500 font-bold">{(t.views || 0).toLocaleString()} views</span>
+                           <span className="text-[9px] label-caps !text-slate-500 font-bold">{(trend.views || 0).toLocaleString()} {tc('units.views')}</span>
                         </div>
                       </div>
                     </div>
@@ -269,11 +272,11 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
           <div className="mt-4 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20">
              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
              <div className="relative z-10">
-               <h4 className="font-hl font-black text-xl mb-2 leading-tight">Crée ton propre duel</h4>
-               <p className="text-white/70 text-xs mb-6 leading-relaxed opacity-80 uppercase tracking-widest text-[9px] font-bold">Compare n'importe quels joueurs parmi plus de 150 000 profils mis à jour quotidiennement.</p>
+               <h4 className="font-hl font-black text-xl mb-2 leading-tight">{t('cta')}</h4>
+               <p className="text-white/70 text-xs mb-6 leading-relaxed opacity-80 uppercase tracking-widest text-[9px] font-bold">{t('description')}</p>
                <Link href={localizedHref(locale, '/compare')} className="no-underline">
                  <button className="w-full py-3 bg-white text-blue-600 rounded-xl font-hl font-black text-xs label-caps hover:bg-blue-50 transition-colors shadow-lg">
-                   Lancer le moteur
+                   {tc('buttons.launch_engine')}
                  </button>
                </Link>
              </div>

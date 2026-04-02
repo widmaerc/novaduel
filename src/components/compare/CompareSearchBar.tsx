@@ -23,6 +23,7 @@ interface Props {
   hideMode?: boolean
   inlineButton?: boolean
   isHero?: boolean
+  isNotFound?: boolean
 }
 
 const POS_STYLE: Record<string, { bg: string; color: string }> = {
@@ -195,13 +196,13 @@ function Slot({
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
-export default function CompareSearchBar({ locale: propLocale, initialPlayerA, initialPlayerB, ctaLabel, hideMode = false, inlineButton = false, isHero = false }: Props) {
+export default function CompareSearchBar({ locale: propLocale, initialPlayerA, initialPlayerB, ctaLabel, hideMode = false, inlineButton = false, isHero = false, isNotFound = false }: Props) {
   const router = useRouter()
   const params = useParams()
   const locale = (params?.locale as string) ?? propLocale ?? 'fr'
   const t = useTranslations('Comparison.search')
   const tc = useTranslations('Common')
-  const defaultCta = ctaLabel || useTranslations('Comparison')('cta')
+  const defaultCta = ctaLabel || tc('buttons.launch_engine')
 
   const [defaultPlayers, setDefaultPlayers] = useState<DBPlayer[]>([])
   const [searchA,        setSearchA]         = useState<DBPlayer[]>([])
@@ -319,7 +320,7 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
   const duelButton = (
     <button 
       onClick={launch} 
-      disabled={!pA && !pB}
+      disabled={isNotFound ? (!pA && !pB) : (!pA || !pB)}
       className={`relative overflow-hidden w-full md:w-auto bg-primary text-white px-10 py-5 rounded-2xl font-hl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 hover:bg-blue-700 hover:-translate-y-0.5 group`}
     >
       <span className="relative z-10">{defaultCta}</span>
@@ -344,7 +345,11 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
           tc={tc}
 
         />
-        <div className={isHero ? "text-[11px] font-black bg-blue-50 text-primary px-4 py-2 rounded-xl tracking-widest flex-shrink-0 shadow-sm border border-blue-100/50 mx-1 label-caps" : "text-[10px] font-black text-slate-300 px-1 py-1 md:bg-white md:border-2 md:border-slate-100 md:text-primary md:w-8 md:h-8 md:rounded-full flex items-center justify-start md:justify-center tracking-widest flex-shrink-0 z-10 font-hl"}>VS</div>
+        <div className="flex items-center justify-center shrink-0 z-10 mx-[-8px] md:mx-[-4px]">
+          <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-hl font-black text-[8px] md:text-[10px] shadow-xl shadow-slate-900/10 border-2 border-white ring-4 ring-slate-50 select-none">
+            VS
+          </div>
+        </div>
         <Slot
           isA={false} player={pB} query={qB} filtered={filteredB}
           open={oB} focused={fB} loading={loadingInit || loadingB} totalCount={totalCount}

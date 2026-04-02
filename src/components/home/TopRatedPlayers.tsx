@@ -76,13 +76,13 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
   return (
     <div className={`glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm ${className}`}>
       {/* Header */}
-      <div className="px-4 py-2.5 border-b border-gray-50 flex items-center justify-between gap-2">
-        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-slate-600 truncate">{t('in_form_title')}</span>
-        <div className="relative inline-flex items-center shrink-0 max-w-[140px]">
+      <div className="px-4 py-3 md:px-5 md:py-3.5 border-b border-gray-50 flex items-center justify-between gap-2 bg-slate-50/30">
+        <span className="label-caps !text-slate-900 !text-[10px] font-black font-hl tracking-[0.15em]">{t('title')}</span>
+        <div className="relative inline-flex items-center shrink-0 max-w-[150px]">
           <select
             value={leagueId ?? ''}
             onChange={e => setLeagueId(e.target.value ? Number(e.target.value) : null)}
-            className="appearance-none bg-gray-50 border border-gray-100 rounded-full pl-3 pr-8 py-1.5 text-[10px] md:text-xs font-bold text-primary cursor-pointer outline-none w-full truncate"
+            className="appearance-none bg-white border border-slate-200 hover:border-primary/50 transition-colors rounded-lg pl-3 pr-8 py-1.5 text-[10px] font-bold text-slate-700 cursor-pointer outline-none w-full shadow-sm"
           >
             {LEAGUES.map(l => (
               <option key={l.id ?? 'all'} value={l.id ?? ''}>
@@ -90,7 +90,7 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
               </option>
             ))}
           </select>
-          <svg className="absolute right-2.5 pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" color="#60a5fa">
+          <svg className="absolute right-2.5 pointer-events-none text-slate-400" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </div>
@@ -98,42 +98,46 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
 
       {/* List */}
       {loading ? (
-        <div className="p-8 flex justify-center">
-          <span className="text-xs text-slate-500 animate-pulse font-bold tracking-widest uppercase">{tc('labels.loading')}</span>
+        <div className="p-10 flex flex-col items-center justify-center gap-3">
+          <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tc('labels.loading')}</span>
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col divide-y divide-gray-50">
           {players.map((p, i) => {
-            const rc = ratingColor(p.rating)
             return (
               <Link
                   key={p.id}
                   href={localizedHref(locale, `/player/${p.slug}`)}
-                  className={`flex items-center gap-3 md:gap-4 px-4 py-2 hover:bg-gray-50 transition-colors no-underline group${i < players.length - 1 ? ' border-b border-gray-50' : ''}`}
+                  className="flex items-center gap-3 md:gap-4 px-4 py-2.5 hover:bg-slate-50/50 transition-all no-underline group"
                 >
                 {/* Rang */}
-                <span className="font-hl font-black text-xs text-slate-400 w-4 text-center shrink-0 group-hover:text-primary/40 transition-colors">{i + 1}</span>
+                <span className="font-hl font-black text-xs text-slate-400 w-5 text-center shrink-0 group-hover:text-primary transition-colors">
+                  {i + 1}
+                </span>
 
-                {/* Avatar coloré (carré) */}
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-hl font-bold text-[10px] shrink-0 ${AV_COLORS[i % AV_COLORS.length].bg} ${AV_COLORS[i % AV_COLORS.length].text} group-hover:scale-105 transition-all shadow-sm`}>
+                {/* Avatar (carré premium) */}
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-hl font-bold text-xs shrink-0 ${AV_COLORS[i % AV_COLORS.length].bg} ${AV_COLORS[i % AV_COLORS.length].text} group-hover:scale-110 transition-all shadow-sm border border-white`}>
                   {p.initials}
                 </div>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-slate-700 font-bold truncate group-hover:text-primary transition-colors leading-tight">{p.name}</div>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[10px] md:text-xs text-gray-500 truncate">{p.team}</span>
-                    </div>
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-[14px] text-slate-900 font-extrabold font-hl truncate group-hover:text-primary transition-colors leading-tight tracking-tight">
+                    {p.name}
                   </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[9px] font-bold text-slate-500 tracking-wider truncate">{p.team}</span>
+                  </div>
+                </div>
 
-                  {/* Rating */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    <div className={`w-1 h-6 rounded-sm ${p.rating >= 8 ? 'bg-emerald-500' : p.rating >= 7 ? 'bg-emerald-400' : 'bg-slate-300'}`} />
-                    <span className="font-hl font-bold text-base md:text-lg text-slate-900">
-                      {p.rating.toFixed(1)}
-                    </span>
-                  </div>
+                {/* Rating */}
+                <div className="flex items-center gap-2.5 shrink-0 pl-1">
+                  <div className={`w-1 h-5 rounded-full ${p.rating >= 8 ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]' : p.rating >= 7 ? 'bg-emerald-400' : 'bg-slate-300'}`} />
+                  <span className="font-hl font-black text-base text-slate-900">
+                    {p.rating.toFixed(1)}
+                  </span>
+                </div>
               </Link>
             )
           })}

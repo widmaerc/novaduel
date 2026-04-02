@@ -27,14 +27,15 @@ interface StandingsData {
 }
 
 const FORM_COLOR: Record<string, string> = {
-  W: 'var(--color-primary)', 
-  D: 'var(--color-primary-dim)', 
-  L: 'var(--color-slate-500)',
+  W: '#22c55e', // Green
+  D: '#94a3b8', // Gray (slate-400)
+  L: '#ef4444', // Red
 }
 
-function formLetter(c: string) {
-  if (c === 'W') return 'V'
-  if (c === 'L') return 'D'
+function formLetter(c: string, tc: any) {
+  if (c === 'W') return tc('stats.header.won')
+  if (c === 'L') return tc('stats.header.lost')
+  if (c === 'D') return tc('stats.header.drawn')
   return c
 }
 
@@ -80,21 +81,21 @@ export default function LeagueTable({ defaultLeagueId = 39, className = '' }: Pr
   return (
     <div className={`glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm ${className}`}>
       {/* Header */}
-      <div className="px-4 py-3 md:px-5 md:py-4 border-b border-gray-50 flex items-center justify-between gap-2">
-        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-dark truncate">{tc('labels.standings')}</span>
+      <div className="px-4 py-3 md:px-5 md:py-3.5 border-b border-gray-50 flex items-center justify-between gap-2 bg-slate-50/30">
+        <span className="label-caps !text-slate-900 !text-[10px] font-black font-hl tracking-[0.15em]">{tc('labels.standings')}</span>
 
-        {/* Pill select */}
-        <div className="relative inline-flex items-center shrink-0 max-w-[140px]">
+        {/* Pill select - Minimalist */}
+        <div className="relative inline-flex items-center shrink-0 max-w-[150px]">
           <select
             value={leagueId}
             onChange={e => setLeagueId(Number(e.target.value))}
-            className="appearance-none bg-gray-50 border border-gray-100 rounded-full pl-3 pr-8 py-1.5 text-[10px] md:text-xs font-bold text-primary cursor-pointer outline-none w-full truncate"
+            className="appearance-none bg-white border border-slate-200 hover:border-primary/50 transition-colors rounded-lg pl-3 pr-8 py-1.5 text-[10px] font-bold text-slate-700 cursor-pointer outline-none w-full shadow-sm"
           >
             {leagues.map(l => (
               <option key={l.id} value={l.id}>{l.name}</option>
             ))}
           </select>
-          <svg className="absolute right-2.5 pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" color="#60a5fa">
+          <svg className="absolute right-2.5 pointer-events-none text-slate-400" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </div>
@@ -102,60 +103,61 @@ export default function LeagueTable({ defaultLeagueId = 39, className = '' }: Pr
 
       {/* Table */}
       {loading ? (
-        <div className="p-6 flex justify-center">
-          <span className="text-xs text-gray-400 animate-pulse">{tc('labels.loading')}</span>
+        <div className="p-10 flex flex-col items-center justify-center gap-3">
+          <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tc('labels.loading')}</span>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-50/50">
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center w-6">#</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-left">
+              <tr className="bg-slate-50/50 border-b border-gray-50">
+                <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-center w-8">#</th>
+                <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-left">
                   {tc('labels.team')}
                 </th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.played')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.won')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.drawn')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.lost')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">Pts</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center hidden sm:table-cell">
+                <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-8">{tc('stats.header.played')}</th>
+                <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-8">{tc('stats.header.won')}</th>
+                <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-8">{tc('stats.header.drawn')}</th>
+                <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-8">{tc('stats.header.lost')}</th>
+                <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-900 uppercase tracking-widest text-center w-10">Pts</th>
+                <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-center hidden sm:table-cell">
                   {tc('stats.form')}
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-50">
               {rows.map((row) => (
-                <tr key={row.team_id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors group">
-                  <td className="py-1.5 px-3 text-center">
-                    <span className="text-xs font-bold text-slate-500">
+                <tr key={row.team_id} className="hover:bg-slate-50/50 transition-all group">
+                  <td className="py-2 px-3 text-center">
+                    <span className="font-hl font-black text-xs text-slate-400 group-hover:text-primary transition-colors">
                       {row.rank}
                     </span>
                   </td>
-                  <td className="py-1.5 px-3">
-                    <div className="flex items-center gap-3">
-                      <div className="p-1 bg-white rounded-lg shadow-sm border border-gray-50 group-hover:scale-110 transition-transform">
-                        <TeamBadge teamId={row.team_id} teamName={row.team_name} size={16} />
+                  <td className="py-2 px-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1 px-1.5 bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-slate-100 group-hover:scale-110 transition-transform">
+                        <TeamBadge teamId={row.team_id} teamName={row.team_name} size={14} />
                       </div>
-                      <span className="text-sm font-bold text-slate-700 truncate max-w-[120px]">{row.team_name}</span>
+                      <span className="text-[14px] font-extrabold font-hl text-slate-800 truncate max-w-[110px] md:max-w-[140px] tracking-tight">{row.team_name}</span>
                     </div>
                   </td>
-                  <td className="py-1.5 px-3 text-center text-[11px] font-semibold text-gray-500">{row.played}</td>
-                  <td className="py-1.5 px-3 text-center text-[11px] font-semibold text-gray-500">{row.win}</td>
-                  <td className="py-1.5 px-3 text-center text-[11px] font-semibold text-gray-500">{row.draw}</td>
-                  <td className="py-1.5 px-3 text-center text-[11px] font-semibold text-gray-500">{row.lose}</td>
-                  <td className="py-1.5 px-3 text-center">
-                    <span className="font-hl font-bold text-sm text-slate-900">{row.points}</span>
+                  <td className="py-2 px-3 text-center text-[10px] font-bold font-hl text-slate-500">{row.played}</td>
+                  <td className="py-2 px-3 text-center text-[10px] font-bold font-hl text-slate-500">{row.win}</td>
+                  <td className="py-2 px-3 text-center text-[10px] font-bold font-hl text-slate-500">{row.draw}</td>
+                  <td className="py-2 px-3 text-center text-[10px] font-bold font-hl text-slate-500">{row.lose}</td>
+                  <td className="py-2 px-3 text-center">
+                    <span className="font-hl font-black text-sm text-slate-900">{row.points}</span>
                   </td>
-                  <td className="py-2.5 px-3 hidden sm:table-cell">
+                  <td className="py-2 px-3 hidden sm:table-cell">
                     <div className="flex gap-1 justify-center">
                       {row.form.slice(-5).split('').map((c, i) => (
                         <span
                           key={i}
-                          className="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[7px] font-black text-white"
-                          style={{ backgroundColor: FORM_COLOR[c] ?? '#d1d5db' }}
+                          className="w-3.5 h-3.5 rounded-md flex items-center justify-center text-[7px] font-black text-white shadow-sm"
+                          style={{ backgroundColor: FORM_COLOR[c] ?? '#cbd5e1' }}
                         >
-                          {formLetter(c)}
+                          {formLetter(c, tc)}
                         </span>
                       ))}
                     </div>
@@ -169,18 +171,18 @@ export default function LeagueTable({ defaultLeagueId = 39, className = '' }: Pr
 
       {/* Footer */}
       {data && (
-        <div className="px-5 py-2.5 border-t border-gray-50 flex justify-between items-center bg-gray-50/20">
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tight">
+        <div className="px-5 py-2.5 border-t border-slate-50 flex justify-between items-center bg-slate-50/30">
+          <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">
             {tc('labels.season')} {data.season}/{data.season + 1}
           </span>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-[8px] font-bold text-slate-600 uppercase">UCL</span>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary ring-2 ring-primary/20" />
+              <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">UCL</span>
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              <span className="text-[8px] font-bold text-slate-600 uppercase">UEL</span>
+            <span className="flex items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 ring-2 ring-amber-500/20" />
+              <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">UEL</span>
             </span>
           </div>
         </div>

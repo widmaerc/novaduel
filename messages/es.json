@@ -83,7 +83,8 @@
       "meters": "m",
       "views": "vistas",
       "remaining": "{count} restantes",
-      "number_abbr": "N°"
+      "number_abbr": "N°",
+      "match": "Partido"
     },
     "positions": {
       "all": "Todos",
@@ -106,7 +107,8 @@
       "share": "Compartir",
       "launch_compare": "Iniciar comparación",
       "analyze_cta": "Análisis →",
-      "explore_cta": "Explorar →"
+      "explore_cta": "Explorar →",
+      "launch_engine": "LANZAR EL MOTOR"
     },
     "labels": {
       "not_available": "Análisis no disponible",
@@ -124,7 +126,11 @@
       "player": "Jugador",
       "team": "Equipo",
       "loading": "Cargando…",
-      "standings": "Clasificación"
+      "standings": "Clasificación",
+      "total_players": "Total Jugadores",
+      "scouting_base": "Base de Scouting",
+      "seasons": "Temporadas",
+      "performance_index": "Índice de Rendimiento"
     },
     "profile": {
       "born": "Nacido el",
@@ -172,6 +178,13 @@
       "popular_title": "Duelos Populares",
       "top_scorers": "Máximos Goleadores",
       "top_passers": "Máximos Asistentes"
+    },
+    "Duel": {
+      "title": "DUELO EN VIVO",
+      "trending_title": "TENDENCIAS",
+      "cta": "Crea tu propio duelo",
+      "description": "Compara cualquier jugador entre más de 150.000 perfiles actualizados diariamente.",
+      "analyse_cta": "Analizar Duelo"
     },
     "performance": {
       "title": "AUMENTO DE RENDIMIENTO SEMANAL",

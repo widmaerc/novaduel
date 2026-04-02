@@ -301,8 +301,8 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
       {/* ── KPI Cards ───────────────────────────────────────────────── */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: tp('stats.kpi_goals'),   value: isMissingData ? 'N/D' : s.goals,   sub: `${goalsPerMatch} / ${tc('labels.match')}`, color: 'group-hover:text-emerald-500', bar: 'bg-emerald-500/30' },
-          { label: tp('stats.kpi_assists'),  value: isMissingData ? 'N/D' : s.assists, sub: `${assistsPerMatch} / ${tc('labels.match')}`, color: 'group-hover:text-blue-500', bar: 'bg-blue-500/30' },
+          { label: tp('stats.kpi_goals'),   value: isMissingData ? 'N/D' : s.goals,   sub: `${goalsPerMatch} / ${tc('units.match')}`, color: 'group-hover:text-emerald-500', bar: 'bg-emerald-500/30' },
+          { label: tp('stats.kpi_assists'),  value: isMissingData ? 'N/D' : s.assists, sub: `${assistsPerMatch} / ${tc('units.match')}`, color: 'group-hover:text-blue-500', bar: 'bg-blue-500/30' },
           { label: tp('stats.kpi_matches'),  value: isMissingData ? 'N/D' : s.matches, sub: seasonDisplay, color: 'group-hover:text-slate-900', bar: 'bg-slate-400/30' },
           { label: tc('stats.rating'),       value: isMissingData ? 'N/D' : (s.rating ? Number(s.rating).toFixed(1) : '—'), sub: '/ 10', color: 'group-hover:text-primary', bar: 'bg-primary/30' },
         ].map((kpi) => (

@@ -24,16 +24,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CompareIndexPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'Comparison' })
+  const tc = await getTranslations({ locale, namespace: 'Common' })
 
-  // Fetch comparisons: featured first, then most viewed — bypass Redis for accurate counts
-  const { data: featuredRaw } = await supabaseAdmin
+  // Fetch trending comparisons (most viewed) — bypass Redis for accurate counts
+  const { data: trendsRaw } = await supabaseAdmin
     .from('comparisons')
-    .select('slug, views, is_featured, player_a:players!player_a_id(name, common_name, initials, avatar_bg, avatar_color), player_b:players!player_b_id(name, common_name, initials, avatar_bg, avatar_color)')
-    .or('is_featured.eq.true,views.gt.0')
+    .select('slug, views, player_a:dn_players!player_a_id(id, name, firstname, lastname, slug, statistics), player_b:dn_players!player_b_id(id, name, firstname, lastname, slug, statistics)')
     .order('views', { ascending: false })
-    .limit(6)
+    .limit(10)
 
-  const featured = featuredRaw ?? []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function enrichDnPlayer(p: any) {
+    if (!p) return null
+    const stats: any[] = p.statistics ?? []
+    const best = stats.reduce((acc: any, s: any) =>
+      (s.games?.appearences ?? 0) > (acc?.games?.appearences ?? 0) ? s : acc, stats[0] ?? null)
+    
+    const initials = (p.firstname && p.lastname)
+      ? `${p.firstname[0]}${p.lastname[0]}`.toUpperCase()
+      : (p.name ?? '??').split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
+      
+    return {
+      name: p.name,
+      common_name: p.name,
+      initials,
+      team: best?.team?.name ?? '—',
+    }
+  }
+
+  const trends = (trendsRaw ?? []).map((c: any) => ({
+    slug: c.slug,
+    labelA: c.player_a?.name || '?',
+    labelB: c.player_b?.name || '?',
+    pA: enrichDnPlayer(c.player_a),
+    pB: enrichDnPlayer(c.player_b),
+    views: c.views
+  }))
   const players  = await getFeaturedPlayers()
 
   return (
@@ -53,64 +79,35 @@ export default async function CompareIndexPage({ params }: Props) {
           </p>
         </div>
 
-        {/* Search bar */}
+        {/* Search bar & Trends */}
         <div className="max-w-4xl mx-auto mb-16">
           <CompareSearchBar locale={locale} isHero={true} />
+          
+          {/* Trending Comparisons Area */}
+          {trends.length > 0 && (
+            <div className="mt-8 space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="label-caps !text-slate-400 text-[10px] tracking-[0.2em] uppercase">{tc('labels.trends')} :</span>
+                <div className="h-px bg-slate-100 flex-1" />
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {trends.map((tr) => (
+                  <a
+                    key={tr.slug}
+                    href={localizedHref(locale, `/compare/${tr.slug}`)}
+                    className="glass-card !rounded-full px-4 py-2 text-[11px] font-bold text-slate-800 hover:text-primary hover:border-primary transition-all flex items-center gap-2.5 group shadow-sm bg-white/50 border-slate-200/50"
+                  >
+                    <span className="font-hl truncate max-w-[120px]">{tr.labelA}</span>
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-900 text-white text-[8px] font-black shadow-lg shadow-slate-900/10 group-hover:bg-primary transition-colors">VS</span>
+                    <span className="font-hl truncate max-w-[120px]">{tr.labelB}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Popular comparisons */}
-        {featured.length > 0 && (
-          <section className="mb-16">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-px bg-slate-100 flex-1" />
-              <h2 className="label-caps !text-slate-400 whitespace-nowrap px-4">
-                {t('popular_title')}
-              </h2>
-              <div className="h-px bg-slate-100 flex-1" />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {featured.map((c: any) => {
-                const pA = c.player_a
-                const pB = c.player_b
-                if (!pA || !pB) return null
-                return (
-                  <a 
-                    key={c.slug} 
-                    href={localizedHref(locale, `/compare/${c.slug}`)}
-                    className="glass-card group flex items-center gap-4 p-4 no-underline hover:bg-slate-50 transition-all border-slate-200/50"
-                  >
-                    <div className="flex -space-x-3 shrink-0">
-                      <div 
-                        className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[11px] border-2 border-white shadow-sm transition-transform group-hover:-translate-x-1"
-                        style={{ background: pA.avatar_bg ?? 'rgba(30,64,175,0.1)', color: pA.avatar_color ?? '#1e40af' }}
-                      >
-                        {pA.initials ?? pA.name?.slice(0, 2).toUpperCase()}
-                      </div>
-                      <div 
-                        className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[11px] border-2 border-white shadow-sm transition-transform group-hover:translate-x-1"
-                        style={{ background: pB.avatar_bg ?? 'rgba(146,0,15,0.1)', color: pB.avatar_color ?? '#92000f' }}
-                      >
-                        {pB.initials ?? pB.name?.slice(0, 2).toUpperCase()}
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-bold text-sm text-slate-800 truncate group-hover:text-primary transition-colors">
-                        {pA.common_name || pA.name} <span className="text-slate-300 font-medium px-1">vs</span> {pB.common_name || pB.name}
-                      </div>
-                      <div className="label-caps !text-[9px] !text-slate-400 mt-1">
-                        {c.views ?? 0} {t('views')}
-                      </div>
-                    </div>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-slate-200 group-hover:text-primary group-hover:translate-x-1 transition-all">
-                      <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                  </a>
-                )
-              })}
-            </div>
-          </section>
-        )}
+        {/* Featured players to compare */}
 
         {/* Featured players to compare */}
         {players.length > 0 && (
@@ -124,19 +121,21 @@ export default async function CompareIndexPage({ params }: Props) {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {players.slice(0, 8).map((p) => (
+              {players.slice(0, 8).map((p, idx) => (
                 <a 
                   key={p.slug} 
                   href={`/${locale}/player/${p.slug}`}
                   className="glass-card flex items-center gap-3 p-3 no-underline hover:bg-slate-50 transition-all group"
                 >
                   <div 
-                    className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[10px] shrink-0 bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-all shadow-sm"
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[10px] shrink-0 transition-all shadow-sm ${
+                      idx % 2 === 0 ? 'bg-primary/5 text-primary border border-primary/10' : 'bg-slate-100 text-slate-600'
+                    } group-hover:bg-primary group-hover:text-white group-hover:border-primary`}
                   >
                     {p.initials ?? p.name?.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <div className="font-bold text-xs text-slate-800 truncate group-hover:text-primary transition-colors">
+                    <div className="font-bold text-xs text-slate-800 truncate group-hover:text-primary transition-colors font-hl">
                       {p.common_name || p.name}
                     </div>
                     <div className="label-caps !text-[8px] !text-slate-400 truncate mt-0.5">
