@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import { Link } from '@/navigation'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface Player {
@@ -20,22 +21,24 @@ interface SearchResult {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const POS_COLORS: Record<string, { bg: string; color: string }> = {
-  ATT: { bg: '#fffbeb', color: '#d97706' },  // amber-50  / amber-600
-  MIL: { bg: '#eff6ff', color: '#2563eb' },  // blue-50   / blue-600
-  DEF: { bg: '#f0fdf4', color: '#16a34a' },  // green-50  / green-600
-  GK:  { bg: '#faf5ff', color: '#9333ea' },  // purple-50 / purple-600
+const POS_COLORS: Record<string, { bg: string; color: string; border: string }> = {
+  ATT: { bg: '#fffbeb', color: '#d97706', border: '#fef1c7' },
+  MIL: { bg: '#eff6ff', color: '#1e40af', border: '#dbeafe' },
+  DEF: { bg: '#f0fdf4', color: '#15803d', border: '#dcfce7' },
+  GK:  { bg: '#faf5ff', color: '#7e22ce', border: '#f3e8ff' },
 }
-const fallbackPos = { bg: '#f3f4f5', color: '#727782' }
+const fallbackPos = { bg: '#f8fafc', color: '#64748b', border: '#f1f5f9' }
 
 function Avatar({ initials, position, size = 40 }: { initials: string; position: string; size?: number }) {
-  const { bg, color } = POS_COLORS[position] ?? { bg: '#eff6ff', color: '#004782' }
+  const { bg, color, border } = POS_COLORS[position] ?? fallbackPos
   const display = initials || '?'
   return (
-    <div className="flex-shrink-0 rounded-full border border-black/[.06]"
-      style={{ width: size, height: size, background: bg, color,
+    <div className="flex-shrink-0 rounded-xl border shadow-sm transition-transform group-hover:scale-105"
+      style={{ 
+        width: size, height: size, background: bg, color, borderColor: border,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: "'Manrope',sans-serif", fontWeight: 800, fontSize: Math.round(size * 0.34) }}>
+        fontFamily: "'Manrope',sans-serif", fontWeight: 800, fontSize: Math.round(size * 0.36) 
+      }}>
       {display}
     </div>
   )
@@ -126,224 +129,299 @@ export default function PlayersPage() {
   const hasMore = players.length < total
 
   return (
-    <div className="max-w-[1280px] mx-auto px-3 sm:px-4 lg:px-6 pb-20">
+    <div className="pb-20">
+      
+      {/* ── Hero Mesh Section ── */}
+      <div className="hero-mesh border-b border-slate-200">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-12 md:py-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <span className="label-caps !text-primary !font-black !mb-2 block">Scouting Base</span>
+              <h1 className="font-hl font-black text-3xl sm:text-4xl lg:text-5xl text-slate-900 leading-none tracking-tight">
+                {t('title').split(' ').map((word, i) => (
+                  <span key={i} className={i === 1 ? 'text-primary' : ''}>{word} </span>
+                ))}
+              </h1>
+              <div className="flex items-center gap-3 mt-4">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 shadow-sm">
+                      P{i}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm font-semibold text-slate-500">
+                  <span className="text-slate-900 font-hl font-black">{total.toLocaleString()}</span> {t('count', { total: '' }).trim()} accessibles
+                </p>
+              </div>
+            </div>
 
-      {/* Header */}
-      <div className="pt-6 pb-5">
-        <p className="text-[10px] font-black uppercase tracking-[.12em] text-[#004782] mb-1">{tc('labels.database')}</p>
-        <h1 className="font-headline font-black text-[22px] sm:text-[28px] text-[#191c1d] leading-tight">
-          {t('title')}
-        </h1>
-        <p className="text-[13px] text-[#727782] mt-1">{t('count', { total })}</p>
+            {/* Total Badge */}
+            <div className="glass-card shadow-xl !bg-white/40 !py-3 !px-6 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl ai-gradient flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8l2 2-2 2M15 10h6"/>
+                </svg>
+              </div>
+              <div>
+                <div className="label-caps !text-[9px] !text-slate-400">Total Players</div>
+                <div className="font-hl font-black text-xl text-slate-900">{total.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* ── Autocomplete search ── */}
-      <div ref={wrapRef} className="relative mb-6">
-        <div className="flex items-center gap-2 bg-white rounded-xl border border-[#c2c6d2] shadow-sm px-4 py-3 transition-all"
-          style={{ borderColor: open ? '#004782' : undefined,
-            boxShadow: open ? '0 0 0 3px rgba(0,71,130,.08)' : undefined }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#727782" strokeWidth="2" className="flex-shrink-0">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input ref={inputRef} type="text" value={query} autoComplete="off"
-            placeholder={t('search_placeholder')}
-            onChange={e => { setQuery(e.target.value); setOpen(true); setFocusedI(-1) }}
-            onFocus={() => setOpen(true)}
-            onKeyDown={onKey}
-            className="flex-1 bg-transparent border-none outline-none font-semibold text-[14px] text-[#191c1d] placeholder:text-[#c2c6d2] placeholder:font-normal" />
-          {searchL && <div className="w-4 h-4 rounded-full border-2 border-[#c2c6d2] border-t-[#004782] animate-spin flex-shrink-0" />}
-          {query && !searchL && (
-            <button onClick={() => { setQuery(''); setSearchR([]); setOpen(false); inputRef.current?.focus() }}
-              className="text-[#727782] hover:text-[#191c1d] flex-shrink-0">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M18 6 6 18M6 6l12 12"/>
-              </svg>
-            </button>
-          )}
-        </div>
-
-        {/* Dropdown */}
-        {open && query.length >= 2 && (
-          <div className="absolute top-[calc(100%+6px)] left-0 right-0 bg-white rounded-xl border border-[#c2c6d2] z-50 overflow-hidden"
-            style={{ maxHeight: 320, overflowY: 'auto', boxShadow: '0 8px 32px rgba(0,0,0,.12)' }}>
-            {searchR.length === 0 && !searchL && (
-              <div className="py-6 text-center text-[13px] text-[#727782]">
-                {t('no_results', { query })}
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 -translate-y-8">
+        
+        {/* ── Search & Filter Bar ── */}
+        <div className="glass-card shadow-2xl space-y-5 !p-6 border-slate-200/60">
+          <div className="flex flex-col lg:flex-row items-center gap-6">
+            
+            {/* Autocomplete Search */}
+            <div ref={wrapRef} className="relative flex-1 w-full">
+              <div className={`flex items-center gap-3 bg-slate-50 rounded-2xl border-2 px-5 py-4 transition-all duration-300 ${open ? 'border-primary shadow-lg shadow-primary/5 bg-white' : 'border-slate-100 hover:border-slate-200'}`}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={open ? '#1e40af' : '#64748b'} strokeWidth="2.5" className="flex-shrink-0">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input ref={inputRef} type="text" value={query} autoComplete="off"
+                  placeholder={t('search_placeholder')}
+                  onChange={e => { setQuery(e.target.value); setOpen(true); setFocusedI(-1) }}
+                  onFocus={() => setOpen(true)}
+                  onKeyDown={onKey}
+                  className="flex-1 bg-transparent border-none outline-none font-hl font-bold text-base text-slate-900 placeholder:text-slate-400 placeholder:font-medium" />
+                
+                {searchL && <div className="w-5 h-5 rounded-full border-3 border-slate-200 border-t-primary animate-spin flex-shrink-0" />}
+                
+                {query && !searchL && (
+                  <button onClick={() => { setQuery(''); setSearchR([]); setOpen(false); inputRef.current?.focus() }}
+                    className="w-6 h-6 rounded-full bg-slate-200/50 hover:bg-slate-200 flex items-center justify-center transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="3">
+                      <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                  </button>
+                )}
               </div>
-            )}
-            {searchR.map((r, i) => {
-              const posS = getPosStyles(r.position)
-              return (
-                <div key={r.id}
-                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-[#f3f4f5] last:border-0 transition-colors
-                    ${focusedI === i ? 'bg-[#EFF6FF]' : 'hover:bg-[#f8f9fa]'}`}
-                  onClick={() => goToPlayer(r.slug)}
-                  onMouseEnter={() => setFocusedI(i)}>
-                  <Avatar initials={r.initials} position={r.position} size={36} />
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-[13px] text-[#191c1d] truncate">{r.common_name || r.name}</div>
-                    <div className="text-[10px] text-[#727782] truncate">{r.team}</div>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-[9px] font-bold uppercase px-1.5 py-px rounded"
-                      style={{ background: posS.bg, color: posS.color }}>
-                      {tc(`positions.${(r.position === 'MIL' ? 'mid' : r.position).toLowerCase()}`) || r.position}
-                    </span>
-                    {r.rating > 0 && (
-                      <span className="font-headline font-black text-[12px] text-[#191c1d]">
-                        {r.rating.toFixed(1)}
-                      </span>
+
+              {/* Dropdown */}
+              {open && query.length >= 2 && (
+                <div className="absolute top-[calc(100%+12px)] left-0 right-0 glass-card !p-0 z-50 overflow-hidden shadow-2xl border-slate-200 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="max-h-[360px] overflow-y-auto">
+                    {searchR.length === 0 && !searchL && (
+                      <div className="py-12 text-center">
+                        <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
+                            <path d="M12 8v4M12 16h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </div>
+                        <p className="text-sm font-semibold text-slate-500">{t('no_results', { query })}</p>
+                      </div>
                     )}
+                    {searchR.map((r, i) => {
+                      const posS = getPosStyles(r.position)
+                      return (
+                        <div key={r.id}
+                          className={`flex items-center gap-4 px-5 py-4 cursor-pointer border-b border-slate-50 last:border-0 transition-all group
+                            ${focusedI === i ? 'bg-primary/5 translate-x-1' : 'hover:bg-slate-50'}`}
+                          onClick={() => goToPlayer(r.slug)}
+                          onMouseEnter={() => setFocusedI(i)}>
+                          <Avatar initials={r.initials} position={r.position} size={42} />
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-hl font-black text-sm transition-colors ${focusedI === i ? 'text-primary' : 'text-slate-900'}`}>
+                              {r.common_name || r.name}
+                            </div>
+                            <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{r.team}</div>
+                          </div>
+                          <div className="flex items-center gap-3 flex-shrink-0">
+                            <span className="text-[10px] font-black uppercase px-2 py-1 rounded-lg border shadow-sm transition-colors"
+                              style={{ background: posS.bg, color: posS.color, borderColor: posS.border }}>
+                              {tc(`positions.${(r.position === 'MIL' ? 'mid' : r.position).toLowerCase()}`) || r.position}
+                            </span>
+                            {r.rating > 0 && (
+                              <span className="font-hl font-black text-base text-slate-900 min-w-[32px] text-right">
+                                {r.rating.toFixed(1)}
+                              </span>
+                            )}
+                          </div>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2.5" className="transition-transform group-hover:translate-x-1">
+                            <path d="m9 18 6-6-6-6"/>
+                          </svg>
+                        </div>
+                      )
+                    })}
                   </div>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c2c6d2" strokeWidth="2">
-                    <path d="m9 18 6-6-6-6"/>
-                  </svg>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+              )}
+            </div>
 
-      {/* ── Filtres ── */}
-      <div className="flex items-center gap-2 flex-wrap mb-4">
-        {/* Position */}
-        <div className="flex bg-[#f3f4f5] rounded-lg p-0.5 gap-px">
-          {[
-            ['', tc('positions.all')],
-            ['ATT', tc('positions.att')],
-            ['MIL', tc('positions.mid')],
-            ['DEF', tc('positions.def')],
-            ['GK', tc('positions.gk')]
-          ].map(([v, l]) => (
-            <button key={v} onClick={() => setPosition(v)}
-              className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all whitespace-nowrap
-                ${position === v ? 'bg-white text-[#004782] font-bold shadow-sm' : 'text-[#727782]'}`}>
-              {l}
-            </button>
-          ))}
-        </div>
-
-        {/* Sort */}
-        <div className="relative ml-auto">
-          <select value={sort} onChange={e => setSort(e.target.value)}
-            className="appearance-none bg-white border border-[#c2c6d2] rounded-lg px-3 py-1.5 pr-7 text-[12px] font-semibold text-[#191c1d] outline-none cursor-pointer">
-            <option value="rating">{t('filters.sort_rating')}</option>
-            <option value="goals">{t('filters.sort_goals')}</option>
-            <option value="assists">{t('filters.sort_assists')}</option>
-            <option value="matches">{t('filters.sort_matches')}</option>
-            <option value="name">{t('filters.sort_name')}</option>
-          </select>
-          <svg className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2"
-            width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#727782" strokeWidth="2.5">
-            <path d="m6 9 6 6 6-6"/>
-          </svg>
-        </div>
-      </div>
-
-      {/* ── Liste des joueurs ── */}
-      <div className="bg-white rounded-xl border border-[#c2c6d2] shadow-sm overflow-hidden">
-
-        {/* En-tête tableau */}
-        <div className="hidden sm:grid px-4 py-2 text-[10px] font-black uppercase tracking-[.08em] text-[#727782] bg-[#f3f4f5] border-b border-[#c2c6d2]"
-          style={{ gridTemplateColumns: '2fr 1fr 64px 56px 48px 48px 130px' }}>
-          <span>{t('table.player')}</span>
-          <span>{t('table.team')}</span>
-          <span className="text-center">{t('table.position')}</span>
-          <span className="text-center">{t('table.rating')}</span>
-          <span className="text-center">{t('table.goals')}</span>
-          <span className="text-center">{t('table.assists')}</span>
-          <span />
-        </div>
-
-        {players.length === 0 && !loading && (
-          <div className="py-16 text-center text-[13px] text-[#727782]">
-            {t('table.no_players')}
-          </div>
-        )}
-
-        {players.map((p, idx) => {
-          const posS = getPosStyles(p.position)
-          return (
-            <div key={p.id}
-              onClick={() => goToPlayer(p.slug)}
-              className={`flex sm:grid items-center gap-3 px-4 py-3 border-b border-[#f3f4f5] last:border-0
-                cursor-pointer hover:bg-[#f8f9fa] active:bg-[#f3f4f5] transition-colors`}
-              style={{ gridTemplateColumns: '2fr 1fr 64px 56px 48px 48px 130px' }}>
-
-              {/* Joueur */}
-              <div className="flex items-center gap-3 min-w-0 flex-1 sm:flex-none">
-                <div className="text-[11px] font-bold text-[#c2c6d2] w-5 text-right flex-shrink-0 hidden sm:block">
-                  {idx + 1}
-                </div>
-                <Avatar initials={p.initials} position={p.position} size={36} />
-                <div className="min-w-0">
-                  <div className="font-semibold text-[13px] text-[#191c1d] truncate">{p.common_name || p.name}</div>
-                  <div className="text-[10px] text-[#727782] truncate sm:hidden">{p.team} · {p.nationality}</div>
-                </div>
-              </div>
-
-              {/* Équipe */}
-              <div className="hidden sm:block text-[12px] text-[#727782] truncate pr-2">{p.team}</div>
-
-              {/* Poste */}
-              <div className="hidden sm:flex justify-center">
-                <span className="text-[9px] font-black uppercase px-1.5 py-px rounded"
-                  style={{ background: posS.bg, color: posS.color }}>
-                  {tc(`positions.${(p.position === 'MIL' ? 'mid' : p.position).toLowerCase()}`)}
-                </span>
-              </div>
-
-              {/* Note */}
-              <div className="hidden sm:flex justify-center">
-                <span className="font-headline font-black text-[13px]" style={{ color: p.rating >= 8 ? '#15803d' : p.rating >= 7 ? '#004782' : '#727782' }}>
-                  {p.rating ? p.rating.toFixed(1) : '—'}
-                </span>
-              </div>
-
-              {/* Buts */}
-              <div className="hidden sm:flex justify-center font-bold text-[12px] text-[#191c1d]">{p.goals ?? 0}</div>
-
-              {/* Assists */}
-              <div className="hidden sm:flex justify-center font-bold text-[12px] text-[#191c1d]">{p.assists ?? 0}</div>
-
-              {/* Action */}
-              <div className="flex items-center gap-2 flex-shrink-0 ml-auto sm:ml-0">
-                <button
-                  onClick={e => { e.stopPropagation(); goToPlayer(p.slug) }}
-                  className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#004782] border border-[#004782]/20 bg-[#EFF6FF] hover:bg-[#004782] hover:text-white transition-all whitespace-nowrap">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  {tc('buttons.view_profile')}
+            {/* Quick Filters */}
+            <div className="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl">
+              {[
+                ['', tc('positions.all')],
+                ['ATT', tc('positions.att')],
+                ['MIL', tc('positions.mid')],
+                ['DEF', tc('positions.def')],
+                ['GK', tc('positions.gk')]
+              ].map(([v, l]) => (
+                <button key={v} onClick={() => setPosition(v)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-hl font-black transition-all whitespace-nowrap
+                    ${position === v ? 'bg-white text-primary shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}`}>
+                  {l}
                 </button>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c2c6d2" strokeWidth="2" className="flex-shrink-0">
-                  <path d="m9 18 6-6-6-6"/>
+              ))}
+            </div>
+
+            {/* Sort Toggle */}
+            <div className="relative flex-shrink-0 w-full lg:w-48">
+              <select value={sort} onChange={e => setSort(e.target.value)}
+                className="w-full appearance-none bg-slate-100/50 border-2 border-transparent hover:border-slate-200 focus:border-primary/20 rounded-2xl px-5 py-3.5 pr-10 text-[13px] font-hl font-black text-slate-700 outline-none cursor-pointer transition-all">
+                <option value="rating">{t('filters.sort_rating')}</option>
+                <option value="goals">{t('filters.sort_goals')}</option>
+                <option value="assists">{t('filters.sort_assists')}</option>
+                <option value="matches">{t('filters.sort_matches')}</option>
+                <option value="name">{t('filters.sort_name')}</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="m6 9 6 6 6-6"/>
                 </svg>
               </div>
             </div>
-          )
-        })}
-
-        {loading && (
-          <div className="flex items-center justify-center gap-2 py-8 text-[12px] text-[#727782]">
-            <div className="w-4 h-4 rounded-full border-2 border-[#c2c6d2] border-t-[#004782] animate-spin" />
-            {tc('labels.loading')}
           </div>
-        )}
-      </div>
-
-      {/* Pagination */}
-      {hasMore && !loading && (
-        <div className="flex justify-center mt-4">
-          <button onClick={loadMore}
-            className="px-6 py-2.5 rounded-lg bg-white border border-[#c2c6d2] text-[13px] font-semibold text-[#727782] hover:border-[#004782] hover:text-[#004782] transition-all shadow-sm">
-            {tc('buttons.load_more')} <span className="text-[#c2c6d2]">({tc('units.remaining', { count: total - players.length })})</span>
-          </button>
         </div>
-      )}
 
+        {/* ── Table Container ── */}
+        <div className="mt-10 glass-card !p-0 overflow-hidden shadow-2xl border-slate-200/60">
+          
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-slate-50/50 border-b border-slate-100">
+                  <th className="px-6 py-5 text-left"><span className="label-caps !text-slate-400">#</span></th>
+                  <th className="px-6 py-5 text-left min-w-[240px]"><span className="label-caps !text-slate-400">{t('table.player')}</span></th>
+                  <th className="px-6 py-5 text-left hidden md:table-cell"><span className="label-caps !text-slate-400">{t('table.team')}</span></th>
+                  <th className="px-6 py-5 text-center"><span className="label-caps !text-slate-400">{t('table.position')}</span></th>
+                  <th className="px-6 py-5 text-center"><span className="label-caps !text-slate-400">{t('table.rating')}</span></th>
+                  <th className="px-6 py-5 text-center hidden sm:table-cell"><span className="label-caps !text-slate-400">{t('table.goals')}</span></th>
+                  <th className="px-6 py-5 text-center hidden sm:table-cell"><span className="label-caps !text-slate-400">{t('table.assists')}</span></th>
+                  <th className="px-6 py-5 text-right"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {players.length === 0 && !loading && (
+                  <tr>
+                    <td colSpan={8} className="py-24 text-center">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center">
+                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2">
+                            <path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/>
+                          </svg>
+                        </div>
+                        <p className="font-hl font-black text-slate-800 text-lg">{t('table.no_players')}</p>
+                        <p className="text-sm text-slate-500 font-medium">Réinitialisez les filtres pour voir plus de joueurs.</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+
+                {players.map((p, idx) => {
+                  const posS = getPosStyles(p.position)
+                  const ratingColor = p.rating >= 8 ? '#16a34a' : p.rating >= 7 ? '#1e40af' : '#64748b'
+                  return (
+                    <tr key={p.id} onClick={() => goToPlayer(p.slug)} 
+                      className="group hover:bg-slate-50 transition-colors cursor-pointer">
+                      <td className="px-6 py-5">
+                        <span className="font-hl font-black text-xs text-slate-400 group-hover:text-primary transition-colors">
+                          {(idx + 1).toString().padStart(2, '0')}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-4">
+                          <Avatar initials={p.initials} position={p.position} size={44} />
+                          <div className="min-w-0">
+                            <div className="font-hl font-black text-[15px] text-slate-900 group-hover:text-primary transition-colors truncate">
+                              {p.common_name || p.name}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-lg leading-none">{p.flag_emoji}</span>
+                              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
+                                {p.nationality}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 hidden md:table-cell">
+                        <div className="text-[13px] font-bold text-slate-600 truncate max-w-[160px]">
+                          {p.team}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 text-center">
+                        <span className="inline-block text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border shadow-sm transition-transform group-hover:scale-110"
+                          style={{ background: posS.bg, color: posS.color, borderColor: posS.border }}>
+                          {tc(`positions.${(p.position === 'MIL' ? 'mid' : p.position).toLowerCase()}`)}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-center">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="font-hl font-black text-lg" style={{ color: ratingColor }}>
+                            {p.rating ? p.rating.toFixed(2) : '—'}
+                          </span>
+                          <div className="w-10 h-1 bg-slate-100 rounded-full overflow-hidden">
+                            <div className="h-full ai-gradient" style={{ width: `${(p.rating / 10) * 100}%` }} />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 text-center hidden sm:table-cell">
+                        <span className="font-hl font-black text-[15px] text-slate-800">{p.goals ?? 0}</span>
+                      </td>
+                      <td className="px-6 py-5 text-center hidden sm:table-cell">
+                        <span className="font-hl font-black text-[15px] text-slate-800">{p.assists ?? 0}</span>
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <button onClick={e => { e.stopPropagation(); goToPlayer(p.slug) }}
+                            className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-hl font-black text-white ai-gradient shadow-lg shadow-blue-500/20 translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                              <path d="M2.062 12.348a1 1 0 0 1 0-0.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 0.696 10.75 10.75 0 0 1-19.876 0z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            {tc('buttons.view_profile').split(' ')[0]}
+                          </button>
+                          <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:text-primary transition-colors">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {(loading || players.length > 0) && (
+            <div className="p-8 bg-slate-50/30">
+              {loading ? (
+                <div className="flex flex-col items-center gap-3 py-4">
+                  <div className="w-8 h-8 rounded-full border-4 border-slate-200 border-t-primary animate-spin" />
+                  <span className="label-caps !text-slate-400">{tc('labels.loading')}</span>
+                </div>
+              ) : hasMore && (
+                <button onClick={loadMore}
+                  className="group relative flex items-center justify-center gap-3 w-full max-w-md mx-auto py-4 rounded-2xl bg-white border-2 border-slate-100 text-sm font-hl font-black text-slate-800 hover:border-primary/20 hover:text-primary transition-all shadow-sm hover:shadow-xl active:scale-[0.98]">
+                  <span>{tc('buttons.load_more')}</span>
+                  <span className="text-slate-400 group-hover:text-primary/50 font-medium">({tc('units.remaining', { count: (total - players.length).toLocaleString() })})</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="group-hover:translate-y-0.5 transition-transform">
+                    <path d="m6 9 6 6 6-6"/>
+                  </svg>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

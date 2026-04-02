@@ -15,15 +15,17 @@ interface SeasonFilterTabsProps {
 
 export function SeasonFilterTabs({ tabs, active, onChange }: SeasonFilterTabsProps) {
   return (
-    <div className="flex border-t border-[#f3f4f5] overflow-x-auto scrollbar-hide">
+    <div className="flex bg-slate-50/50 border-t border-slate-100 overflow-x-auto scrollbar-hide p-1 gap-1">
       {tabs.map(tab => (
-        <button key={tab} onClick={() => onChange(tab)}
-          className={`flex-shrink-0 px-3 py-2.5 text-[11px] font-semibold whitespace-nowrap text-center border-none border-b-2 transition-all ${
+        <button 
+          key={tab} 
+          onClick={() => onChange(tab)}
+          className={`flex-1 min-w-[80px] px-3 py-2.5 rounded-lg text-[10px] label-caps transition-all duration-200 ${
             active === tab
-              ? 'text-[#004782] border-b-[#004782] font-bold bg-[#EFF6FF]'
-              : 'text-[#727782] border-b-transparent bg-transparent hover:text-[#004782] hover:bg-[#f3f4f5]'
+              ? 'bg-white text-primary font-black shadow-sm border border-slate-200/50'
+              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100/50'
           }`}
-          style={{ flex: '1 0 auto' }}>
+        >
           {tab}
         </button>
       ))}
@@ -34,18 +36,20 @@ export function SeasonFilterTabs({ tabs, active, onChange }: SeasonFilterTabsPro
 // ── FormDots ──────────────────────────────────────────────────────────────────
 function FormDots({ form, t }: { form: string; t: any }) {
   const results = (form || '').split(',').slice(0, 5) as FormResult[]
-  const colors: Record<FormResult, string> = { V: '#22c55e', N: '#f59e0b', D: '#ef4444' }
+  const colors: Record<FormResult, string> = { V: 'bg-green-500 shadow-green-500/20', N: 'bg-amber-500 shadow-amber-500/20', D: 'bg-red-500 shadow-red-500/20' }
   const labels: Record<FormResult, string> = { 
     V: t('stats.win') || 'Victoire', 
     N: t('stats.draw') || 'Nul', 
     D: t('stats.loss') || 'Défaite' 
   }
   return (
-    <div className="flex gap-1 mt-1.5">
+    <div className="flex gap-1 mt-2">
       {results.map((r, i) => (
-        <div key={i} title={labels[r] || r}
-          className="w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-full flex items-center justify-center text-white font-black"
-          style={{ background: colors[r], fontSize: 8 }}>
+        <div 
+          key={i} 
+          title={labels[r] || r}
+          className={`w-5 h-5 rounded-md flex items-center justify-center text-white font-black text-[8px] shadow-sm transform hover:scale-110 transition-transform ${colors[r]}`}
+        >
           {r}
         </div>
       ))}
@@ -57,42 +61,54 @@ function FormDots({ form, t }: { form: string; t: any }) {
 function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Player; side: 'left' | 'right'; winnerSlug: string; locale: string; t: any; tc: any }) {
   const isRight  = side === 'right'
   const isWinner = player.slug === winnerSlug
+  const posKey = (player.position === 'MIL' ? 'mid' : player.position).toLowerCase();
+  
   const posStyle = {
-    ATT: { background: '#fef2f2', color: '#dc2626' },
-    MIL: { background: '#EFF6FF', color: '#004782' },
-    DEF: { background: '#f0fdf4', color: '#15803d' },
-    GK:  { background: '#f5f3ff', color: '#6d28d9' },
-  }[player.position] || { background: '#f3f4f5', color: '#727782' }
+    ATT: { background: 'rgba(239, 68, 68, 0.08)', color: '#dc2626' },
+    MIL: { background: 'rgba(30, 64, 175, 0.08)', color: '#1e40af' },
+    DEF: { background: 'rgba(34, 197, 94, 0.08)', color: '#15803d' },
+    GK:  { background: 'rgba(109, 40, 217, 0.08)', color: '#6d28d9' },
+  }[player.position] || { background: '#f8fafc', color: '#64748b' }
 
   return (
-    <div className={`flex items-center gap-2.5 sm:gap-3 min-w-0 ${isRight ? 'flex-row-reverse' : ''}`}>
-      <a href={localizedHref(locale, `/player/${player.slug}`)} className="flex-shrink-0 hover:opacity-80 transition-opacity">
-        <PlayerAvatar
-          initials={player.initials}
-          avatarBg={player.avatar_bg} avatarColor={player.avatar_color}
-          size={56} showBadge rating={player.rating}
-        />
-      </a>
-      <div className={`min-w-0 ${isRight ? 'text-right' : ''}`}>
-        <a href={localizedHref(locale, `/player/${player.slug}`)} className="no-underline group">
-          <div className="font-headline font-extrabold text-[14px] sm:text-[16px] leading-tight text-[#191c1d] truncate group-hover:text-primary transition-colors">
-            {player.common_name}
-          </div>
+    <div className={`flex items-center gap-4 group ${isRight ? 'flex-row-reverse' : ''}`}>
+      <div className="relative shrink-0">
+        <a href={localizedHref(locale, `/player/${player.slug}`)} className="block relative transition-transform hover:scale-105 duration-300">
+          <PlayerAvatar
+            initials={player.initials}
+            avatarBg={player.avatar_bg} avatarColor={player.avatar_color}
+            size={72} showBadge={false}
+          />
+          {player.rating > 0 && (
+            <div 
+              className="absolute -top-1 -right-1 px-1.5 py-1 rounded-lg text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all"
+              style={{ color: player.rating >= 8 ? '#15803d' : '#1e40af' }}
+            >
+              {player.rating.toFixed(1)}
+            </div>
+          )}
         </a>
-        <div className={`flex items-center gap-1 mt-0.5 flex-wrap ${isRight ? 'justify-end' : ''}`}>
-          <span className="text-[10px] text-[#727782]">{player.flag_emoji} {player.team}</span>
-          <span className="text-[9px] font-bold uppercase tracking-[.05em] px-1.5 py-px rounded flex-shrink-0"
-            style={posStyle}>
-            {tc(`positions.${(player.position === 'MIL' ? 'mid' : player.position).toLowerCase()}`)}
+      </div>
+      
+      <div className={`flex-1 min-w-0 ${isRight ? 'text-right' : ''}`}>
+        <a href={localizedHref(locale, `/player/${player.slug}`)} className="no-underline">
+          <h2 className="font-hl font-black text-xl sm:text-2xl text-slate-900 truncate leading-tight hover:text-primary transition-colors">
+            {player.common_name || player.name}
+          </h2>
+        </a>
+        <div className={`flex items-center gap-2 mt-1.5 flex-wrap ${isRight ? 'justify-end' : ''}`}>
+          <span className="label-caps !text-[9px] !text-slate-400 opacity-80">{player.flag_emoji} {player.team}</span>
+          <span className="label-caps !text-[8px] px-2 py-0.5 rounded-lg whitespace-nowrap" style={posStyle}>
+            {tc(`positions.${posKey}`) || player.position}
           </span>
         </div>
         <div className={`flex ${isRight ? 'justify-end' : ''}`}>
           <FormDots form={player.recent_form} t={tc} />
         </div>
         {isWinner && (
-          <div className={`mt-1 flex ${isRight ? 'justify-end' : ''}`}>
-            <span className="inline-flex items-center gap-1 bg-[#004782] !text-white text-[8px] font-black uppercase tracking-[.1em] px-2 py-0.5 rounded-full">
-              <span className="!text-white">⭐ {t('hero.winner')}</span>
+          <div className={`mt-3 flex ${isRight ? 'justify-end' : ''}`}>
+            <span className="label-caps !text-[8px] bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-lg shadow-sm">
+              <span className="text-[10px] leading-none">⭐</span> {t('hero.winner')}
             </span>
           </div>
         )}
@@ -125,21 +141,34 @@ export default function ComparisonHero({
   function handleTab(tab: string) { setInternalTab(tab); onTabChange?.(tab) }
   
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-[#eef0f2] shadow-sm">
-      <div className="flex items-center gap-2 px-3 py-4 sm:px-5 sm:py-5 sm:gap-3">
-        <div className="flex-1 min-w-0">
+    <div className="glass-card !p-0 overflow-hidden mb-8 border-slate-200/50 shadow-2xl shadow-slate-200/50 relative">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 hero-mesh opacity-30 pointer-events-none" />
+      <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-red-500/5 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col md:flex-row items-stretch md:items-center gap-8 md:gap-4 px-6 md:px-10 py-10 md:py-14">
+        <div className="flex-1 min-w-0 order-1 md:order-1">
           <PlayerCard player={playerA} side="left" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} />
         </div>
-        <div className="flex flex-col items-center gap-1 flex-shrink-0 px-1">
-          <div className="font-headline font-black text-[14px] sm:text-[16px] italic text-[#727782]">VS</div>
-          <div className="text-[8px] font-bold text-[#727782] uppercase tracking-[.08em] bg-[#f3f4f5] px-2 py-0.5 rounded-full whitespace-nowrap">
-            {t('hero.career_badge')}
+
+        <div className="flex flex-col items-center gap-3 shrink-0 order-3 md:order-2 px-6">
+          <div className="relative">
+            <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-150 animate-pulse" />
+            <div className="relative font-hl font-black text-3xl md:text-4xl italic text-slate-100 text-gradient tracking-tighter z-10 drop-shadow-sm select-none">VS</div>
+          </div>
+          <div className="px-4 py-1.5 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
+            <span className="label-caps !text-[9px] !text-slate-400 whitespace-nowrap">
+              {t('hero.career_badge')}
+            </span>
           </div>
         </div>
-        <div className="flex-1 min-w-0">
+
+        <div className="flex-1 min-w-0 order-2 md:order-3">
           <PlayerCard player={playerB} side="right" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} />
         </div>
       </div>
+      
       <SeasonFilterTabs tabs={seasonTabs} active={activeTab} onChange={handleTab} />
     </div>
   )

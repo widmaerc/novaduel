@@ -1,38 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 @import "tailwindcss";
 
 @source "../**/*.{ts,tsx}";
 
-/* Load fonts */
-@layer base {
-  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
-}
-
 @theme {
-  /* Colors */
-  --color-primary: #004782;
-  --color-primary-c: #185fa5;
-  --color-primary-glow: rgba(24, 95, 165, 0.4);
-  --color-primary-fixed: #d4e3ff;
-  --color-primary-light: #EFF6FF;
-  --color-primary-dim: #a4c9ff;
-  --color-secondary: #325f99;
-  --color-sec-c: #93bdfd;
+  /* Palette "Deep Tech" */
+  --color-primary: #1e40af;
+  --color-primary-c: #1d4ed8;
+  --color-primary-glow: rgba(30, 64, 175, 0.4);
+  --color-primary-fixed: #dbeafe;
+  --color-primary-light: #eff6ff;
+  --color-primary-dim: #93c5fd;
+  
+  --color-indigo-tech: #3b82f6;
+  --color-secondary: #3b82f6;
+  --color-sec-c: #60a5fa;
   --color-tertiary: #92000f;
   --color-tertiary-c: #b91a20;
-  --color-accent: #92000f;
+  --color-accent: #1e40af;
   --color-live: #22c55e;
-  --color-surface: #f8f9fa;
-  --color-dark: #191c1d;
-  --color-sc: #edeeef;
-  --color-sc-low: #f3f4f5;
-  --color-sc-high: #e7e8e9;
-  --color-sc-highest: #e1e3e4;
+  --color-surface: #f8fafc;
+  --color-dark: #0f172a;
+  --color-sc: #f1f5f9;
+  --color-sc-low: #f8fafc;
+  --color-sc-high: #e2e8f0;
+  --color-sc-highest: #cbd5e1;
   --color-sc-lowest: #ffffff;
-  --color-on-s: #191c1d;
-  --color-on-sv: #424751;
-  --color-outline: #727782;
-  --color-out-v: #c2c6d2;
+  
+  /* Slate Palette for Hierarchy */
+  --color-slate-500: #64748b;
+  --color-slate-700: #334155;
+  --color-slate-900: #0f172a;
 
   /* Fonts */
   --font-headline: var(--font-manrope), sans-serif;
@@ -67,64 +66,70 @@
 
 /* Utilities */
 @layer utilities {
-  /* ── Typography ── */
+  /* ── Typography Analytique ── */
   .font-hl { font-family: 'Manrope', sans-serif; }
+  .label-caps {
+    font-size: 0.75rem; /* text-xs */
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* tracking-wider */
+    font-weight: 700;
+    color: #64748b; /* slate-500 */
+  }
 
-  /* ── Glassmorphism ── */
+  /* ── Glassmorphism (Effet de verre) ── */
   .glass {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 10px 30px rgba(0, 71, 130, 0.05);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+  }
+  .glass-card:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08);
+    border-color: #cbd5e1;
   }
 
-  /* ── Internal glow ── */
-  .glass-glow-blue {
-    position: relative;
-    overflow: hidden;
+  /* ── Gradients ── */
+  .ai-gradient {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
   }
-  .glass-glow-blue::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, rgba(24, 95, 165, 0.1), transparent 70%);
-    pointer-events: none;
+  .text-gradient {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-  /* Legacy alias */
-  .glow-blue { position: relative; overflow: hidden; }
-  .glow-blue::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, rgba(24, 95, 165, 0.1), transparent 70%);
-    pointer-events: none;
+
+  /* ── Radar Visualization ── */
+  .radar-area-current {
+    fill: rgba(30, 64, 175, 0.15);
+    stroke: #1e40af;
+    stroke-width: 2;
+  }
+  .radar-area-potential {
+    fill: none;
+    stroke: #3b82f6;
+    stroke-width: 1.5;
+    stroke-dasharray: 4 2;
   }
 
   /* ── Backgrounds ── */
   .grid-bg {
-    background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
+    background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
     background-size: 32px 32px;
   }
   .hero-mesh {
     background-image:
-      radial-gradient(at 0% 0%, rgba(24, 95, 165, 0.05) 0, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(0, 71, 130, 0.05) 0, transparent 50%),
-      radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
+      radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.05) 0, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.05) 0, transparent 50%),
+      radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
     background-size: auto, auto, 24px 24px;
-  }
-
-  /* ── Text gradient ── */
-  .text-gradient {
-    background: linear-gradient(135deg, #004782 0%, #185fa5 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   /* ── Animations ── */
@@ -139,25 +144,10 @@
   .a5 { animation: fadeUp .55s .32s ease both; }
 
   .glass-panel {
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(194,198,210, 0.2);
-  }
-
-  .pl-row {
-    transition: background .12s;
-  }
-  .pl-row:hover {
-    background: #f3f4f5;
-  }
-
-  .bar-grow {
-    animation: barIn .9s .3s ease both;
-  }
-
-  .count {
-    animation: countIn .6s .3s ease both;
+    border: 1px solid rgba(226, 232, 240, 0.6);
   }
 
   /* ── Hover Utilities ── */
@@ -167,31 +157,37 @@
   }
   .pcard-hover:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 71, 130, 0.08);
-    border-color: rgba(0, 71, 130, 0.2);
-  }
-
-  .editorial-img {
-    transition: transform 0.7s ease;
-  }
-  .editorial-card:hover .editorial-img {
-    transform: scale(1.05);
-  }
-
-  /* ── Element Components ── */
-  .glass-row {
-    transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(0, 71, 130, 0.05);
-  }
-  .glass-row:hover {
-    background: rgba(24, 95, 165, 0.03);
-    transform: translateX(4px);
+    box-shadow: 0 20px 40px rgba(30, 64, 175, 0.08);
+    border-color: rgba(30, 64, 175, 0.2);
   }
 
   .live-badge {
     background: rgba(34, 197, 94, 0.1);
+    color: #166534;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    font-weight: 700;
+  }
+
+  /* ── Badges Dynamiques ── */
+  .badge-elite {
+    background: rgba(30, 64, 175, 0.1);
+    color: #1e40af;
+    border: 1px solid rgba(30, 64, 175, 0.2);
+    font-weight: 800;
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 9999px;
+  }
+  .badge-undervalued {
+    background: rgba(34, 197, 94, 0.1);
     color: #15803d;
     border: 1px solid rgba(34, 197, 94, 0.2);
+    font-weight: 800;
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 9999px;
   }
 
   /* ── Nav link hover underline ── */
@@ -201,7 +197,7 @@
     position: absolute;
     bottom: -4px; left: 0;
     width: 0; height: 2px;
-    background: #004782;
+    background: #1e40af;
     transition: width 0.3s ease;
   }
   .nav-link:hover::after,
@@ -218,14 +214,11 @@
   .radar-label {
     font-size: 4.8px;
     font-weight: 800;
-    fill: #004782;
+    fill: #1e40af;
     font-family: 'Manrope', sans-serif;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
 }
 
 :root {
@@ -280,7 +273,7 @@ a {
 
 /* Hover utility for footer links */
 .hover\:text-primary:hover {
-  color: #004782;
+  color: #1e40af;
 }
 
 /* Transition utility */

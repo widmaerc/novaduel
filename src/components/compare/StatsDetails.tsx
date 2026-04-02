@@ -24,10 +24,17 @@ function DoubleBar({ a, b, lowerIsBetter }: { a: number; b: number; lowerIsBette
   const total = a + b || 1
   const pA    = Math.round((a / total) * 100)
   const pB    = 100 - pA
+  
+  // Logic: Primary blue for A, Deep Red for B. If lower is better, invert prominence.
+  const gradientA = lowerIsBetter && a > b ? 'bg-slate-200' : 'bg-gradient-to-r from-blue-600 to-blue-400'
+  const gradientB = lowerIsBetter && b > a ? 'bg-slate-200' : 'bg-gradient-to-l from-red-600 to-red-400'
+
   return (
-    <div className="w-full flex h-1.5 rounded overflow-hidden bg-[#edeeef]">
-      <div className="transition-all duration-700" style={{ width: `${pA}%`, background: lowerIsBetter && a > b ? '#c2c6d2' : '#004782', borderRadius: '3px 0 0 3px' }} />
-      <div className="transition-all duration-700" style={{ width: `${pB}%`, background: lowerIsBetter && b > a ? '#c2c6d2' : '#92000f', borderRadius: '0 3px 3px 0' }} />
+    <div className="w-full flex h-1.5 sm:h-2 rounded-full overflow-hidden bg-slate-100/50 shadow-inner border border-slate-200/20">
+      <div className={`transition-all duration-1000 ease-out h-full ${gradientA} ${pA > 0 ? 'rounded-l-full' : ''}`} 
+        style={{ width: `${pA}%` }} />
+      <div className={`transition-all duration-1000 ease-out h-full ${gradientB} ${pB > 0 ? 'rounded-r-full' : ''}`} 
+        style={{ width: `${pB}%` }} />
     </div>
   )
 }
@@ -86,93 +93,110 @@ export default function StatsDetails({ playerA, playerB, labels }: StatsDetailsP
   }
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-[#eef0f2] shadow-sm text-primary">
-      <div className="px-4 py-3 border-b border-[#eef0f2]">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <span className="font-headline font-bold text-[13px] text-[#191c1d]">{labels?.title ?? 'Statistiques'}</span>
-          <div className="flex bg-[#f3f4f5] rounded-lg p-0.5 gap-px overflow-x-auto max-w-full">
+    <div className="glass-card shadow-xl border-slate-200/50 !p-0 overflow-hidden mb-8">
+      {/* Header with Nav */}
+      <div className="px-6 py-6 border-b border-slate-100 relative">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex flex-col gap-1">
+            <h3 className="font-hl font-black text-lg text-slate-900 drop-shadow-sm">
+              {labels?.title ?? 'Statistiques Comparatives'}
+            </h3>
+            <p className="label-caps !text-[9px] !text-slate-400 opacity-80">Données techniques avancées</p>
+          </div>
+          
+          <div className="flex bg-slate-100/60 p-1.5 rounded-xl gap-1 overflow-x-auto no-scrollbar border border-slate-200/30">
             {(Object.keys(CAT_LABELS) as StatCategory[]).map(c => (
               <button key={c} onClick={() => setCat(c)}
-                className={`px-2.5 py-1.5 rounded-md text-[10px] sm:text-[11px] font-semibold transition-all whitespace-nowrap flex-shrink-0 ${
-                  cat === c ? 'bg-white text-[#004782] font-bold shadow-sm' : 'text-[#727782] hover:text-[#191c1d]'}`}>
+                className={`px-4 py-2 rounded-lg text-[10px] label-caps transition-all whitespace-nowrap ${
+                  cat === c ? 'bg-white text-primary font-black shadow-sm border border-slate-200/30' : 'text-slate-400 hover:text-slate-600'}`}>
                 {CAT_LABELS[c]}
               </button>
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-2 mt-3">
-          <div className="flex items-center gap-1.5 bg-[#EFF6FF] border border-[#004782]/20 px-2.5 py-1 rounded-full">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#004782] flex-shrink-0" />
-            <span className="text-[10px] font-bold text-[#004782] uppercase tracking-[.06em] truncate max-w-[80px] sm:max-w-none">
-              {playerA.common_name}
-            </span>
+        
+        {/* Dynamic Legend */}
+        <div className="flex items-center gap-4 mt-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+              <span className="text-blue-600 font-black text-[10px]">{playerA.initials}</span>
+            </div>
+            <span className="label-caps !text-[9px] !text-blue-600 font-black">{playerA.common_name}</span>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#fef2f2] border border-[#92000f]/20 px-2.5 py-1 rounded-full">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#92000f] flex-shrink-0" />
-            <span className="text-[10px] font-bold text-[#92000f] uppercase tracking-[.06em] truncate max-w-[80px] sm:max-w-none">
-              {playerB.common_name}
-            </span>
+          <div className="w-px h-4 bg-slate-100" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center shrink-0">
+              <span className="text-red-600 font-black text-[10px]">{playerB.initials}</span>
+            </div>
+            <span className="label-caps !text-[9px] !text-red-600 font-black">{playerB.common_name}</span>
           </div>
         </div>
       </div>
 
-      {STATS[cat].map((row, i) => {
-        const vA = val(playerA, row)
-        const vB = val(playerB, row)
-        const wA = row.lowerIsBetter ? vA <= vB : vA >= vB
-        const wB = row.lowerIsBetter ? vB <= vA : vB >= vA
+      {/* Stats List */}
+      <div className="divide-y divide-slate-50">
+        {STATS[cat].map((row, i) => {
+          const vA = val(playerA, row)
+          const vB = val(playerB, row)
+          const wA = row.lowerIsBetter ? vA <= vB : vA >= vB
+          const wB = row.lowerIsBetter ? vB <= vA : vB >= vA
 
-        return (
-          <div key={i} className="px-4 py-3 border-b border-[#f3f4f5] last:border-0 hover:bg-[#f8f9fa] transition-colors">
-            {/* Mobile */}
-            <div className="flex items-center gap-3 sm:hidden">
-              <span className="font-headline font-extrabold text-[17px] w-12 flex-shrink-0"
-                style={{ color: wA ? '#191c1d' : '#c2c6d2' }}>
-                {display(playerA, row)}
-              </span>
-              <div className="flex-1 flex flex-col items-center gap-1 min-w-0">
-                <span className="text-[9px] font-bold uppercase tracking-[.06em] text-[#727782] text-center">
-                  {row.emoji} {row.label}
-                </span>
-                <DoubleBar a={vA} b={vB} lowerIsBetter={row.lowerIsBetter} />
-              </div>
-              <span className="font-headline font-extrabold text-[17px] w-12 flex-shrink-0 text-right"
-                style={{ color: wB ? '#191c1d' : '#c2c6d2' }}>
-                {display(playerB, row)}
-              </span>
-            </div>
-            {/* Desktop */}
-            <div className="hidden sm:grid items-center gap-0"
-              style={{ gridTemplateColumns: '72px 1fr 72px' }}>
-              <div className="flex items-center gap-1">
-                <span className="font-headline font-extrabold text-[18px]"
-                  style={{ color: wA ? '#191c1d' : '#c2c6d2' }}>
+          return (
+            <div key={i} className="px-6 py-5 group hover:bg-slate-50/50 transition-all duration-300">
+              {/* Mobile View */}
+              <div className="flex items-center gap-6 sm:hidden">
+                <span className="font-hl font-black text-2xl w-14 shrink-0 transition-colors"
+                  style={{ color: wA ? '#1e40af' : '#cbd5e1' }}>
                   {display(playerA, row)}
                 </span>
-                {wA && !wB && <span className="text-[9px] font-black text-[#004782]">▲</span>}
-              </div>
-              <div className="flex flex-col items-center gap-1.5 px-3 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-[.06em] text-[#727782] text-center w-full truncate">
-                  {row.emoji} {row.label}
-                </span>
-                <DoubleBar a={vA} b={vB} lowerIsBetter={row.lowerIsBetter} />
-                {row.lowerIsBetter && (
-                  <span className="text-[9px] text-[#727782] opacity-60">
-                    {labels?.lowerIsBetterHint ?? 'Moins = mieux'}
+                <div className="flex-1 flex flex-col items-center gap-2 min-w-0">
+                  <span className="label-caps !text-[9px] !text-slate-400 text-center w-full truncate">
+                    <span className="mr-1.5">{row.emoji}</span> {row.label}
                   </span>
-                )}
-              </div>
-              <div className="flex items-center justify-end gap-1">
-                {wB && !wA && <span className="text-[9px] font-black text-[#92000f]">▲</span>}
-                <span className="font-headline font-extrabold text-[18px]"
-                  style={{ color: wB ? '#191c1d' : '#c2c6d2' }}>
+                  <DoubleBar a={vA} b={vB} lowerIsBetter={row.lowerIsBetter} />
+                </div>
+                <span className="font-hl font-black text-2xl w-14 shrink-0 text-right transition-colors"
+                  style={{ color: wB ? '#dc2626' : '#cbd5e1' }}>
                   {display(playerB, row)}
                 </span>
               </div>
+
+              {/* Desktop View */}
+              <div className="hidden sm:grid items-center gap-0"
+                style={{ gridTemplateColumns: '120px 1fr 120px' }}>
+                <div className="flex items-center gap-3">
+                  <span className="font-hl font-black text-3xl transition-colors"
+                    style={{ color: wA ? '#1e40af' : '#cbd5e1' }}>
+                    {display(playerA, row)}
+                  </span>
+                  {wA && !wB && <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-lg shadow-blue-500/20" />}
+                </div>
+                
+                <div className="flex flex-col items-center gap-3 px-10 min-w-0">
+                  <span className="label-caps !text-[10px] !text-slate-400 text-center w-full truncate flex items-center justify-center gap-2">
+                    <span className="opacity-100">{row.emoji}</span>
+                    <span className="opacity-80 font-bold">{row.label}</span>
+                  </span>
+                  <DoubleBar a={vA} b={vB} lowerIsBetter={row.lowerIsBetter} />
+                  {row.lowerIsBetter && (
+                    <span className="label-caps !text-[8px] !text-slate-300 italic">
+                      {labels?.lowerIsBetterHint ?? 'Valeur basse privilégiée'}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-end gap-3 text-right">
+                  {wB && !wA && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-lg shadow-red-500/20" />}
+                  <span className="font-hl font-black text-3xl transition-colors"
+                    style={{ color: wB ? '#dc2626' : '#cbd5e1' }}>
+                    {display(playerB, row)}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
     </div>
   )
 }

@@ -173,74 +173,83 @@ export default async function PlayerPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-[1440px] mx-auto px-10 pb-20">
+      <main className="max-w-[1440px] mx-auto px-10 pb-20 relative overflow-hidden">
+        <div className="hero-mesh" />
 
         {/* ── HERO ─────────────────────────────────────────── */}
-        <section className="a1 relative grid grid-cols-[420px_1fr] gap-10 items-end py-9 pb-10 border-b border-[#c2c6d2]/20 mb-10">
+        <section className="relative z-10 grid grid-cols-[420px_1fr] gap-12 items-end py-12 pb-14 border-b border-slate-200/40 mb-12">
 
           {/* Left: player visual */}
           <div className="relative">
             {/* Breadcrumb */}
-            <div className="text-[12px] text-[#727782] mb-5 flex items-center gap-1.5">
-              <Link href={`/${locale}`} className="text-[#727782] hover:text-primary transition-colors no-underline">{t('breadcrumb.home')}</Link> ›
-              <Link href={localizedHref(locale, '/players')} className="text-[#727782] hover:text-primary transition-colors no-underline">{t('breadcrumb.players')}</Link> ›
-              <span className="text-[#191c1d]">{p.name}</span>
+            <div className="text-[12px] font-medium text-slate-500 mb-6 flex items-center gap-2">
+              <Link href={`/${locale}`} className="hover:text-primary transition-colors no-underline">
+                {t('breadcrumb.home')}
+              </Link> 
+              <span className="text-slate-300">/</span>
+              <Link href={localizedHref(locale, '/players')} className="hover:text-primary transition-colors no-underline">
+                {t('breadcrumb.players')}
+              </Link> 
+              <span className="text-slate-300">/</span>
+              <span className="text-slate-900 font-semibold">{p.name}</span>
             </div>
 
             {/* Avatar area */}
             {(() => {
               const avatarPalette: Record<string, { from: string; to: string; text: string }> = {
-                ATT: { from: '#fef2f2', to: '#fee2e2', text: '#dc2626' },
-                MIL: { from: '#eff6ff', to: '#dbeafe', text: '#004782' },
-                DEF: { from: '#f0fdf4', to: '#dcfce7', text: '#15803d' },
-                GK:  { from: '#f5f3ff', to: '#ede9fe', text: '#6d28d9' },
+                ATT: { from: 'var(--color-primary-light)', to: 'var(--color-primary-fixed)', text: 'var(--color-primary)' },
+                MIL: { from: '#eff6ff', to: '#dbeafe', text: '#1e40af' },
+                DEF: { from: 'var(--color-primary-dim)', to: 'var(--color-primary-light)', text: 'var(--color-primary)' },
+                GK:  { from: 'var(--color-primary-fixed)', to: 'var(--color-primary-light)', text: '#1d4ed8' },
               }
-              const pal = avatarPalette[player.position] ?? { from: '#f3f4f6', to: '#e5e7eb', text: '#727782' }
+              const pal = avatarPalette[player.position] ?? { from: '#f8fafc', to: '#f1f5f9', text: '#334155' }
               return (
-            <div className="relative rounded-2xl overflow-hidden h-[450px] flex items-center justify-center shadow-inner group"
-              style={{ background: `linear-gradient(135deg, ${pal.from}, ${pal.to})` }}>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.5),transparent)]" />
+            <div className="glass-card relative rounded-3xl overflow-hidden h-[480px] flex items-center justify-center shadow-2xl group border-white/60"
+              style={{ background: `linear-gradient(135deg, ${pal.from} 0%, ${pal.to} 100%)` }}>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.7),transparent)]" />
 
-              <span className="font-hl font-black text-[120px] select-none tracking-tighter z-1 uppercase"
-                style={{ color: pal.text, opacity: 0.15 }}>
+              <span className="font-hl font-black text-[150px] select-none tracking-tighter z-1 uppercase"
+                style={{ color: pal.text, opacity: 0.08 }}>
                 {p.initials}
               </span>
 
               {/* Decorative accent */}
-              <div className="absolute inset-0 border-[16px] border-white/40 pointer-events-none" />
+              <div className="absolute inset-0 border-[1px] border-white/40 pointer-events-none" />
 
               {/* Elite badge */}
-              <div className="absolute top-4 left-4 z-10">
-                <span className="bg-primary/80 !text-white font-hl font-extrabold text-[8px] uppercase tracking-[0.15em] py-1.5 px-3.5 rounded-full backdrop-blur-md border border-white/20">
-                  <span className="opacity-90">⭐ {tc('labels.elite_badge')}</span>
+              <div className="absolute top-6 left-6 z-10">
+                <span className="ai-gradient text-white font-hl font-black text-[9px] uppercase tracking-[0.2em] py-2 px-5 rounded-full shadow-[0_8px_20px_rgba(30,64,175,0.25)] border border-white/20">
+                  <span className="opacity-80">★</span> <span className="ml-1.5">{tc('labels.elite_badge')}</span>
                 </span>
               </div>
 
               {/* Rating glass */}
-              <div className="glass-panel absolute top-4 right-4 z-10 rounded-2xl p-3 px-4 text-center shadow-lg">
-                <div className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-primary/70 mb-1">{tc('labels.global_rating')}</div>
-                <div className="count font-hl font-black text-[32px] text-primary leading-none">{p.ratingDisplay}</div>
-                <div className="flex gap-0.5 justify-center mt-1.5">
+              <div className="absolute top-6 right-6 z-10 rounded-2xl p-5 px-6 text-center shadow-2xl glass backdrop-blur-2xl border-white/60 bg-white/60">
+                <div className="label-caps mb-1.5 opacity-60 text-[9px] tracking-widest">{tc('labels.global_rating')}</div>
+                <div className="font-hl font-black text-[42px] text-primary leading-none drop-shadow-sm tracking-tight">{p.ratingDisplay}</div>
+                <div className="flex gap-1.5 justify-center mt-3">
                   {[...Array(5)].map((_, i) => (
-                    <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < p.ratingStars ? 'bg-primary' : 'bg-[#c2c6d2]'}`} />
+                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < p.ratingStars ? 'bg-primary shadow-[0_0_10px_rgba(30,64,175,0.6)] animate-pulse-soft' : 'bg-slate-200'}`} />
                   ))}
                 </div>
               </div>
 
               {/* Shirt number badge */}
               {(player.shirt_number ?? 0) > 0 && (
-                <div className="glass-panel absolute bottom-4 right-4 z-10 rounded-xl px-3 py-1.5 text-center shadow-lg min-w-[48px]">
-                  <div className="text-[8px] font-extrabold uppercase tracking-[0.12em] text-primary/60 leading-none mb-0.5">#</div>
-                  <div className="font-hl font-black text-[22px] text-primary leading-none">{player.shirt_number}</div>
+                <div className="absolute bottom-6 right-6 z-10 rounded-2xl px-5 py-3 text-center shadow-xl glass border-white/60 bg-white/50 min-w-[64px]">
+                  <div className="label-caps opacity-40 leading-none mb-1 text-[10px]">#</div>
+                  <div className="font-hl font-black text-[28px] text-primary leading-none">{player.shirt_number}</div>
                 </div>
               )}
 
               {/* Form dots */}
-              <div className="absolute bottom-4 left-4 z-10 flex gap-1.5 items-center">
-                <span className="text-[9px] font-bold text-white/70 uppercase tracking-[0.08em] mr-1">{tc('stats.form')}</span>
-                {p.form.map((r, i) => (
-                  <div key={i} className="w-6 h-6 rounded-full flex items-center justify-center font-hl font-extrabold text-[10px] text-white border-2 border-white/30" style={{ backgroundColor: formColor(r) }}>{r}</div>
-                ))}
+              <div className="absolute bottom-6 left-6 z-10 flex gap-1.5 items-center bg-white/40 backdrop-blur-md p-2 px-3 rounded-2xl border border-white/40 shadow-sm">
+                <span className="label-caps text-slate-500/80 mr-2 text-[9px]">{tc('stats.form')}</span>
+                <div className="flex gap-1">
+                  {p.form.map((r, i) => (
+                    <div key={i} className="w-6 h-6 rounded-lg flex items-center justify-center font-hl font-black text-[10px] text-white shadow-sm" style={{ backgroundColor: formColor(r) }}>{r}</div>
+                  ))}
+                </div>
               </div>
             </div>
               )
@@ -249,23 +258,23 @@ export default async function PlayerPage({ params }: Props) {
 
           {/* Right: identity */}
           <div className="pb-3">
-            <div className="flex items-center gap-2.5 mb-4">
-              <span className="bg-primary/10 text-primary border border-primary/20 rounded-full text-[9px] font-extrabold uppercase tracking-[0.12em] py-1 px-3">{p.positionLabel}</span>
-              <span className="flex items-center gap-1.5 text-[12px] text-[#424751]">
-                <TeamBadge teamId={0} teamName={player.team ?? ''} size={18} />
-                {p.team} · {p.league}
+            <div className="flex items-center gap-3 mb-6">
+              <span className="bg-primary/10 text-primary border border-primary/20 rounded-full text-[10px] font-bold uppercase tracking-wider py-1 px-4">{p.positionLabel}</span>
+              <span className="flex items-center gap-2 text-[13px] text-slate-600 font-medium">
+                <TeamBadge teamId={0} teamName={player.team ?? ''} size={20} />
+                {p.team} <span className="text-slate-300 mx-1">·</span> {p.league}
               </span>
-              <span className="text-xl">{p.flag}</span>
+              <span className="text-2xl drop-shadow-sm">{p.flag}</span>
             </div>
 
-            <h1 className="font-hl font-black text-[38px] md:text-[44px] lg:text-[48px] leading-[0.95] -tracking-[1.5px] text-primary uppercase mb-2">
+            <h1 className="font-hl font-black text-[48px] md:text-[54px] lg:text-[64px] leading-[0.9] -tracking-[0.03em] text-slate-900 uppercase mb-3">
               {p.firstName}<br />
-              <span className="text-[#727782]">{p.lastName}</span>
+              <span className="text-slate-400">{p.lastName}</span>
             </h1>
-            <div className="text-[14px] text-[#727782] italic mb-7">{p.nicknames}</div>
+            <div className="text-[16px] text-slate-500 font-medium italic mb-10 pl-1">{p.nicknames}</div>
 
             {/* Quick info grid */}
-            <div className="grid grid-cols-4 gap-4 bg-[#f3f4f5] rounded-2xl p-5 mb-7">
+            <div className="grid grid-cols-4 gap-6 glass-card p-6 px-8 mb-10 max-w-2xl bg-white/40 border-white/60">
               {[
                 { label: t('profile.nationality'), value: p.nationality },
                 { label: t('profile.age'), value: `${p.age} ${tc('units.years')}` },
@@ -273,24 +282,24 @@ export default async function PlayerPage({ params }: Props) {
                 { label: t('profile.value'), value: p.marketValue, blue: true },
               ].map((item) => (
                 <div key={item.label}>
-                  <div className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-[#727782] mb-1">{item.label}</div>
-                  <div className={`text-[13px] font-semibold ${item.blue ? 'text-primary' : 'text-[#191c1d]'}`}>{item.value}</div>
+                  <div className="label-caps mb-1.5">{item.label}</div>
+                  <div className={`text-[15px] font-bold ${item.blue ? 'text-primary' : 'text-slate-900'}`}>{item.value}</div>
                 </div>
               ))}
             </div>
 
             {/* CTA */}
-            <div className="flex gap-2.5 flex-wrap">
-              <Link href={localizedHref(locale, `/compare?a=${p.id}`)} className="flex items-center gap-2 bg-primary !text-white py-3 px-6 rounded-full font-hl font-extrabold text-[12px] uppercase tracking-[0.08em] no-underline shadow-[0_4px_16px_rgba(0,71,130,0.25)] hover:bg-[#185fa5] transition-all">
-                <span className="material-symbols-outlined text-base !text-white">compare_arrows</span>
+            <div className="flex gap-4 flex-wrap">
+              <Link href={localizedHref(locale, `/compare?a=${p.id}`)} className="ai-gradient flex items-center gap-3 text-white py-4 px-8 rounded-full font-hl font-bold text-[13px] uppercase tracking-widest no-underline shadow-xl shadow-blue-900/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <span className="material-symbols-outlined text-[20px] !text-white">analytics</span>
                 <span className="!text-white">{tc('buttons.compare')} {p.firstName}</span>
               </Link>
-              <button className="flex items-center gap-2 bg-white text-primary border-1.5 border-primary/20 py-3 px-5 rounded-full font-hl font-bold text-[12px] uppercase tracking-[0.06em] cursor-pointer hover:bg-primary/5 transition-all">
-                <span className="material-symbols-outlined text-base">bookmark</span>
+              <button className="flex items-center gap-2 bg-white text-slate-800 border-2 border-slate-100 py-4 px-6 rounded-full font-hl font-bold text-[13px] uppercase tracking-wider cursor-pointer hover:bg-slate-50 transition-all shadow-sm">
+                <span className="material-symbols-outlined text-[20px] text-slate-400">bookmark</span>
                 {tc('buttons.save')}
               </button>
-              <button className="flex items-center gap-2 bg-white text-[#424751] border-1.5 border-[#e1e3e4] py-3 px-5 rounded-full font-hl font-bold text-[12px] uppercase tracking-[0.06em] cursor-pointer hover:bg-[#f3f4f5] transition-all">
-                <span className="material-symbols-outlined text-base">share</span>
+              <button className="flex items-center gap-2 bg-white text-slate-800 border-2 border-slate-100 py-4 px-6 rounded-full font-hl font-bold text-[13px] uppercase tracking-wider cursor-pointer hover:bg-slate-50 transition-all shadow-sm">
+                <span className="material-symbols-outlined text-[20px] text-slate-400">share</span>
                 {tc('buttons.share')}
               </button>
             </div>
@@ -304,11 +313,12 @@ export default async function PlayerPage({ params }: Props) {
           <div className="flex flex-col gap-4">
 
             {/* Quick scout */}
-            <div className="a2 bg-white rounded-2xl border border-[#c2c6d2]/20 p-5 overflow-hidden shadow-sm">
-              <div className="-mx-5 -mt-5 px-5 py-2.5 mb-4 bg-[#f8f9fa] border-b border-[#eef0f2]">
-                <h3 className="font-hl font-extrabold text-[13px] text-primary">{t('profile.quick_scout_title')}</h3>
+            <div className="glass-card bg-white p-6 overflow-hidden">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-[20px]">fact_check</span>
+                <h3 className="label-caps text-primary text-[11px]">{t('profile.quick_scout_title')}</h3>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col space-y-1">
                 {[
                   { label: t('profile.height'), value: p.height },
                   { label: t('profile.weight'), value: p.weight },
@@ -321,28 +331,29 @@ export default async function PlayerPage({ params }: Props) {
                   { label: tc('stats.red_cards'), value: String(p.redCards) },
                   { label: tc('stats.min_per_goal'), value: p.minutesPerGoal, blue: true },
                 ].map((row) => (
-                  <div key={row.label} className="pl-row flex justify-between items-center py-2 border-b border-[#f3f4f5] last:border-0">
-                    <span className="text-[12px] text-[#424751]">{row.label}</span>
-                    <span className={`text-[12px] font-semibold ${row.blue ? 'text-primary' : 'text-[#191c1d]'}`}>{row.value}</span>
+                  <div key={row.label} className="flex justify-between items-center py-2.5 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 -mx-2 rounded-lg transition-colors">
+                    <span className="text-[12px] text-slate-500 font-medium">{row.label}</span>
+                    <span className={`text-[12px] font-bold ${row.blue ? 'text-primary' : 'text-slate-900'}`}>{row.value}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Similar profiles */}
-            <div className="a3 bg-primary rounded-2xl p-5 relative overflow-hidden">
-              <div className="absolute -top-5 -right-5 w-25 h-25 bg-white/5 rounded-full pointer-events-none" />
-              <div className="-mx-5 -mt-5 px-5 py-2.5 mb-4 bg-white/10 border-b border-white/15 relative z-1">
-                <h3 className="font-hl font-extrabold text-[13px] text-white">{t('sections.similar_profiles')}</h3>
+            <div className="ai-gradient rounded-3xl p-6 relative overflow-hidden shadow-lg shadow-blue-900/10">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-white/80 text-[20px]">people</span>
+                <h3 className="label-caps text-white text-[11px] !opacity-100">{t('sections.similar_profiles')}</h3>
               </div>
-              <div className="flex flex-col gap-1.5 relative z-1">
+              <div className="flex flex-col gap-2">
                 {p.similar.map((s) => (
-                  <Link key={s.name} href={localizedHref(locale, `/player/${s.slug}`)} className="flex items-center justify-between p-2 px-3 bg-white/10 rounded-xl no-underline hover:bg-white/20 transition-colors group/s">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center font-hl font-extrabold text-[9px] text-white uppercase">{s.initials}</div>
-                      <span className="text-[12px] font-semibold text-white group-hover/s:text-blue-200 transition-colors">{s.name}</span>
+                  <Link key={s.name} href={localizedHref(locale, `/player/${s.slug}`)} className="flex items-center justify-between p-3 bg-white/10 rounded-2xl no-underline hover:bg-white/20 transition-all border border-white/5 hover:border-white/20 group/s">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center font-hl font-black text-[10px] text-white uppercase shadow-inner border border-white/10">{s.initials}</div>
+                      <span className="text-[12px] font-bold text-white group-hover/s:translate-x-0.5 transition-transform">{s.name}</span>
                     </div>
-                    <span className="text-[10px] font-bold text-[#a4c9ff]">{s.match} %</span>
+                    <span className="text-[10px] font-black text-white bg-white/20 px-2 py-1 rounded-lg border border-white/10 group-hover:bg-white/30 transition-colors">{s.match}%</span>
                   </Link>
                 ))}
               </div>
@@ -373,23 +384,19 @@ export default async function PlayerPage({ params }: Props) {
             />
 
             {/* AI Insight */}
-            <div className="a4 bg-white rounded-2xl border-l-4 border-primary p-6 shadow-sm relative overflow-hidden">
-              <div className="absolute -bottom-2 -right-2 opacity-[0.03] pointer-events-none">
-                <span className="material-symbols-outlined text-[100px] text-primary">psychology</span>
+            <div className="glass-card bg-white p-0 shadow-sm relative overflow-hidden border-blue-100/50">
+              <div className="ai-gradient text-white p-5 flex items-center gap-3">
+                <span className="material-symbols-outlined text-[24px] !text-white">auto_awesome</span>
+                <h3 className="label-caps text-white text-[12px] !opacity-100">{t('ai.title')}</h3>
+                <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-wider py-1 px-3 rounded-full ml-auto backdrop-blur-md border border-white/10">{t('ai.badge')}</span>
               </div>
-              <div className="-mx-6 -mt-6 px-6 py-3 mb-4 bg-[#EFF6FF] border-b border-[#dbeafe] flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[20px] text-primary">psychology</span>
-                <h3 className="font-hl font-extrabold text-[15px] text-primary">{t('ai.title')}</h3>
-                <span className="bg-primary/10 text-primary text-[8px] font-extrabold uppercase tracking-[0.1em] py-1 px-2 rounded-full ml-auto">{t('ai.badge')}</span>
-              </div>
-              <div className="relative z-1">
+              <div className="p-8 relative z-1 bg-gradient-to-b from-blue-50/30 to-transparent">
                 <FormattedInsight text={p.aiInsight} />
               </div>
             </div>
 
             {/* Career — un tableau par compétition */}
             {(() => {
-              // Grouper par compétition
               const byComp = new Map<string, typeof p.career>()
               for (const row of p.career) {
                 if (!byComp.has(row.competition)) byComp.set(row.competition, [])
@@ -397,37 +404,51 @@ export default async function PlayerPage({ params }: Props) {
               }
               if (!byComp.size) return null
               return (
-                <div className="a5 flex flex-col gap-4">
-                  <h3 className="font-hl font-extrabold text-[14px] text-primary">{t('career.title')}</h3>
+                <div className="flex flex-col gap-8 mt-4">
+                  <div className="flex items-center gap-2 px-1">
+                    <span className="material-symbols-outlined text-primary text-[20px]">history_edu</span>
+                    <h3 className="label-caps text-primary text-[12px]">{t('career.title')}</h3>
+                  </div>
+                  
                   {Array.from(byComp.entries()).map(([comp, rows]) => (
-                    <div key={comp} className="bg-white rounded-2xl border border-[#c2c6d2]/20 overflow-hidden shadow-sm">
-                      <div className="px-5 py-3 border-b border-[#f3f4f5] flex items-center gap-2">
-                        <span className="bg-[#EFF6FF] text-primary text-[9px] font-extrabold uppercase tracking-[0.08em] py-1 px-2.5 rounded">{comp}</span>
-                        <span className="text-[10px] text-[#727782]">{rows.length} saison{rows.length > 1 ? 's' : ''}</span>
+                    <div key={comp} className="glass-card bg-white/40 overflow-hidden shadow-xl shadow-slate-200/40 border-white/60">
+                      <div className="px-8 py-5 bg-slate-50/50 border-b border-slate-100/60 flex items-center justify-between">
+                        <span className="text-[15px] font-black text-slate-900 uppercase tracking-tight">{comp}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="label-caps text-primary bg-primary/5 px-2 py-0.5 rounded-md text-[9px]">{rows.length} {rows.length > 1 ? tc('labels.seasons') : tc('labels.season')}</span>
+                        </div>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full border-collapse">
                           <thead>
-                            <tr className="bg-[#f3f4f5]">
+                            <tr className="bg-slate-50/30">
                               {[tc('labels.season'), tc('labels.team'), tc('stats.matches_played_abbr'), tc('stats.goals_assists_abbr'), tc('stats.rating')].map((h) => (
-                                <th key={h} className={`py-2 px-5 text-[9px] font-black uppercase tracking-[0.08em] text-[#727782] ${h === tc('labels.season') || h === tc('labels.team') ? 'text-left' : 'text-center'}`}>{h}</th>
+                                <th key={h} className={`py-4 px-8 label-caps text-[10px] opacity-60 ${h === tc('labels.season') || h === tc('labels.team') ? 'text-left' : 'text-center'}`}>{h}</th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
                             {rows.map((row) => (
-                              <tr key={`${row.season}-${row.team}`} className="border-b border-[#f3f4f5] last:border-0 hover:bg-[#f3f4f5] transition-colors">
-                                <td className="py-2.5 px-5 text-[12px] font-bold text-[#191c1d]">{row.season}</td>
-                                <td className="py-2.5 px-5 text-[12px] text-[#424751] flex items-center gap-1.5">
-                                  <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={16} />
-                                  {row.team}
+                              <tr key={`${row.season}-${row.team}`} className="border-b border-slate-50 last:border-0 hover:bg-blue-50/20 transition-all group/row">
+                                <td className="py-5 px-8 text-[14px] font-black text-slate-900">{row.season}</td>
+                                <td className="py-5 px-8">
+                                  <div className="flex items-center gap-3">
+                                    <div className="p-1 bg-white rounded-lg shadow-sm border border-slate-100 group-hover/row:scale-110 transition-transform">
+                                      <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={20} />
+                                    </div>
+                                    <span className="text-[14px] text-slate-700 font-bold group-hover/row:text-primary transition-colors">{row.team}</span>
+                                  </div>
                                 </td>
-                                <td className="py-2.5 px-5 text-center font-hl font-bold text-[12px] text-[#191c1d]">{row.matches}</td>
-                                <td className="py-2.5 px-5 text-center font-hl font-bold text-[12px] text-[#191c1d]">{row.goals} / {row.assists}</td>
-                                <td className="py-2.5 px-5 text-center">
+                                <td className="py-5 px-8 text-center font-hl font-black text-[16px] text-slate-900">{row.matches || 0}</td>
+                                <td className="py-5 px-8 text-center font-hl font-bold text-[15px] text-slate-700">
+                                  <span className="text-slate-900 font-black">{row.goals || 0}</span>
+                                  <span className="text-slate-300 mx-1.5 inline-block scale-y-125">/</span>
+                                  <span className="text-primary font-black">{row.assists || 0}</span>
+                                </td>
+                                <td className="py-5 px-8 text-center">
                                   {row.rating > 0
-                                    ? <span className="text-[10px] font-black py-0.5 px-2 rounded-lg" style={{ backgroundColor: row.ratingColor, color: row.ratingText }}>{row.rating.toFixed(1)}</span>
-                                    : <span className="text-[10px] text-[#c2c6d2]">—</span>
+                                    ? <span className="inline-block min-w-[42px] font-hl font-black text-[13px] py-1.5 px-3 rounded-xl shadow-sm border border-black/5" style={{ backgroundColor: row.ratingColor, color: row.ratingText }}>{row.rating.toFixed(1)}</span>
+                                    : <span className="text-[13px] text-slate-300 font-bold">—</span>
                                   }
                                 </td>
                               </tr>
@@ -446,53 +467,85 @@ export default async function PlayerPage({ params }: Props) {
           <div className="flex flex-col gap-4">
 
             {/* Radar */}
-            <div className="a2 bg-white rounded-2xl border border-[#c2c6d2]/20 p-5 overflow-hidden shadow-sm">
-              <div className="-mx-5 -mt-5 px-5 py-2.5 mb-4 bg-[#f8f9fa] border-b border-[#eef0f2] text-center">
-                <h3 className="font-hl font-extrabold text-[13px] text-primary">{t('sections.skill_matrix')}</h3>
+            <div className="glass-card bg-white p-6 shadow-sm overflow-hidden">
+              <div className="flex items-center justify-center gap-2 mb-8">
+                <span className="material-symbols-outlined text-primary text-[20px]">radar</span>
+                <h3 className="label-caps text-primary text-[11px]">{t('sections.skill_matrix')}</h3>
               </div>
-              <div className="relative h-[180px] flex items-center justify-center">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" className="drop-shadow-[0_4px_12px_rgba(0,71,130,0.1)]">
-                  <polygon points="50,15 85,38 72,82 28,82 15,38" fill="none" stroke="#e1e3e4" strokeWidth="0.5"/>
-                  <polygon points="50,25 75,41 66,72 34,72 25,41" fill="none" stroke="#e1e3e4" strokeWidth="0.5"/>
-                  <polygon points="50,35 65,45 60,62 40,62 35,45" fill="none" stroke="#e1e3e4" strokeWidth="0.5"/>
-                  <polygon points="50,18 82,40 68,78 32,75 20,42" fill="rgba(0,71,130,0.12)" stroke="var(--color-primary)" strokeWidth="1.2"/>
-                  <circle cx="50" cy="18" r="1.5" fill="var(--color-primary)"/>
-                  <circle cx="82" cy="40" r="1.5" fill="var(--color-primary)"/>
-                  <circle cx="68" cy="78" r="1.5" fill="var(--color-primary)"/>
-                  <circle cx="32" cy="75" r="1.5" fill="var(--color-primary)"/>
-                  <circle cx="20"  cy="42" r="1.5" fill="var(--color-primary)"/>
-                  <text className="radar-label" x="50" y="10" textAnchor="middle">{tRadar('speed')}</text>
-                  <text className="radar-label" x="88" y="42" textAnchor="start">{tRadar('dribble')}</text>
-                  <text className="radar-label" x="72" y="88" textAnchor="middle">{tRadar('passes')}</text>
-                  <text className="radar-label" x="28" y="88" textAnchor="middle">{tRadar('tech')}</text>
-                  <text className="radar-label" x="12" y="42" textAnchor="end">{tRadar('finish')}</text>
+              <div className="relative h-[240px] flex items-center justify-center -mt-4">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" className="drop-shadow-[0_8px_32px_rgba(30,64,175,0.2)] overflow-visible">
+                  <defs>
+                    <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="#1e40af" stopOpacity="0.1" />
+                    </radialGradient>
+                    <filter id="glow">
+                      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  
+                  {/* Axis */}
+                  <polygon points="50,15 85,38 72,82 28,82 15,38" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
+                  <polygon points="50,25 75,41 66,72 34,72 25,41" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
+                  <polygon points="50,35 65,45 60,62 40,62 35,45" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
+                  
+                  {/* Potential Area (Dashed) */}
+                  <polygon points="50,12 87,36 74,85 26,85 13,36" 
+                    className="radar-area-potential opacity-40 transition-all duration-1000" />
+
+                  {/* Radar Area (Filled) */}
+                  <polygon points="50,18 82,40 68,78 32,75 20,42" 
+                    fill="url(#radarGradient)" 
+                    stroke="var(--color-primary)" 
+                    strokeWidth="1.5" 
+                    filter="url(#glow)"
+                    className="radar-area-current shadow-xl transition-all duration-1000" />
+                  
+                  {/* Data Points */}
+                  {[
+                    { x: 50, y: 18 }, { x: 82, y: 40 }, { x: 68, y: 78 }, { x: 32, y: 75 }, { x: 20, y: 42 }
+                  ].map((pt, i) => (
+                    <circle key={i} cx={pt.x} cy={pt.y} r="1.5" fill="var(--color-primary)" stroke="white" strokeWidth="0.5" />
+                  ))}
+                  
+                  {/* Labels */}
+                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="50" y="8" textAnchor="middle">{tRadar('speed')}</text>
+                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="92" y="42" textAnchor="start">{tRadar('dribble')}</text>
+                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="72" y="90" textAnchor="middle">{tRadar('passes')}</text>
+                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="28" y="90" textAnchor="middle">{tRadar('tech')}</text>
+                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="8" y="42" textAnchor="end">{tRadar('finish')}</text>
                 </svg>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 mt-3">
-                <div className="text-center bg-[#f3f4f5] rounded-lg p-2.5">
-                  <div className="text-[11px] text-[#424751] mb-1">{tRadar('creativity')}</div>
-                  <div className="font-hl font-black text-[20px] text-primary">{p.radar.creativity}</div>
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                <div className="text-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                  <div className="label-caps mb-1 opacity-70 text-[9px]">{tRadar('creativity')}</div>
+                  <div className="font-hl font-black text-[22px] text-primary">{p.radar.creativity}</div>
                 </div>
-                <div className="text-center bg-[#f3f4f5] rounded-lg p-2.5">
-                  <div className="text-[11px] text-[#424751] mb-1">{tRadar('vision')}</div>
-                  <div className="font-hl font-black text-[20px] text-primary">{p.radar.vision}</div>
+                <div className="text-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                  <div className="label-caps mb-1 opacity-70 text-[9px]">{tRadar('vision')}</div>
+                  <div className="font-hl font-black text-[22px] text-primary">{p.radar.vision}</div>
                 </div>
               </div>
             </div>
 
             {/* Tactical roles */}
-            <div className="a3 bg-[#f3f4f5] rounded-2xl border border-[#c2c6d2]/20 p-5.5 overflow-hidden">
-              <div className="-mx-5.5 -mt-5.5 px-5.5 py-2.5 mb-4 bg-[#e8eaec] border-b border-[#d8dce0]">
-                <h3 className="font-hl font-extrabold text-[14px] text-primary">{t('sections.tactical_roles')}</h3>
+            <div className="glass-card bg-slate-50/80 p-6 overflow-hidden border-slate-200/50">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-[20px]">tactic</span>
+                <h3 className="label-caps text-primary text-[11px]">{t('sections.tactical_roles')}</h3>
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-5">
                 {p.tacticalRoles.map((role) => (
                   <div key={role.role}>
-                    <div className="flex justify-between text-[12px] font-bold text-[#191c1d] mb-1">
-                      <span>{role.role}</span><span>{role.pct}%</span>
+                    <div className="flex justify-between items-end mb-2">
+                      <span className="text-[13px] font-bold text-slate-900">{role.role}</span>
+                      <span className="font-hl font-black text-[15px] text-primary">{role.pct}%</span>
                     </div>
-                    <div className="h-1 bg-[#e1e3e4] rounded-full overflow-hidden">
-                      <div className="bar-grow h-full rounded-full" style={{ width:`${role.pct}%`, backgroundColor: role.pct >= 70 ? 'var(--color-primary)' : '#727782' }} />
+                    <div className="h-2 bg-slate-200 rounded-full overflow-hidden shadow-inner">
+                      <div className="bar-grow h-full rounded-full shadow-sm" style={{ width:`${role.pct}%`, backgroundColor: role.pct >= 70 ? 'var(--color-primary)' : '#94a3b8' }} />
                     </div>
                   </div>
                 ))}
@@ -500,57 +553,57 @@ export default async function PlayerPage({ params }: Props) {
             </div>
 
             {/* Strengths & weaknesses */}
-            <div className="a4 bg-white rounded-2xl border border-[#c2c6d2]/20 p-5.5 overflow-hidden shadow-sm">
-              <div className="-mx-5.5 -mt-5.5 px-5.5 py-2.5 mb-4 bg-[#f8f9fa] border-b border-[#eef0f2]">
-                <h3 className="font-hl font-extrabold text-[14px] text-primary">{t('sections.strengths_weaknesses')}</h3>
+            <div className="glass-card bg-white p-6 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-[20px]">insights</span>
+                <h3 className="label-caps text-primary text-[11px]">{t('sections.strengths_weaknesses')}</h3>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {p.strengths.map((s) => (
-                  <div key={s} className="flex items-start gap-2.5 p-2 rounded-lg">
-                    <span className="text-[15px] shrink-0">✅</span>
-                    <div className="text-[13px] font-bold text-[#191c1d]">{s}</div>
+                  <div key={s} className="flex items-start gap-3 p-3 bg-emerald-50/50 rounded-2xl border border-emerald-100/50 group hover:bg-emerald-50 transition-colors">
+                    <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+                    <div className="text-[13px] font-bold text-slate-800 leading-snug">{s}</div>
                   </div>
                 ))}
-                <div className="h-px bg-[#f3f4f5] my-1" />
                 {p.weaknesses.map((w) => (
-                  <div key={w} className="flex items-start gap-2.5 p-2 rounded-lg">
-                    <span className="text-[15px] shrink-0">⚠️</span>
-                    <div className="text-[13px] font-medium text-[#727782]">{w}</div>
+                  <div key={w} className="flex items-start gap-3 p-3 bg-amber-50/50 rounded-2xl border border-amber-100/50 group hover:bg-amber-50 transition-colors">
+                    <span className="material-symbols-outlined text-amber-600 text-[18px]">warning</span>
+                    <div className="text-[13px] font-medium text-slate-600 leading-snug">{w}</div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Trophées & Palmarès */}
-            <div className="a5 bg-white rounded-2xl border border-[#c2c6d2]/20 p-5 overflow-hidden shadow-sm">
-              <div className="-mx-5 -mt-5 px-5 py-2.5 mb-4 bg-[#f8f9fa] border-b border-[#eef0f2] flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-primary">emoji_events</span>
-                <h3 className="font-hl font-extrabold text-[13px] text-primary">{t('sections.trophies')}</h3>
+            <div className="glass-card bg-white p-6 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-[20px]">emoji_events</span>
+                <h3 className="label-caps text-primary text-[11px]">{t('sections.trophies')}</h3>
                 {trophyWins.length > 0 && (
-                  <span className="ml-auto bg-primary/10 text-primary text-[9px] font-extrabold uppercase tracking-[0.1em] py-0.5 px-2 rounded-full">
-                    {trophyWins.length} 🏆
+                  <span className="ml-auto ai-gradient text-white text-[10px] font-black py-0.5 px-2.5 rounded-full shadow-sm ring-4 ring-blue-50">
+                    {trophyWins.length}
                   </span>
                 )}
               </div>
               {trophyList.length === 0 ? (
-                <p className="text-[12px] text-[#727782] italic">{t('sections.no_trophies')}</p>
+                <p className="text-[12px] text-slate-400 italic px-1">{t('sections.no_trophies')}</p>
               ) : (
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-2">
                   {trophyWins.map((trophy, i) => (
-                    <div key={`w-${i}`} className="flex items-start gap-2 py-1.5 border-b border-[#f3f4f5] last:border-0">
-                      <span className="text-[14px] shrink-0 mt-0.5">🏆</span>
+                    <div key={`w-${i}`} className="flex items-center gap-4 p-3 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
+                      <span className="text-xl drop-shadow-sm group-hover:scale-110 transition-transform">🏆</span>
                       <div className="min-w-0">
-                        <div className="text-[11px] font-bold text-[#191c1d] truncate">{trophy.league}</div>
-                        <div className="text-[10px] text-[#727782]">{trophy.season} · <span className="text-primary font-semibold">{t('sections.trophies_winner')}</span></div>
+                        <div className="text-[13px] font-bold text-slate-900 truncate">{trophy.league}</div>
+                        <div className="label-caps text-primary text-[9px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_winner')}</div>
                       </div>
                     </div>
                   ))}
                   {trophyRunners.map((trophy, i) => (
-                    <div key={`r-${i}`} className="flex items-start gap-2 py-1.5 border-b border-[#f3f4f5] last:border-0">
-                      <span className="text-[14px] shrink-0 mt-0.5">🥈</span>
+                    <div key={`r-${i}`} className="flex items-center gap-4 p-3 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-slate-200 transition-all">
+                      <span className="text-xl drop-shadow-sm opacity-60">🥈</span>
                       <div className="min-w-0">
-                        <div className="text-[11px] font-bold text-[#424751] truncate">{trophy.league}</div>
-                        <div className="text-[10px] text-[#727782]">{trophy.season} · <span className="text-[#727782] font-semibold">{t('sections.trophies_runner_up')}</span></div>
+                        <div className="text-[13px] font-bold text-slate-700 truncate">{trophy.league}</div>
+                        <div className="label-caps text-slate-400 text-[9px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_runner_up')}</div>
                       </div>
                     </div>
                   ))}
@@ -559,12 +612,15 @@ export default async function PlayerPage({ params }: Props) {
             </div>
 
             {/* Pro CTA */}
-            <div className="a6 bg-slate-900 rounded-2xl p-5.5 text-white">
-              <div className="text-[10px] font-black uppercase tracking-[0.15em] text-blue-400 mb-2">{tc('labels.pro_scouting')}</div>
-              <div className="text-[13px] font-medium text-white/75 leading-relaxed mb-4.5">{tc('labels.pro_scouting_sub')}</div>
-              <button className="w-full py-2.5 bg-blue-600 border-0 rounded-lg font-hl font-extrabold text-[12px] uppercase tracking-[0.08em] text-white cursor-pointer hover:bg-blue-700 transition-colors">
-                {tc('labels.pro_scouting_cta')}
-              </button>
+            <div className="rounded-3xl p-7 text-white bg-slate-900 relative overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
+              <div className="relative z-1">
+                <div className="label-caps !text-blue-400 text-[10px] mb-3">{tc('labels.pro_scouting')}</div>
+                <div className="text-[14px] font-medium text-slate-300 leading-relaxed mb-6">{tc('labels.pro_scouting_sub')}</div>
+                <button className="w-full py-3.5 ai-gradient border-0 rounded-xl font-hl font-black text-[12px] uppercase tracking-widest text-white cursor-pointer hover:scale-[1.02] transition-transform shadow-lg shadow-blue-900/40">
+                  {tc('labels.pro_scouting_cta')}
+                </button>
+              </div>
             </div>
           </div>
         </div>

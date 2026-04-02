@@ -67,29 +67,45 @@ function Slot({
   return (
     <div ref={wRef} className={`relative ${isHero ? 'flex-[1.5]' : 'flex-1'} min-w-0`}>
       {player ? (
-        <div className="flex items-center gap-2.5 px-4 py-2.5 transition-all"
-          style={{ background: accentBg, borderRadius: 100, border: `1.5px solid ${accent}20` }}>
-          <div className="flex flex-1 items-center gap-2.5 min-w-0 group transition-all">
-            {(() => { const c = POS_STYLE[player.position] ?? { bg: '#f3f4f5', color: '#727782' }; return (
-              <PlayerAvatar initials={player.initials} avatarBg={c.bg} avatarColor={c.color} size={28} />
-            )})()}
+        <div 
+          className="flex items-center gap-3 px-4 py-2.5 transition-all glass-card !rounded-full group"
+          style={{ 
+            borderColor: isA ? 'rgba(30,64,175,0.2)' : 'rgba(146,0,15,0.2)',
+            background: isA ? 'rgba(30,64,175,0.03)' : 'rgba(146,0,15,0.03)'
+          }}
+        >
+          <div className="flex flex-1 items-center gap-3 min-w-0">
+            {(() => { 
+              const p = player!;
+              const c = POS_STYLE[p.position] ?? { bg: '#f1f5f9', color: '#64748b' }; 
+              return (
+                <div className="relative">
+                  <PlayerAvatar initials={p.initials} avatarBg={c.bg} avatarColor={c.color} size={32} />
+                  <div 
+                    className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white"
+                    style={{ background: isA ? '#1e40af' : '#92000f' }}
+                  />
+                </div>
+              )
+            })()}
             <div className="flex-1 min-w-0">
-              <div className="font-headline font-bold text-[13px] truncate" style={{ color: accent }}>{player.name}</div>
-              <div className="text-[10px] text-[#727782] truncate">{player.club}</div>
+              <div className="font-bold text-sm truncate" style={{ color: isA ? '#1e40af' : '#92000f' }}>{player.name}</div>
+              <div className="label-caps !text-[9px] !text-slate-400 truncate mt-0.5">{player.club}</div>
             </div>
           </div>
-          <button onClick={onClear} 
-            className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[#727782] hover:bg-black/[.06] transition-all">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <button 
+            onClick={onClear} 
+            className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600 hover:shadow-sm transition-all"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
               <path d="M18 6 6 18M6 6l12 12"/>
             </svg>
           </button>
         </div>
       ) : (
-        <div className={`flex items-center gap-2 px-4 h-11 md:h-14 transition-all 
-          ${isHero ? 'bg-[#f8f9fa] border-[#eef0f2] text-[#191c1d]' : 'bg-gray-50 border-transparent'} 
-          border rounded-xl ${open ? 'ring-2 ring-primary/20 bg-white shadow-sm border-gray-200' : ''}`}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isHero ? "#727782" : "#a0a6b2"} strokeWidth="2.5" className="flex-shrink-0">
+        <div className={`flex items-center gap-3 px-4 h-12 md:h-14 transition-all bg-white border rounded-xl overflow-hidden
+          ${open ? 'ring-2 ring-primary/10 border-primary/50 shadow-lg shadow-primary/5' : 'border-slate-200 shadow-sm hover:border-slate-300'}`}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-slate-300 flex-shrink-0">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input
@@ -101,14 +117,14 @@ function Slot({
             onChange={e => { onQuery(e.target.value); onOpen(true) }}
             onFocus={() => onOpen(true)}
             onKeyDown={onKey}
-            className="flex-1 w-full bg-transparent border-none outline-none font-hl font-bold text-sm text-primary placeholder-gray-400 min-w-0"
+            className="flex-1 w-full bg-transparent border-none outline-none font-hl font-bold text-sm text-slate-900 placeholder-slate-300 min-w-0"
           />
           {query && (
             <button
               onMouseDown={e => e.preventDefault()}
               onClick={() => { onQuery(''); onOpen(true); iRef.current?.focus() }}
-              className="flex-shrink-0 text-[#a0a6b2] hover:text-[#424751]">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              className="flex-shrink-0 text-slate-300 hover:text-slate-500 transition-colors">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M18 6 6 18M6 6l12 12"/>
               </svg>
             </button>
@@ -117,51 +133,55 @@ function Slot({
       )}
 
       {!player && open && (
-        <div className={`absolute top-[calc(100%+8px)] ${isHero ? 'left-0 md:-left-4 md:min-w-[420px]' : 'left-0 right-0'} bg-white rounded-xl border border-[#c2c6d2] z-50 flex flex-col overflow-hidden`}
-          style={{ maxHeight: 350, overflowY: 'auto', boxShadow: '0 12px 40px rgba(0,71,130,.15)' }}>
+        <div className={`absolute top-[calc(100%+8px)] ${isHero ? 'left-0 md:-left-4 md:min-w-[440px]' : 'left-0 right-0'} glass-card !p-0 z-50 flex flex-col overflow-hidden shadow-2xl shadow-primary/20`}
+          style={{ maxHeight: 350, overflowY: 'auto' }}>
           {loading ? (
-            <div className="flex items-center justify-center gap-2 py-5 text-[12px] text-[#727782]">
-              <div className="w-4 h-4 rounded-full border-2 border-[#c2c6d2] border-t-[#004782] animate-spin" />
-              {t('loading')}
+            <div className="flex items-center justify-center gap-3 py-8 text-[12px] text-slate-400">
+              <div className="w-5 h-5 rounded-full border-2 border-slate-100 border-t-primary animate-spin" />
+              <span className="font-bold tracking-widest uppercase">{t('loading')}</span>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="py-5 text-center text-[12px] text-[#727782] px-4">
-              {t('no_results', { query })}
-              <div className="text-[10px] text-[#c2c6d2] mt-1">{t('database_info')}</div>
+            <div className="py-8 text-center px-6">
+              <div className="text-sm font-bold text-slate-600 mb-1">{t('no_results', { query })}</div>
+              <div className="label-caps !text-[9px] !text-slate-300">{t('database_info')}</div>
             </div>
           ) : (
             <>
-              <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-[.1em] text-[#727782] bg-[#f3f4f5] border-b border-[#edeeef] sticky top-0 flex items-center justify-between">
-                <span>{totalCount} {t('players_in_db')}</span>
-                {query && <span className="normal-case font-normal">{filtered.length} {t('results')}</span>}
+              <div className="px-4 py-2 text-[10px] bg-slate-50/80 border-b border-slate-100 sticky top-0 flex items-center justify-between z-10 backdrop-blur-sm">
+                <span className="label-caps !text-slate-400">{totalCount} {t('players_in_db')}</span>
+                {query && <span className="label-caps !text-primary">{filtered.length} {t('results')}</span>}
               </div>
               {filtered.map((p, i) => {
-                const pos = POS_STYLE[p.position] ?? { bg: '#f3f4f5', color: '#727782' }
+                const pos = POS_STYLE[p.position] ?? { bg: '#f1f5f9', color: '#64748b' }
                 return (
                   <div key={p.id}
-                    onMouseDown={e => e.preventDefault()} // prevent input blur on click
-                    className={`flex items-center gap-2.5 px-3 py-2.5 cursor-pointer border-b border-[#f3f4f5] last:border-0 transition-colors
-                      ${focused === i ? (isA ? 'bg-[#EFF6FF]' : 'bg-[#fef2f2]') : 'hover:bg-[#f8f9fa]'}`}
+                    onMouseDown={e => e.preventDefault()}
+                    className={`flex items-center gap-4 px-4 py-3 cursor-pointer border-b border-slate-50 last:border-0 transition-all
+                      ${focused === i ? (isA ? 'bg-blue-50/50' : 'bg-red-50/50') : 'hover:bg-slate-50'}`}
                     onClick={() => onSelect(p)}
                     onMouseEnter={() => onFocus(i)}>
-                    {(() => { const c = POS_STYLE[p.position] ?? { bg: '#f3f4f5', color: '#727782' }; return (
-                      <PlayerAvatar initials={p.initials}
-                        avatarBg={c.bg} avatarColor={c.color} size={34} />
-                    )})()}
-                    <div className="flex-1 min-w-0 pr-2">
-                      <div className="text-[13px] md:text-sm font-semibold text-[#191c1d] truncate">
+                    <div className="relative shrink-0">
+                      <PlayerAvatar initials={p.initials} avatarBg={pos.bg} avatarColor={pos.color} size={36} />
+                      {p.rating > 0 && (
+                        <div 
+                          className="absolute -top-1 -right-1 px-1 py-0.5 rounded-md text-[8px] font-black leading-none bg-white border border-slate-100 shadow-sm"
+                          style={{ color: p.rating >= 8 ? '#15803d' : '#1e40af' }}
+                        >
+                          {p.rating.toFixed(1)}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold text-slate-900 truncate">
                         {p.common_name || p.name}
                       </div>
-                      <div className="text-[10px] md:text-[11px] text-[#727782] mt-px truncate">{p.team}</div>
+                      <div className="label-caps !text-[9px] !text-slate-400 mt-0.5 truncate">{p.team}</div>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-[9px] font-bold uppercase tracking-[.06em] px-1.5 py-px rounded"
+                    <div className="shrink-0 flex items-center">
+                      <span className="label-caps !text-[8px] px-2 py-1 rounded-lg border border-transparent"
                         style={{ background: pos.bg, color: pos.color }}>
                         {tc(`positions.${((p.position === 'MIL' ? 'mid' : p.position) ?? '').toLowerCase()}`) || p.position}
                       </span>
-                      {p.rating > 0 && (
-                        <span className="font-headline font-black text-[12px] text-[#191c1d]">{p.rating.toFixed(1)}</span>
-                      )}
                     </div>
                   </div>
                 )
@@ -297,10 +317,13 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
   }
 
   const duelButton = (
-    <button onClick={launch} disabled={!pA && !pB}
-      style={{ color: 'white' }}
-      className={`w-full md:w-auto bg-primary !text-white px-10 py-5 rounded-xl font-hl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all whitespace-nowrap active:scale-95 hover:bg-primary-c`}>
-      {defaultCta}
+    <button 
+      onClick={launch} 
+      disabled={!pA && !pB}
+      className={`relative overflow-hidden w-full md:w-auto bg-primary text-white px-10 py-5 rounded-2xl font-hl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 hover:bg-blue-700 hover:-translate-y-0.5 group`}
+    >
+      <span className="relative z-10">{defaultCta}</span>
+      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
     </button>
   )
 
@@ -321,7 +344,7 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
           tc={tc}
 
         />
-        <div className={isHero ? "text-[11px] font-black bg-[#eef6ff] text-[#004782] px-4 py-1.5 rounded-lg tracking-widest flex-shrink-0 shadow-sm border border-[#d6e9ff] mx-1" : "text-[9px] font-black text-gray-400 px-1 py-1 md:bg-white md:border-2 md:border-primary/10 md:text-primary md:w-6 md:h-6 md:rounded-full flex items-center justify-start md:justify-center tracking-widest flex-shrink-0 z-10"}>vs</div>
+        <div className={isHero ? "text-[11px] font-black bg-blue-50 text-primary px-4 py-2 rounded-xl tracking-widest flex-shrink-0 shadow-sm border border-blue-100/50 mx-1 label-caps" : "text-[10px] font-black text-slate-300 px-1 py-1 md:bg-white md:border-2 md:border-slate-100 md:text-primary md:w-8 md:h-8 md:rounded-full flex items-center justify-start md:justify-center tracking-widest flex-shrink-0 z-10 font-hl"}>VS</div>
         <Slot
           isA={false} player={pB} query={qB} filtered={filteredB}
           open={oB} focused={fB} loading={loadingInit || loadingB} totalCount={totalCount}
@@ -342,11 +365,14 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
           {duelButton}
           {!hideMode && (
             <>
-              <div className="hidden sm:block w-px h-7 bg-[#c2c6d2] flex-shrink-0" />
-              <div className="flex bg-[#f3f4f5] rounded-lg p-0.5 gap-px flex-shrink-0">
+              <div className="hidden sm:block w-px h-8 bg-slate-100 flex-shrink-0 mx-2" />
+              <div className="flex bg-slate-100 rounded-xl p-1.5 gap-1 flex-shrink-0 border border-slate-200/50">
                 {(['joueurs', 'equipes'] as const).map(m => (
-                  <button key={m} onClick={() => setMode(m)}
-                    className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all ${mode === m ? 'bg-white text-[#004782] font-bold shadow-sm' : 'text-[#727782]'}`}>
+                  <button 
+                    key={m} 
+                    onClick={() => setMode(m)}
+                    className={`px-4 py-2 rounded-lg text-[10px] label-caps transition-all ${mode === m ? 'bg-white text-primary font-black shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
                     {m === 'joueurs' ? t('mode_players') : t('mode_teams')}
                   </button>
                 ))}

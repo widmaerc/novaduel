@@ -451,8 +451,8 @@ export async function getPlayerCareer(afId: number): Promise<CareerRow[]> {
             goals:       s.goals?.total      ?? 0,
             assists:     s.goals?.assists     ?? 0,
             rating,
-            ratingColor: rating >= 7.5 ? '#dcfce7' : rating >= 6.5 ? '#fef9c3' : rating > 0 ? '#fee2e2' : '#f3f4f5',
-            ratingText:  rating >= 7.5 ? '#15803d' : rating >= 6.5 ? '#854d0e' : rating > 0 ? '#b91c1c' : '#727782',
+            ratingColor: rating >= 7.5 ? '#eff6ff' : rating >= 6.5 ? '#f8fafc' : rating > 0 ? '#f1f5f9' : '#f8f9fa',
+            ratingText:  rating >= 7.5 ? '#1e40af' : rating >= 6.5 ? '#334155' : rating > 0 ? '#64748b' : '#94a3b8',
           });
         }
 

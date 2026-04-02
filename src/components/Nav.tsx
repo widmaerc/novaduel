@@ -45,7 +45,7 @@ export function Nav({ locale }: NavProps) {
               className="group font-hl font-black text-xl sm:text-2xl tracking-tighter text-primary uppercase select-none flex-shrink-0 transition-transform active:scale-95"
               style={{ textDecoration: 'none' }}
             >
-              Nova<span className="text-[#004782] group-hover:text-primary transition-colors">Duel</span>
+              Nova<span className="text-secondary group-hover:text-primary transition-colors">Duel</span>
             </Link>
 
             {/* Desktop: nav links (hidden on mobile) */}

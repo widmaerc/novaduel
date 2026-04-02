@@ -37,91 +37,118 @@ export default async function CompareIndexPage({ params }: Props) {
   const players  = await getFeaturedPlayers()
 
   return (
-    <div className="max-w-[1280px] mx-auto px-3 sm:px-4 lg:px-6 pb-20">
+    <div className="relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="hero-mesh absolute inset-0 opacity-40 pointer-events-none" />
+      
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative z-10">
+        {/* Header */}
+        <div className="max-w-2xl mb-10">
+          <p className="label-caps !text-primary mb-2 opacity-80">{t('label')}</p>
+          <h1 className="font-hl font-black text-3xl md:text-5xl text-slate-900 leading-[1.1] mb-4 text-gradient">
+            {t('title')}
+          </h1>
+          <p className="text-sm md:text-base text-slate-500 font-medium leading-relaxed">
+            {t('sub')}
+          </p>
+        </div>
 
-      {/* Header */}
-      <div className="pt-6 pb-4">
-        <p className="text-[10px] font-black uppercase tracking-[.12em] text-[#004782] mb-1">{t('label')}</p>
-        <h1 className="font-headline font-black text-[22px] sm:text-[28px] text-[#191c1d] leading-tight mb-1">
-          {t('title')}
-        </h1>
-        <p className="text-[13px] text-[#727782]">
-          {t('sub')}
-        </p>
-      </div>
+        {/* Search bar */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <CompareSearchBar locale={locale} isHero={true} />
+        </div>
 
-      {/* Search bar */}
-      <div className="mb-8">
-        <CompareSearchBar locale={locale} />
-      </div>
-
-      {/* Popular comparisons */}
-      {featured.length > 0 && (
-        <section className="mb-10">
-          <h2 className="font-headline font-bold text-[13px] text-[#727782] uppercase tracking-[.08em] mb-3">
-            {t('popular_title')}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {featured.map((c: any) => {
-              const pA = c.player_a
-              const pB = c.player_b
-              if (!pA || !pB) return null
-              return (
-                <a key={c.slug} href={localizedHref(locale, `/compare/${c.slug}`)}
-                  className="flex items-center gap-3 bg-white rounded-xl border border-[#c2c6d2] shadow-sm px-4 py-3 no-underline hover:shadow-md hover:border-[#004782]/30 transition-all">
-                  <div className="flex flex-shrink-0">
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center font-headline font-black text-[11px] border-2 border-white z-10"
-                      style={{ background: pA.avatar_bg ?? 'rgba(0,71,130,.1)', color: pA.avatar_color ?? '#004782' }}>
-                      {pA.initials ?? pA.name?.slice(0, 2).toUpperCase()}
+        {/* Popular comparisons */}
+        {featured.length > 0 && (
+          <section className="mb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px bg-slate-100 flex-1" />
+              <h2 className="label-caps !text-slate-400 whitespace-nowrap px-4">
+                {t('popular_title')}
+              </h2>
+              <div className="h-px bg-slate-100 flex-1" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {featured.map((c: any) => {
+                const pA = c.player_a
+                const pB = c.player_b
+                if (!pA || !pB) return null
+                return (
+                  <a 
+                    key={c.slug} 
+                    href={localizedHref(locale, `/compare/${c.slug}`)}
+                    className="glass-card group flex items-center gap-4 p-4 no-underline hover:bg-slate-50 transition-all border-slate-200/50"
+                  >
+                    <div className="flex -space-x-3 shrink-0">
+                      <div 
+                        className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[11px] border-2 border-white shadow-sm transition-transform group-hover:-translate-x-1"
+                        style={{ background: pA.avatar_bg ?? 'rgba(30,64,175,0.1)', color: pA.avatar_color ?? '#1e40af' }}
+                      >
+                        {pA.initials ?? pA.name?.slice(0, 2).toUpperCase()}
+                      </div>
+                      <div 
+                        className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[11px] border-2 border-white shadow-sm transition-transform group-hover:translate-x-1"
+                        style={{ background: pB.avatar_bg ?? 'rgba(146,0,15,0.1)', color: pB.avatar_color ?? '#92000f' }}
+                      >
+                        {pB.initials ?? pB.name?.slice(0, 2).toUpperCase()}
+                      </div>
                     </div>
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center font-headline font-black text-[11px] border-2 border-white -ml-3"
-                      style={{ background: pB.avatar_bg ?? 'rgba(146,0,15,.1)', color: pB.avatar_color ?? '#92000f' }}>
-                      {pB.initials ?? pB.name?.slice(0, 2).toUpperCase()}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-sm text-slate-800 truncate group-hover:text-primary transition-colors">
+                        {pA.common_name || pA.name} <span className="text-slate-300 font-medium px-1">vs</span> {pB.common_name || pB.name}
+                      </div>
+                      <div className="label-caps !text-[9px] !text-slate-400 mt-1">
+                        {c.views ?? 0} {t('views')}
+                      </div>
+                    </div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-slate-200 group-hover:text-primary group-hover:translate-x-1 transition-all">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </a>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Featured players to compare */}
+        {players.length > 0 && (
+          <section>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px bg-slate-100 flex-1" />
+              <h2 className="label-caps !text-slate-400 whitespace-nowrap px-4">
+                {t('featured_players')}
+              </h2>
+              <div className="h-px bg-slate-100 flex-1" />
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {players.slice(0, 8).map((p) => (
+                <a 
+                  key={p.slug} 
+                  href={`/${locale}/player/${p.slug}`}
+                  className="glass-card flex items-center gap-3 p-3 no-underline hover:bg-slate-50 transition-all group"
+                >
+                  <div 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[10px] shrink-0 bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-all shadow-sm"
+                  >
+                    {p.initials ?? p.name?.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-xs text-slate-800 truncate group-hover:text-primary transition-colors">
+                      {p.common_name || p.name}
+                    </div>
+                    <div className="label-caps !text-[8px] !text-slate-400 truncate mt-0.5">
+                      {p.team}
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-[13px] text-[#191c1d] truncate">
-                      {pA.common_name || pA.name} <span className="text-[#727782] font-normal">vs</span> {pB.common_name || pB.name}
-                    </div>
-                    <div className="text-[10px] text-[#727782] mt-px">
-                      {c.views ?? 0} {t('views')}
-                    </div>
-                  </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c2c6d2" strokeWidth="2" className="flex-shrink-0">
-                    <path d="m9 18 6-6-6-6"/>
-                  </svg>
                 </a>
-              )
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* Featured players to compare */}
-      {players.length > 0 && (
-        <section>
-          <h2 className="font-headline font-bold text-[13px] text-[#727782] uppercase tracking-[.08em] mb-3">
-            {t('featured_players')}
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {players.slice(0, 8).map((p) => (
-              <a key={p.slug} href={`/${locale}/player/${p.slug}`}
-                className="flex items-center gap-2.5 bg-white rounded-xl border border-[#c2c6d2] shadow-sm px-3 py-2.5 no-underline hover:shadow-md hover:border-[#004782]/30 transition-all">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center font-headline font-black text-[10px] flex-shrink-0"
-                  style={{ background: p.avatar_bg ?? 'rgba(0,71,130,.1)', color: p.avatar_color ?? '#004782' }}>
-                  {p.initials ?? p.name?.slice(0, 2).toUpperCase()}
-                </div>
-                <div className="min-w-0">
-                  <div className="font-semibold text-[12px] text-[#191c1d] truncate">{p.common_name || p.name}</div>
-                  <div className="text-[10px] text-[#727782] truncate">{p.team}</div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   )
 }
