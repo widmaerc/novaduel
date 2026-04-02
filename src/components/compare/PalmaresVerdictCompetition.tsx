@@ -200,82 +200,63 @@ function CompSection({
 }) {
   const headers = labels ?? ['Compétition', 'Note', 'MJ', 'B', 'A', 'JA', 'JR']
   return (
-    <>
-      <div className="px-6 py-4 border-l-[6px] transition-all hover:bg-slate-50/50"
-        style={{ borderColor: accent, background: `${accent}05` }}>
-        <h4 className="label-caps !text-[11px] !font-black !opacity-100 flex items-center gap-3" style={{ color: accent }}>
-          <div className="w-8 h-8 rounded-lg bg-white border border-slate-100 flex items-center justify-center shadow-sm shrink-0">
+    <div className="flex flex-col h-full">
+      <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/20">
+        <h4 className="label-caps !text-[11px] !font-black !opacity-100 flex items-center gap-2.5" style={{ color: accent }}>
+          <div className="w-6 h-6 rounded-md bg-white border border-slate-100 flex items-center justify-center shadow-sm shrink-0 font-hl font-black text-[10px]">
             {player.initials}
           </div>
-          {player.common_name}
+          <span className="truncate">{player.common_name}</span>
         </h4>
+        <div className="flex items-center gap-1.5 opacity-60">
+          <div className="w-1 h-3 rounded-full" style={{ backgroundColor: accent }} />
+          <span className="label-caps !text-[8px] !text-slate-400">Section {player.initials}</span>
+        </div>
       </div>
+      
       <div className="overflow-x-auto no-scrollbar">
-        {/* Mobile View Table */}
-        <div className="sm:hidden min-w-[400px]">
-          <div className="grid px-6 py-3 border-b border-slate-100 bg-slate-50/50"
-            style={{ gridTemplateColumns: colsMobile }}>
-            <span className="label-caps !text-[9px] !text-slate-400">{headers[0]}</span>
-            <span className="label-caps !text-[9px] !text-slate-400 text-center">{headers[1]}</span>
-            <span className="label-caps !text-[9px] !text-slate-400 text-center">{headers[2]}</span>
-            <span className="label-caps !text-[9px] !text-slate-400 text-center">{headers[3]}</span>
-            <span className="label-caps !text-[9px] !text-slate-400 text-center">{headers[4]}</span>
-          </div>
-          {stats.map((s, i) => (
-            <div key={i}
-              className="grid px-6 py-4 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-all items-center"
-              style={{ gridTemplateColumns: colsMobile }}>
-              <div className="flex items-center gap-3 font-bold text-sm text-slate-800 truncate pr-2">
-                <div className="w-6 h-6 bg-white rounded-lg border border-slate-100 flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
-                  {s.competition_logo
-                    ? <img src={s.competition_logo} alt="" className="w-5 h-5 object-contain" />
-                    : <div className="w-3 h-3 bg-slate-100 rounded-full" />}
-                </div>
-                <span className="truncate">{s.competition}</span>
-              </div>
-              <div className="flex justify-center"><RatingPill rating={s.rating} /></div>
-              <div className="text-center font-bold text-sm text-slate-400">{s.matches}</div>
-              <div className="text-center font-hl font-black text-md text-slate-900">{s.goals}</div>
-              <div className="text-center font-hl font-black text-md text-slate-900">{s.assists}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Desktop View Table */}
-        <div className="hidden sm:block">
-          <div className="grid px-8 py-4 border-b border-slate-100 bg-slate-50/50"
-            style={{ gridTemplateColumns: colsSm }}>
-            <span className="label-caps !text-[10px] !text-slate-400">{headers[0]}</span>
-            <span className="label-caps !text-[10px] !text-slate-400 text-center">{headers[1]}</span>
-            <span className="label-caps !text-[10px] !text-slate-400 text-center">{headers[2]}</span>
-            <span className="label-caps !text-[10px] !text-slate-400 text-center">{headers[3]}</span>
-            <span className="label-caps !text-[10px] !text-slate-400 text-center">{headers[4]}</span>
-            <span className="label-caps !text-[10px] !text-slate-400 text-center">{headers[5]}</span>
-            <span className="label-caps !text-[10px] !text-slate-400 text-center">{headers[6]}</span>
-          </div>
-          {stats.map((s, i) => (
-            <div key={i}
-              className="grid px-8 py-5 border-b border-slate-50 last:border-0 hover:bg-slate-50/80 transition-all items-center group/row"
+        {/* Table View (shared desktop/mobile simplified) */}
+        <div className="min-w-full">
+          <thead>
+            <div className="grid px-6 py-2.5 border-b border-slate-100 bg-slate-50/50"
               style={{ gridTemplateColumns: colsSm }}>
-              <div className="flex items-center gap-4 font-bold text-sm text-slate-800 truncate text-left pr-4">
-                <div className="w-8 h-8 bg-white rounded-xl border border-slate-100 flex items-center justify-center shadow-sm shrink-0 overflow-hidden group-hover/row:scale-110 transition-transform">
-                  {s.competition_logo
-                    ? <img src={s.competition_logo} alt="" className="w-6 h-6 object-contain" />
-                    : <div className="w-4 h-4 bg-slate-100 rounded-full" />}
-                </div>
-                <span className="truncate">{s.competition}</span>
-              </div>
-              <div className="flex justify-center"><RatingPill rating={s.rating} /></div>
-              <div className="text-center font-bold text-base text-slate-300">{s.matches}</div>
-              <div className="text-center font-hl font-black text-lg text-slate-900">{s.goals}</div>
-              <div className="text-center font-hl font-black text-lg text-slate-900">{s.assists}</div>
-              <div className="text-center font-bold text-sm text-slate-300">{s.yellow_cards}</div>
-              <div className="text-center font-bold text-sm text-slate-300">{s.red_cards}</div>
+              <span className="label-caps !text-[9px] !text-slate-400 font-black tracking-widest">{headers[0]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-widest">{headers[2]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-widest">{headers[3]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-widest">{headers[4]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-right font-black tracking-widest">{headers[1]}</span>
             </div>
-          ))}
+          </thead>
+          <tbody>
+            {stats.length > 0 ? (
+              stats.map((s, i) => (
+                <div key={i}
+                  className="grid px-6 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50/80 transition-all items-center group/row"
+                  style={{ gridTemplateColumns: colsSm }}>
+                  <div className="flex items-center gap-3 font-hl font-bold text-[12px] text-slate-800 truncate pr-2">
+                    <div className="w-6 h-6 bg-white rounded-lg border border-slate-100 flex items-center justify-center shadow-sm shrink-0 overflow-hidden group-hover/row:scale-110 transition-transform">
+                      {s.competition_logo
+                        ? <img src={s.competition_logo} alt="" className="w-4 h-4 object-contain" />
+                        : <div className="w-2.5 h-2.5 bg-slate-100 rounded-full" />}
+                    </div>
+                    <span className="truncate max-w-[80px] xs:max-w-none">{s.competition}</span>
+                  </div>
+                  <div className="text-center font-hl font-black text-[12px] text-slate-400">{s.matches}</div>
+                  <div className="text-center font-hl font-black text-[14px] text-slate-900">{s.goals}</div>
+                  <div className="text-center font-hl font-black text-[14px] text-slate-600">{s.assists}</div>
+                  <div className="flex justify-end"><RatingPill rating={s.rating} /></div>
+                </div>
+              ))
+            ) : (
+              <div className="py-12 flex flex-col items-center justify-center opacity-30">
+                <span className="material-symbols-outlined text-4xl mb-2">inbox</span>
+                <span className="label-caps !text-[8px] tracking-widest">Aucune donnée</span>
+              </div>
+            )}
+          </tbody>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -287,33 +268,41 @@ interface CompetitionStatsTableProps {
 }
 
 export function CompetitionStatsTable({ playerA, playerB, statsA, statsB, labels }: CompetitionStatsTableProps) {
-  const colsMobile = '1fr 60px 40px 40px 40px'
-  const colsSm     = '1fr 70px 50px 50px 50px 50px 50px'
+  // Ultra-compact columns for side-by-side
+  const colsSm = '1fr 34px 34px 34px 44px'
 
   return (
-    <div className="glass-card shadow-2xl border-slate-200/50 !p-0 overflow-hidden">
-      <div className="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-slate-50/30">
+    <div className="glass-card shadow-2xl border-slate-200/50 !p-0 overflow-hidden bg-white">
+      <div className="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-slate-50/50">
         <div className="flex flex-col gap-1">
-          <h3 className="font-hl font-black text-xl text-slate-900 drop-shadow-sm">
+          <h3 className="font-hl font-black text-xl text-slate-900 drop-shadow-sm tracking-tight">
             {labels?.title ?? 'Statistiques par Compétition'}
           </h3>
-          <p className="label-caps !text-[9px] !text-slate-400 opacity-80">Ventilation par tournoi et performance</p>
+          <p className="label-caps !text-[10px] !text-slate-400 font-bold opacity-80 tracking-[0.1em]">VENTILATION DES PERFORMANCES</p>
         </div>
         
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-blue-600 shadow-lg shadow-blue-600/20" />
-            <span className="label-caps !text-[10px] !text-slate-900 font-bold truncate max-w-[100px]">{playerA.common_name}</span>
+        <div className="flex items-center gap-6 p-2 px-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-600/30" />
+            <span className="label-caps !text-[9px] !text-slate-900 font-black truncate max-w-[90px]">{playerA.common_name}</span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-red-600 shadow-lg shadow-red-600/20" />
-            <span className="label-caps !text-[10px] !text-slate-900 font-bold truncate max-w-[100px]">{playerB.common_name}</span>
+          <div className="w-px h-3 bg-slate-200" />
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-600 shadow-lg shadow-red-600/30" />
+            <span className="label-caps !text-[9px] !text-slate-900 font-black truncate max-w-[90px]">{playerB.common_name}</span>
           </div>
         </div>
       </div>
-      <CompSection player={playerA} stats={statsA} accent="#1e40af" colsMobile={colsMobile} colsSm={colsSm} labels={labels?.headers} />
-      <div className="h-4 bg-slate-50/50 border-y border-slate-100 shadow-inner" />
-      <CompSection player={playerB} stats={statsB} accent="#dc2626" colsMobile={colsMobile} colsSm={colsSm} labels={labels?.headers} />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100/80">
+        <div className="relative">
+          <CompSection player={playerA} stats={statsA} accent="#1e40af" colsMobile={colsSm} colsSm={colsSm} labels={labels?.headers} />
+          <div className="absolute top-0 right-0 h-full w-4 bg-gradient-to-l from-slate-50/10 to-transparent pointer-events-none hidden lg:block" />
+        </div>
+        <div className="relative bg-slate-50/[0.02]">
+          <CompSection player={playerB} stats={statsB} accent="#dc2626" colsMobile={colsSm} colsSm={colsSm} labels={labels?.headers} />
+        </div>
+      </div>
     </div>
   )
 }
