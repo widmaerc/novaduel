@@ -68,42 +68,42 @@ function Slot({
     <div ref={wRef} className={`relative ${isHero ? 'flex-[1.5]' : 'flex-1'} min-w-0`}>
       {player ? (
         <div 
-          className="flex items-center gap-3 px-4 py-2.5 transition-all glass-card !rounded-full group"
+          className="flex items-center gap-2.5 px-4 py-1.5 transition-all glass-card !rounded-full group"
           style={{ 
             borderColor: isA ? 'rgba(30,64,175,0.2)' : 'rgba(146,0,15,0.2)',
             background: isA ? 'rgba(30,64,175,0.03)' : 'rgba(146,0,15,0.03)'
           }}
         >
-          <div className="flex flex-1 items-center gap-3 min-w-0">
+          <div className="flex flex-1 items-center gap-2.5 min-w-0">
             {(() => { 
               const p = player!;
               const c = POS_STYLE[p.position] ?? { bg: '#f1f5f9', color: '#64748b' }; 
               return (
                 <div className="relative">
-                  <PlayerAvatar initials={p.initials} avatarBg={c.bg} avatarColor={c.color} size={32} />
+                  <PlayerAvatar initials={p.initials} avatarBg={c.bg} avatarColor={c.color} size={30} />
                   <div 
-                    className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white"
+                    className="absolute -bottom-1 -right-0.5 w-3 h-3 rounded-full border border-white"
                     style={{ background: isA ? '#1e40af' : '#92000f' }}
                   />
                 </div>
               )
             })()}
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-sm truncate" style={{ color: isA ? '#1e40af' : '#92000f' }}>{player.name}</div>
-              <div className="label-caps !text-[9px] !text-slate-400 truncate mt-0.5">{player.club}</div>
+              <div className="font-semibold text-sm truncate" style={{ color: isA ? '#1e40af' : '#92000f' }}>{player.name}</div>
+              <div className="label-caps !text-[8.5px] !text-slate-400 truncate mt-0">{player.club}</div>
             </div>
           </div>
           <button 
             onClick={onClear} 
-            className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600 hover:shadow-sm transition-all"
+            className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-600 hover:shadow-sm transition-all"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
               <path d="M18 6 6 18M6 6l12 12"/>
             </svg>
           </button>
         </div>
       ) : (
-        <div className={`flex items-center gap-3 px-4 h-12 md:h-14 transition-all bg-white border rounded-xl overflow-hidden
+        <div className={`flex items-center gap-3 px-4 h-10 md:h-12 transition-all bg-white border rounded-xl overflow-hidden
           ${open ? 'ring-2 ring-primary/10 border-primary/50 shadow-lg shadow-primary/5' : 'border-slate-200 shadow-sm hover:border-slate-300'}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-slate-300 flex-shrink-0">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -156,15 +156,15 @@ function Slot({
                 return (
                   <div key={p.id}
                     onMouseDown={e => e.preventDefault()}
-                    className={`flex items-center gap-4 px-4 py-3 cursor-pointer border-b border-slate-50 last:border-0 transition-all
+                    className={`flex items-center gap-3 px-4 py-2 cursor-pointer border-b border-slate-50 last:border-0 transition-all
                       ${focused === i ? (isA ? 'bg-blue-50/50' : 'bg-red-50/50') : 'hover:bg-slate-50'}`}
                     onClick={() => onSelect(p)}
                     onMouseEnter={() => onFocus(i)}>
                     <div className="relative shrink-0">
-                      <PlayerAvatar initials={p.initials} avatarBg={pos.bg} avatarColor={pos.color} size={36} />
+                      <PlayerAvatar initials={p.initials} avatarBg={pos.bg} avatarColor={pos.color} size={32} />
                       {p.rating > 0 && (
                         <div 
-                          className="absolute -top-1 -right-1 px-1 py-0.5 rounded-md text-[8px] font-black leading-none bg-white border border-slate-100 shadow-sm"
+                          className="absolute -top-1 -right-1 px-1 py-0.5 rounded-md text-[8px] font-bold leading-none bg-white border border-slate-100 shadow-sm"
                           style={{ color: p.rating >= 8 ? '#15803d' : '#1e40af' }}
                         >
                           {p.rating.toFixed(1)}
@@ -172,13 +172,13 @@ function Slot({
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-slate-900 truncate">
+                      <div className="text-sm font-semibold text-slate-900 truncate">
                         {p.common_name || p.name}
                       </div>
-                      <div className="label-caps !text-[9px] !text-slate-400 mt-0.5 truncate">{p.team}</div>
+                      <div className="label-caps !text-[8.5px] !text-slate-400 mt-0 truncate">{p.team}</div>
                     </div>
                     <div className="shrink-0 flex items-center">
-                      <span className="label-caps !text-[8px] px-2 py-1 rounded-lg border border-transparent"
+                      <span className="label-caps !text-[8.5px] px-2 py-1 rounded-lg border border-transparent"
                         style={{ background: pos.bg, color: pos.color }}>
                         {tc(`positions.${((p.position === 'MIL' ? 'mid' : p.position) ?? '').toLowerCase()}`) || p.position}
                       </span>

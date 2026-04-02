@@ -30,13 +30,13 @@ function Row({ rank, name, team, val, slug, initials, isLast, unit, locale }: To
   const href = slug ? localizedHref(locale, `/player/${slug}`) : '#';
   
   return (
-    <Link href={href} className={`flex items-center gap-3 md:gap-4 px-4 py-3 hover:bg-gray-50 transition-colors ${!isLast ? 'border-b border-gray-50' : ''}`}>
+    <Link href={href} className={`flex items-center gap-3 md:gap-4 px-4 py-2 hover:bg-gray-50 transition-colors ${!isLast ? 'border-b border-gray-50' : ''}`}>
       <span className="text-xs text-gray-400 w-4 text-center shrink-0">{rank}</span>
-      <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-hl font-bold text-xs ${c.bg} ${c.text} shrink-0`}>
+      <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center font-hl font-bold text-xs ${c.bg} ${c.text} shrink-0 shadow-sm`}>
         {initials ?? name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm text-dark font-medium truncate">{name}</div>
+        <div className="text-sm text-slate-700 font-bold truncate">{name}</div>
         <div className="text-[10px] md:text-xs text-gray-500 mt-0.5 truncate">{team}</div>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -75,7 +75,7 @@ function ListCard({ title, players, unit, locale, leagues, selectedLeague, onLea
 }) {
   return (
     <div className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-      <div className="px-4 py-3 md:px-5 md:py-4 border-b border-gray-50 flex items-center justify-between gap-2">
+      <div className="px-4 py-2.5 border-b border-gray-50 flex items-center justify-between gap-2">
         <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-dark truncate">
           {title}
         </span>
@@ -123,7 +123,7 @@ export default function TopPlayersLists() {
       .then((data: any[]) => {
         if (!Array.isArray(data) || data.length === 0) return;
         const list = parseScorers(data);
-        if (list.length > 0) setScorers(list);
+        if (list.length > 0) setScorers(list.slice(0, 10));
       })
       .catch(() => {});
   }, [selectedScorerLeague]);
@@ -135,7 +135,7 @@ export default function TopPlayersLists() {
       .then((data: any[]) => {
         if (!Array.isArray(data) || data.length === 0) return;
         const list = parseScorers(data);
-        if (list.length > 0) setAssisters(list);
+        if (list.length > 0) setAssisters(list.slice(0, 10));
       })
       .catch(() => {});
   }, [selectedAssistLeague]);

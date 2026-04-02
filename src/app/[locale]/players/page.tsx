@@ -133,11 +133,11 @@ export default function PlayersPage() {
       
       {/* ── Hero Mesh Section ── */}
       <div className="hero-mesh border-b border-slate-200">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-12 md:py-16">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8 md:py-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <span className="label-caps !text-primary !font-black !mb-2 block">Scouting Base</span>
-              <h1 className="font-hl font-black text-3xl sm:text-4xl lg:text-5xl text-slate-900 leading-none tracking-tight">
+              <span className="label-caps !text-primary !font-extrabold !mb-2 block">Scouting Base</span>
+              <h1 className="font-hl font-extrabold text-3xl sm:text-4xl lg:text-5xl text-slate-900 leading-none tracking-tight">
                 {t('title').split(' ').map((word, i) => (
                   <span key={i} className={i === 1 ? 'text-primary' : ''}>{word} </span>
                 ))}
@@ -175,13 +175,13 @@ export default function PlayersPage() {
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 -translate-y-8">
         
         {/* ── Search & Filter Bar ── */}
-        <div className="glass-card shadow-2xl space-y-5 !p-6 border-slate-200/60">
+        <div className="glass-card shadow-2xl space-y-4 !p-4 border-slate-200/60">
           <div className="flex flex-col lg:flex-row items-center gap-6">
             
             {/* Autocomplete Search */}
             <div ref={wrapRef} className="relative flex-1 w-full">
-              <div className={`flex items-center gap-3 bg-slate-50 rounded-2xl border-2 px-5 py-4 transition-all duration-300 ${open ? 'border-primary shadow-lg shadow-primary/5 bg-white' : 'border-slate-100 hover:border-slate-200'}`}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={open ? '#1e40af' : '#64748b'} strokeWidth="2.5" className="flex-shrink-0">
+              <div className={`flex items-center gap-3 bg-slate-50 rounded-2xl border-2 px-4 py-2.5 transition-all duration-300 ${open ? 'border-primary shadow-lg shadow-primary/5 bg-white' : 'border-slate-100 hover:border-slate-200'}`}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={open ? '#1e40af' : '#64748b'} strokeWidth="2.5" className="flex-shrink-0">
                   <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
                 <input ref={inputRef} type="text" value={query} autoComplete="off"
@@ -189,7 +189,7 @@ export default function PlayersPage() {
                   onChange={e => { setQuery(e.target.value); setOpen(true); setFocusedI(-1) }}
                   onFocus={() => setOpen(true)}
                   onKeyDown={onKey}
-                  className="flex-1 bg-transparent border-none outline-none font-hl font-bold text-base text-slate-900 placeholder:text-slate-400 placeholder:font-medium" />
+                  className="flex-1 bg-transparent border-none outline-none font-hl font-semibold text-base text-slate-900 placeholder:text-slate-400 placeholder:font-medium" />
                 
                 {searchL && <div className="w-5 h-5 rounded-full border-3 border-slate-200 border-t-primary animate-spin flex-shrink-0" />}
                 
@@ -221,24 +221,24 @@ export default function PlayersPage() {
                       const posS = getPosStyles(r.position)
                       return (
                         <div key={r.id}
-                          className={`flex items-center gap-4 px-5 py-4 cursor-pointer border-b border-slate-50 last:border-0 transition-all group
+                          className={`flex items-center gap-4 px-5 py-2.5 cursor-pointer border-b border-slate-50 last:border-0 transition-all group
                             ${focusedI === i ? 'bg-primary/5 translate-x-1' : 'hover:bg-slate-50'}`}
                           onClick={() => goToPlayer(r.slug)}
                           onMouseEnter={() => setFocusedI(i)}>
-                          <Avatar initials={r.initials} position={r.position} size={42} />
+                          <Avatar initials={r.initials} position={r.position} size={40} />
                           <div className="flex-1 min-w-0">
-                            <div className={`font-hl font-black text-sm transition-colors ${focusedI === i ? 'text-primary' : 'text-slate-900'}`}>
+                            <div className={`font-hl font-extrabold text-sm transition-colors ${focusedI === i ? 'text-primary' : 'text-slate-900'}`}>
                               {r.common_name || r.name}
                             </div>
                             <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{r.team}</div>
                           </div>
                           <div className="flex items-center gap-3 flex-shrink-0">
-                            <span className="text-[10px] font-black uppercase px-2 py-1 rounded-lg border shadow-sm transition-colors"
+                            <span className="text-[10px] font-bold uppercase px-2 py-1 rounded-lg border shadow-sm transition-colors"
                               style={{ background: posS.bg, color: posS.color, borderColor: posS.border }}>
                               {tc(`positions.${(r.position === 'MIL' ? 'mid' : r.position).toLowerCase()}`) || r.position}
                             </span>
                             {r.rating > 0 && (
-                              <span className="font-hl font-black text-base text-slate-900 min-w-[32px] text-right">
+                              <span className="font-hl font-extrabold text-base text-slate-900 min-w-[32px] text-right">
                                 {r.rating.toFixed(1)}
                               </span>
                             )}
@@ -291,19 +291,19 @@ export default function PlayersPage() {
         </div>
 
         {/* ── Table Container ── */}
-        <div className="mt-10 glass-card !p-0 overflow-hidden shadow-2xl border-slate-200/60">
+        <div className="mt-6 glass-card !p-0 overflow-hidden shadow-2xl border-slate-200/60">
           
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-slate-50/50 border-b border-slate-100">
-                  <th className="px-6 py-5 text-left"><span className="label-caps !text-slate-400">#</span></th>
-                  <th className="px-6 py-5 text-left min-w-[240px]"><span className="label-caps !text-slate-400">{t('table.player')}</span></th>
-                  <th className="px-6 py-5 text-left hidden md:table-cell"><span className="label-caps !text-slate-400">{t('table.team')}</span></th>
-                  <th className="px-6 py-5 text-center"><span className="label-caps !text-slate-400">{t('table.position')}</span></th>
-                  <th className="px-6 py-5 text-center"><span className="label-caps !text-slate-400">{t('table.rating')}</span></th>
-                  <th className="px-6 py-5 text-center hidden sm:table-cell"><span className="label-caps !text-slate-400">{t('table.goals')}</span></th>
-                  <th className="px-6 py-5 text-center hidden sm:table-cell"><span className="label-caps !text-slate-400">{t('table.assists')}</span></th>
+                  <th className="px-6 py-3 text-left"><span className="label-caps !text-slate-400">#</span></th>
+                  <th className="px-6 py-3 text-left min-w-[240px]"><span className="label-caps !text-slate-400">{t('table.player')}</span></th>
+                  <th className="px-6 py-3 text-left hidden md:table-cell"><span className="label-caps !text-slate-400">{t('table.team')}</span></th>
+                  <th className="px-6 py-3 text-center"><span className="label-caps !text-slate-400">{t('table.position')}</span></th>
+                  <th className="px-6 py-3 text-center"><span className="label-caps !text-slate-400">{t('table.rating')}</span></th>
+                  <th className="px-6 py-3 text-center hidden sm:table-cell"><span className="label-caps !text-slate-400">{t('table.goals')}</span></th>
+                  <th className="px-6 py-3 text-center hidden sm:table-cell"><span className="label-caps !text-slate-400">{t('table.assists')}</span></th>
                   <th className="px-6 py-5 text-right"></th>
                 </tr>
               </thead>
@@ -330,41 +330,41 @@ export default function PlayersPage() {
                   return (
                     <tr key={p.id} onClick={() => goToPlayer(p.slug)} 
                       className="group hover:bg-slate-50 transition-colors cursor-pointer">
-                      <td className="px-6 py-5">
-                        <span className="font-hl font-black text-xs text-slate-400 group-hover:text-primary transition-colors">
+                      <td className="px-6 py-3">
+                        <span className="font-hl font-bold text-xs text-slate-400 group-hover:text-primary transition-colors">
                           {(idx + 1).toString().padStart(2, '0')}
                         </span>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-6 py-3">
                         <div className="flex items-center gap-4">
-                          <Avatar initials={p.initials} position={p.position} size={44} />
+                          <Avatar initials={p.initials} position={p.position} size={42} />
                           <div className="min-w-0">
-                            <div className="font-hl font-black text-[15px] text-slate-900 group-hover:text-primary transition-colors truncate">
+                            <div className="font-hl font-extrabold text-[15px] text-slate-900 group-hover:text-primary transition-colors truncate">
                               {p.common_name || p.name}
                             </div>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-lg leading-none">{p.flag_emoji}</span>
-                              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
+                              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">
                                 {p.nationality}
                               </span>
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 hidden md:table-cell">
-                        <div className="text-[13px] font-bold text-slate-600 truncate max-w-[160px]">
+                      <td className="px-6 py-3 hidden md:table-cell">
+                        <div className="text-[13px] font-semibold text-slate-600 truncate max-w-[160px]">
                           {p.team}
                         </div>
                       </td>
-                      <td className="px-6 py-5 text-center">
-                        <span className="inline-block text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border shadow-sm transition-transform group-hover:scale-110"
+                      <td className="px-6 py-3 text-center">
+                        <span className="inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border shadow-sm transition-transform group-hover:scale-110"
                           style={{ background: posS.bg, color: posS.color, borderColor: posS.border }}>
                           {tc(`positions.${(p.position === 'MIL' ? 'mid' : p.position).toLowerCase()}`)}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-center">
+                      <td className="px-6 py-3 text-center">
                         <div className="flex flex-col items-center gap-1">
-                          <span className="font-hl font-black text-lg" style={{ color: ratingColor }}>
+                          <span className="font-hl font-extrabold text-lg" style={{ color: ratingColor }}>
                             {p.rating ? p.rating.toFixed(2) : '—'}
                           </span>
                           <div className="w-10 h-1 bg-slate-100 rounded-full overflow-hidden">
@@ -372,13 +372,13 @@ export default function PlayersPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 text-center hidden sm:table-cell">
-                        <span className="font-hl font-black text-[15px] text-slate-800">{p.goals ?? 0}</span>
+                      <td className="px-6 py-3 text-center hidden sm:table-cell">
+                        <span className="font-hl font-bold text-[15px] text-slate-800">{p.goals ?? 0}</span>
                       </td>
-                      <td className="px-6 py-5 text-center hidden sm:table-cell">
-                        <span className="font-hl font-black text-[15px] text-slate-800">{p.assists ?? 0}</span>
+                      <td className="px-6 py-3 text-center hidden sm:table-cell">
+                        <span className="font-hl font-bold text-[15px] text-slate-800">{p.assists ?? 0}</span>
                       </td>
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-6 py-3 text-right">
                         <div className="flex items-center justify-end gap-3">
                           <button onClick={e => { e.stopPropagation(); goToPlayer(p.slug) }}
                             className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-hl font-black text-white ai-gradient shadow-lg shadow-blue-500/20 translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">

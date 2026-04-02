@@ -49,7 +49,7 @@ function PillSelect({ value, onChange, disabled, children }: {
         value={value}
         onChange={e => onChange(e.target.value)}
         disabled={disabled}
-        className="appearance-none bg-white/40 border border-white/60 rounded-xl pl-3 pr-8 py-2.5 text-[11px] font-bold text-slate-900 cursor-pointer outline-none w-full truncate backdrop-blur-md transition-all focus:border-primary/30 focus:ring-4 focus:ring-primary/5 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+        className="appearance-none bg-white/40 border border-white/60 rounded-xl pl-3 pr-8 py-1.5 text-[11px] font-semibold text-slate-900 cursor-pointer outline-none w-full truncate backdrop-blur-md transition-all focus:border-primary/30 focus:ring-4 focus:ring-primary/5 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
       >
         {children}
       </select>
@@ -199,10 +199,10 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
   return (
     <>
       {/* ── Filter bar ──────────────────────────────────────────────── */}
-      <div className="glass-card bg-white/20 p-5 mb-0 overflow-hidden border-white/40">
-        <div className="-mx-5 -mt-5 px-5 py-3 mb-5 bg-slate-50/40 border-b border-slate-100/50 flex items-center gap-2">
+      <div className="glass-card bg-white/20 p-3 mb-0 overflow-hidden border-white/40">
+        <div className="-mx-4 -mt-3 px-4 py-2 mb-3 bg-slate-50/40 border-b border-slate-100/50 flex items-center gap-2">
           <span className="material-symbols-outlined text-[18px] text-primary">filter_list</span>
-          <span className="label-caps !text-slate-900 font-bold">
+          <span className="label-caps !text-slate-900 font-semibold">
             {tp('filters.title')}
           </span>
           {hasFilter && (
@@ -306,31 +306,31 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
           { label: tp('stats.kpi_matches'),  value: isMissingData ? 'N/D' : s.matches, sub: seasonDisplay, color: 'group-hover:text-slate-900', bar: 'bg-slate-400/30' },
           { label: tc('stats.rating'),       value: isMissingData ? 'N/D' : (s.rating ? Number(s.rating).toFixed(1) : '—'), sub: '/ 10', color: 'group-hover:text-primary', bar: 'bg-primary/30' },
         ].map((kpi) => (
-          <div key={kpi.label} className="glass-card p-6 text-center relative overflow-hidden group hover:scale-[1.02] transition-all border-white/60 bg-white/40 backdrop-blur-sm">
+          <div key={kpi.label} className="glass-card p-3 text-center relative overflow-hidden group hover:scale-[1.02] transition-all border-white/60 bg-white/40 backdrop-blur-sm">
             {loading && <div className="absolute inset-0 bg-white/40 backdrop-blur-sm z-10 flex items-center justify-center" />}
-            <div className="label-caps mb-3 opacity-60 text-[9px] tracking-[0.15em]">{kpi.label}</div>
-            <div className={`count font-hl font-black text-[38px] leading-none text-slate-900 transition-all ${kpi.color} drop-shadow-sm ${loading ? 'opacity-10' : ''}`}>{kpi.value}</div>
-            <div className="label-caps text-[10px] mt-3 opacity-40 lowercase font-medium">{kpi.sub}</div>
+            <div className="label-caps mb-2 opacity-60 text-[9px] tracking-[0.15em]">{kpi.label}</div>
+            <div className={`count font-hl font-extrabold text-[32px] leading-none text-slate-900 transition-all ${kpi.color} drop-shadow-sm ${loading ? 'opacity-10' : ''}`}>{kpi.value}</div>
+            <div className="label-caps text-[9px] mt-2 opacity-40 lowercase font-medium">{kpi.sub}</div>
             <div className={`absolute bottom-0 left-0 h-1 ${kpi.bar} w-0 group-hover:w-full transition-all duration-500`} />
           </div>
         ))}
       </div>
 
       {/* ── Stats bars ──────────────────────────────────────────────── */}
-      <div className="glass-card p-8 overflow-hidden border-white/60 bg-white/30 backdrop-blur-md">
-        <div className="-mx-8 -mt-8 px-8 py-4 mb-8 bg-slate-50/50 border-b border-slate-100/50 flex items-center justify-between">
-          <h3 className="label-caps !text-slate-900 !text-[12px] !font-black tracking-tight">{tp('stats.section_title')}</h3>
-          <span className="label-caps !text-primary !text-[10px] opacity-60 font-bold">{tc('labels.performance_index')}</span>
+      <div className="glass-card p-4 overflow-hidden border-white/60 bg-white/30 backdrop-blur-md">
+        <div className="-mx-4 -mt-4 px-4 py-2.5 mb-4 bg-slate-50/50 border-b border-slate-100/50 flex items-center justify-between">
+          <h3 className="label-caps !text-slate-900 !text-[11px] !font-bold tracking-tight">{tp('stats.section_title')}</h3>
+          <span className="label-caps !text-primary !text-[9px] opacity-60 font-bold">{tc('labels.performance_index')}</span>
         </div>
-        <div className="flex flex-col gap-6 relative">
+        <div className="flex flex-col gap-2.5 relative">
           {loading && <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl z-10" />}
           {statsBars.map((bar) => (
-            <div key={bar.label} className="flex items-center gap-6 group/bar">
+            <div key={bar.label} className="flex items-center gap-4 group/bar">
               <span className="label-caps !text-slate-500 w-[160px] shrink-0 !text-[10px] group-hover/bar:!text-slate-900 transition-colors tracking-widest">{bar.label}</span>
-              <div className="flex-1 h-3 bg-slate-100/50 rounded-full overflow-hidden shadow-inner p-[2px] border border-slate-200/20">
+              <div className="flex-1 h-2.5 bg-slate-100/50 rounded-full overflow-hidden shadow-inner p-[1.5px] border border-slate-200/20">
                 <div className={`bar-grow h-full ${bar.color} rounded-full transition-all duration-1000 ease-out`} style={{ width: `${bar.pct}%` }} />
               </div>
-              <span className="font-hl font-black text-[15px] text-slate-900 w-12 text-right group-hover/bar:text-primary transition-colors tracking-tight">{bar.value}</span>
+              <span className="font-hl font-semibold text-[14px] text-slate-900 w-10 text-right group-hover/bar:text-primary transition-colors tracking-tight">{bar.value}</span>
             </div>
           ))}
         </div>

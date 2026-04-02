@@ -74,15 +74,15 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
   }, [leagueId, limit])
 
   return (
-    <div className={`glass-card p-0 overflow-hidden ${className}`}>
+    <div className={`glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-2 bg-slate-50/50">
-        <h2 className="label-caps tracking-wider text-slate-500 truncate">{t('in_form_title')}</h2>
+      <div className="px-4 py-2.5 border-b border-gray-50 flex items-center justify-between gap-2">
+        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-dark truncate">{t('in_form_title')}</span>
         <div className="relative inline-flex items-center shrink-0 max-w-[140px]">
           <select
             value={leagueId ?? ''}
             onChange={e => setLeagueId(e.target.value ? Number(e.target.value) : null)}
-            className="appearance-none bg-white border border-slate-200 rounded-full pl-3 pr-8 py-1.5 text-[11px] font-bold text-primary cursor-pointer outline-none w-full truncate shadow-sm transition-all focus:border-primary/50"
+            className="appearance-none bg-gray-50 border border-gray-100 rounded-full pl-3 pr-8 py-1.5 text-[10px] md:text-xs font-bold text-primary cursor-pointer outline-none w-full truncate"
           >
             {LEAGUES.map(l => (
               <option key={l.id ?? 'all'} value={l.id ?? ''}>
@@ -90,7 +90,7 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
               </option>
             ))}
           </select>
-          <svg className="absolute right-3 pointer-events-none" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" color="#3b82f6">
+          <svg className="absolute right-2.5 pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" color="#60a5fa">
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </div>
@@ -107,49 +107,33 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
             const rc = ratingColor(p.rating)
             return (
               <Link
-                key={p.id}
-                href={localizedHref(locale, `/player/${p.slug}`)}
-                className={`flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-all no-underline group${i < players.length - 1 ? ' border-b border-slate-50' : ''}`}
-              >
+                  key={p.id}
+                  href={localizedHref(locale, `/player/${p.slug}`)}
+                  className={`flex items-center gap-3 md:gap-4 px-4 py-2 hover:bg-gray-50 transition-colors no-underline group${i < players.length - 1 ? ' border-b border-gray-50' : ''}`}
+                >
                 {/* Rang */}
                 <span className="font-hl font-black text-xs text-slate-300 w-4 text-center shrink-0 group-hover:text-primary/40 transition-colors">{i + 1}</span>
 
-                {/* Initiales colorées */}
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-xs shrink-0 bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                {/* Avatar coloré (carré) */}
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-hl font-bold text-[10px] shrink-0 ${AV_COLORS[i % AV_COLORS.length].bg} ${AV_COLORS[i % AV_COLORS.length].text} group-hover:scale-105 transition-all shadow-sm`}>
                   {p.initials}
                 </div>
 
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm text-slate-900 font-bold truncate group-hover:text-primary transition-colors">{p.name}</div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <TeamBadge teamId={p.team_id ?? 0} teamName={p.team} size={14} />
-                    <span className="label-caps !text-[9px] !text-slate-400 truncate">{p.team}</span>
-                    <span className="text-[10px] text-slate-200">|</span>
-                    <span className="label-caps !text-[9px] !text-slate-400">{p.matches} GP</span>
-                  </div>
-                </div>
-
-                {/* Stats */}
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="text-right hidden sm:block">
-                    <div className="label-caps !text-[10px] !text-slate-400 font-black">
-                      {p.goals}<small className="ml-0.5 opacity-50 font-black">G</small> 
-                      <span className="mx-1.5 opacity-30">/</span>
-                      {p.assists}<small className="ml-0.5 opacity-50 font-black">A</small>
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm text-slate-700 font-bold truncate group-hover:text-primary transition-colors leading-tight">{p.name}</div>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="text-[10px] md:text-xs text-gray-500 truncate">{p.team}</span>
                     </div>
                   </div>
-                  <div 
-                    className="font-hl font-black text-lg min-w-[44px] text-center px-1 py-1 rounded-lg border shadow-sm transition-transform group-hover:scale-105"
-                    style={{ 
-                      backgroundColor: rc.bg, 
-                      color: rc.text,
-                      borderColor: 'rgba(0,0,0,0.03)'
-                    }}
-                  >
-                    {p.rating.toFixed(1)}
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className={`w-1 h-6 rounded-sm ${p.rating >= 8 ? 'bg-emerald-500' : p.rating >= 7 ? 'bg-emerald-400' : 'bg-slate-300'}`} />
+                    <span className="font-hl font-bold text-base md:text-lg text-slate-900">
+                      {p.rating.toFixed(1)}
+                    </span>
                   </div>
-                </div>
               </Link>
             )
           })}

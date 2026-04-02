@@ -48,7 +48,7 @@ export function LangSwitcher({ locale }: { locale: string }) {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 py-2 rounded-xl border border-gray-100 shadow-xl overflow-hidden z-[100]"
+        <div className="absolute right-0 mt-2 w-32 py-1 rounded-xl border border-gray-100 shadow-xl overflow-hidden z-[100]"
           style={{
             background: 'rgba(255, 255, 255, 0.9)',
             backdropFilter: 'blur(10px)',
@@ -59,7 +59,7 @@ export function LangSwitcher({ locale }: { locale: string }) {
             <button
               key={l.code}
               onClick={() => switchTo(l.code)}
-              className={`w-full text-left px-4 py-2 text-[13px] font-medium border-none cursor-pointer flex items-center justify-between transition-colors ${
+              className={`w-full text-left px-3 py-1.5 text-[13px] font-medium border-none cursor-pointer flex items-center justify-between transition-colors ${
                 l.code === locale ? 'text-primary bg-primary/5 font-bold' : 'text-dark hover:bg-gray-50'
               }`}
               style={{ background: 'transparent' }}

@@ -283,7 +283,7 @@ export default async function PlayerPage({ params }: Props) {
               ].map((item) => (
                 <div key={item.label}>
                   <div className="label-caps mb-1.5">{item.label}</div>
-                  <div className={`text-[15px] font-bold ${item.blue ? 'text-primary' : 'text-slate-900'}`}>{item.value}</div>
+                  <div className={`text-[15px] font-semibold ${item.blue ? 'text-primary' : 'text-slate-900'}`}>{item.value}</div>
                 </div>
               ))}
             </div>
@@ -313,7 +313,7 @@ export default async function PlayerPage({ params }: Props) {
           <div className="flex flex-col gap-4">
 
             {/* Quick scout */}
-            <div className="glass-card bg-white p-6 overflow-hidden">
+            <div className="glass-card bg-white p-5 overflow-hidden">
               <div className="flex items-center gap-2 mb-6">
                 <span className="material-symbols-outlined text-primary text-[20px]">fact_check</span>
                 <h3 className="label-caps text-primary text-[11px]">{t('profile.quick_scout_title')}</h3>
@@ -331,9 +331,9 @@ export default async function PlayerPage({ params }: Props) {
                   { label: tc('stats.red_cards'), value: String(p.redCards) },
                   { label: tc('stats.min_per_goal'), value: p.minutesPerGoal, blue: true },
                 ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-2.5 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 -mx-2 rounded-lg transition-colors">
+                  <div key={row.label} className="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 -mx-2 rounded-lg transition-colors">
                     <span className="text-[12px] text-slate-500 font-medium">{row.label}</span>
-                    <span className={`text-[12px] font-bold ${row.blue ? 'text-primary' : 'text-slate-900'}`}>{row.value}</span>
+                    <span className={`text-[12px] font-semibold ${row.blue ? 'text-primary' : 'text-slate-900'}`}>{row.value}</span>
                   </div>
                 ))}
               </div>
@@ -348,12 +348,12 @@ export default async function PlayerPage({ params }: Props) {
               </div>
               <div className="flex flex-col gap-2">
                 {p.similar.map((s) => (
-                  <Link key={s.name} href={localizedHref(locale, `/player/${s.slug}`)} className="flex items-center justify-between p-3 bg-white/10 rounded-2xl no-underline hover:bg-white/20 transition-all border border-white/5 hover:border-white/20 group/s">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center font-hl font-black text-[10px] text-white uppercase shadow-inner border border-white/10">{s.initials}</div>
-                      <span className="text-[12px] font-bold text-white group-hover/s:translate-x-0.5 transition-transform">{s.name}</span>
+                  <Link key={s.name} href={localizedHref(locale, `/player/${s.slug}`)} className="flex items-center justify-between p-2.5 bg-white/10 rounded-2xl no-underline hover:bg-white/20 transition-all border border-white/5 hover:border-white/20 group/s">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center font-hl font-extrabold text-[9px] text-white uppercase shadow-inner border border-white/10">{s.initials}</div>
+                      <span className="text-[12px] font-semibold text-white group-hover/s:translate-x-0.5 transition-transform">{s.name}</span>
                     </div>
-                    <span className="text-[10px] font-black text-white bg-white/20 px-2 py-1 rounded-lg border border-white/10 group-hover:bg-white/30 transition-colors">{s.match}%</span>
+                    <span className="text-[9px] font-extrabold text-white bg-white/20 px-2 py-1 rounded-lg border border-white/10 group-hover:bg-white/30 transition-colors">{s.match}%</span>
                   </Link>
                 ))}
               </div>
@@ -404,7 +404,7 @@ export default async function PlayerPage({ params }: Props) {
               }
               if (!byComp.size) return null
               return (
-                <div className="flex flex-col gap-8 mt-4">
+                <div className="flex flex-col gap-6 mt-4">
                   <div className="flex items-center gap-2 px-1">
                     <span className="material-symbols-outlined text-primary text-[20px]">history_edu</span>
                     <h3 className="label-caps text-primary text-[12px]">{t('career.title')}</h3>
@@ -412,8 +412,8 @@ export default async function PlayerPage({ params }: Props) {
                   
                   {Array.from(byComp.entries()).map(([comp, rows]) => (
                     <div key={comp} className="glass-card bg-white/40 overflow-hidden shadow-xl shadow-slate-200/40 border-white/60">
-                      <div className="px-8 py-5 bg-slate-50/50 border-b border-slate-100/60 flex items-center justify-between">
-                        <span className="text-[15px] font-black text-slate-900 uppercase tracking-tight">{comp}</span>
+                      <div className="px-8 py-3 bg-slate-50/50 border-b border-slate-100/60 flex items-center justify-between">
+                        <span className="text-[15px] font-bold text-slate-900 uppercase tracking-tight">{comp}</span>
                         <div className="flex items-center gap-2">
                           <span className="label-caps text-primary bg-primary/5 px-2 py-0.5 rounded-md text-[9px]">{rows.length} {rows.length > 1 ? tc('labels.seasons') : tc('labels.season')}</span>
                         </div>
@@ -423,32 +423,34 @@ export default async function PlayerPage({ params }: Props) {
                           <thead>
                             <tr className="bg-slate-50/30">
                               {[tc('labels.season'), tc('labels.team'), tc('stats.matches_played_abbr'), tc('stats.goals_assists_abbr'), tc('stats.rating')].map((h) => (
-                                <th key={h} className={`py-4 px-8 label-caps text-[10px] opacity-60 ${h === tc('labels.season') || h === tc('labels.team') ? 'text-left' : 'text-center'}`}>{h}</th>
+                                <th key={h} className={`py-1.5 ${h === tc('labels.season') ? 'px-4' : 'px-8'} label-caps text-[10px] opacity-60 ${h === tc('labels.season') || h === tc('labels.team') ? 'text-left' : 'text-center'}`}>{h}</th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
                             {rows.map((row) => (
                               <tr key={`${row.season}-${row.team}`} className="border-b border-slate-50 last:border-0 hover:bg-blue-50/20 transition-all group/row">
-                                <td className="py-5 px-8 text-[14px] font-black text-slate-900">{row.season}</td>
-                                <td className="py-5 px-8">
+                                <td className="py-1.5 px-4 text-[13px] font-semibold text-slate-900">{row.season}</td>
+                                <td className="py-1.5 px-8">
                                   <div className="flex items-center gap-3">
                                     <div className="p-1 bg-white rounded-lg shadow-sm border border-slate-100 group-hover/row:scale-110 transition-transform">
-                                      <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={20} />
+                                      <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={16} />
                                     </div>
-                                    <span className="text-[14px] text-slate-700 font-bold group-hover/row:text-primary transition-colors">{row.team}</span>
+                                    <span className="text-[13px] text-slate-700 font-medium group-hover/row:text-primary transition-colors">{row.team}</span>
                                   </div>
                                 </td>
-                                <td className="py-5 px-8 text-center font-hl font-black text-[16px] text-slate-900">{row.matches || 0}</td>
-                                <td className="py-5 px-8 text-center font-hl font-bold text-[15px] text-slate-700">
-                                  <span className="text-slate-900 font-black">{row.goals || 0}</span>
-                                  <span className="text-slate-300 mx-1.5 inline-block scale-y-125">/</span>
-                                  <span className="text-primary font-black">{row.assists || 0}</span>
+                                <td className="py-1.5 px-8 text-center font-hl font-semibold text-[14px] text-slate-900">{row.matches || 0}</td>
+                                <td className="py-1.5 px-8">
+                                  <div className="flex items-center justify-center gap-1.5 font-hl text-[13px]">
+                                    <span className="text-slate-900 font-semibold">{row.goals || 0}</span>
+                                    <span className="text-slate-300 font-medium">/</span>
+                                    <span className="text-primary font-semibold">{row.assists || 0}</span>
+                                  </div>
                                 </td>
-                                <td className="py-5 px-8 text-center">
+                                <td className="py-1.5 px-8 text-center">
                                   {row.rating > 0
-                                    ? <span className="inline-block min-w-[42px] font-hl font-black text-[13px] py-1.5 px-3 rounded-xl shadow-sm border border-black/5" style={{ backgroundColor: row.ratingColor, color: row.ratingText }}>{row.rating.toFixed(1)}</span>
-                                    : <span className="text-[13px] text-slate-300 font-bold">—</span>
+                                    ? <span className="inline-block min-w-[34px] font-hl font-bold text-[11px] py-0.5 px-2 rounded-lg shadow-sm border border-black/5" style={{ backgroundColor: row.ratingColor, color: row.ratingText }}>{row.rating.toFixed(1)}</span>
+                                    : <span className="text-[11px] text-slate-300 font-semibold">—</span>
                                   }
                                 </td>
                               </tr>
@@ -537,14 +539,14 @@ export default async function PlayerPage({ params }: Props) {
                 <span className="material-symbols-outlined text-primary text-[20px]">tactic</span>
                 <h3 className="label-caps text-primary text-[11px]">{t('sections.tactical_roles')}</h3>
               </div>
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-4">
                 {p.tacticalRoles.map((role) => (
                   <div key={role.role}>
-                    <div className="flex justify-between items-end mb-2">
-                      <span className="text-[13px] font-bold text-slate-900">{role.role}</span>
-                      <span className="font-hl font-black text-[15px] text-primary">{role.pct}%</span>
+                    <div className="flex justify-between items-end mb-1.5">
+                      <span className="text-[12px] font-semibold text-slate-900">{role.role}</span>
+                      <span className="font-hl font-extrabold text-[14px] text-primary">{role.pct}%</span>
                     </div>
-                    <div className="h-2 bg-slate-200 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden shadow-inner">
                       <div className="bar-grow h-full rounded-full shadow-sm" style={{ width:`${role.pct}%`, backgroundColor: role.pct >= 70 ? 'var(--color-primary)' : '#94a3b8' }} />
                     </div>
                   </div>
@@ -560,15 +562,15 @@ export default async function PlayerPage({ params }: Props) {
               </div>
               <div className="flex flex-col gap-3">
                 {p.strengths.map((s) => (
-                  <div key={s} className="flex items-start gap-3 p-3 bg-emerald-50/50 rounded-2xl border border-emerald-100/50 group hover:bg-emerald-50 transition-colors">
+                  <div key={s} className="flex items-start gap-3 p-2.5 bg-emerald-50/50 rounded-2xl border border-emerald-100/50 group hover:bg-emerald-50 transition-colors">
                     <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
-                    <div className="text-[13px] font-bold text-slate-800 leading-snug">{s}</div>
+                    <div className="text-[12px] font-semibold text-slate-800 leading-snug">{s}</div>
                   </div>
                 ))}
                 {p.weaknesses.map((w) => (
-                  <div key={w} className="flex items-start gap-3 p-3 bg-amber-50/50 rounded-2xl border border-amber-100/50 group hover:bg-amber-50 transition-colors">
+                  <div key={w} className="flex items-start gap-3 p-2.5 bg-amber-50/50 rounded-2xl border border-amber-100/50 group hover:bg-amber-50 transition-colors">
                     <span className="material-symbols-outlined text-amber-600 text-[18px]">warning</span>
-                    <div className="text-[13px] font-medium text-slate-600 leading-snug">{w}</div>
+                    <div className="text-[12px] font-normal text-slate-600 leading-snug">{w}</div>
                   </div>
                 ))}
               </div>
@@ -590,20 +592,20 @@ export default async function PlayerPage({ params }: Props) {
               ) : (
                 <div className="flex flex-col gap-2">
                   {trophyWins.map((trophy, i) => (
-                    <div key={`w-${i}`} className="flex items-center gap-4 p-3 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
+                    <div key={`w-${i}`} className="flex items-center gap-3 p-2.5 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
                       <span className="text-xl drop-shadow-sm group-hover:scale-110 transition-transform">🏆</span>
                       <div className="min-w-0">
-                        <div className="text-[13px] font-bold text-slate-900 truncate">{trophy.league}</div>
-                        <div className="label-caps text-primary text-[9px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_winner')}</div>
+                        <div className="text-[12px] font-semibold text-slate-900 truncate">{trophy.league}</div>
+                        <div className="label-caps text-primary text-[8px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_winner')}</div>
                       </div>
                     </div>
                   ))}
                   {trophyRunners.map((trophy, i) => (
-                    <div key={`r-${i}`} className="flex items-center gap-4 p-3 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-slate-200 transition-all">
+                    <div key={`r-${i}`} className="flex items-center gap-3 p-2.5 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-slate-200 transition-all">
                       <span className="text-xl drop-shadow-sm opacity-60">🥈</span>
                       <div className="min-w-0">
-                        <div className="text-[13px] font-bold text-slate-700 truncate">{trophy.league}</div>
-                        <div className="label-caps text-slate-400 text-[9px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_runner_up')}</div>
+                        <div className="text-[12px] font-semibold text-slate-700 truncate">{trophy.league}</div>
+                        <div className="label-caps text-slate-400 text-[8px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_runner_up')}</div>
                       </div>
                     </div>
                   ))}
