@@ -16,7 +16,7 @@ interface LiveMatch {
   time: string;
 }
 
-const POLL_INTERVAL = 6_000;   // 6s — within the 10s Sportmonks window
+const POLL_INTERVAL = 15_000;  // 15s — API-Football recommande 15s pour les livescores
 const MAX_EMPTY    = 5;        // backoff after 5 consecutive empty responses
 
 function short(name: string) { return name.split(' ').slice(-1)[0]; }

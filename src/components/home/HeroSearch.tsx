@@ -81,7 +81,7 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
           </div>
 
           <div className="pt-6 md:pt-8 lg:pt-6 max-w-3xl">
-            <CompareSearchBar locale={locale} ctaLabel={ts('cta')} placeholder={ts('placeholder')} hideMode inlineButton isHero />
+            <CompareSearchBar locale={locale} ctaLabel={ts('cta')} hideMode inlineButton isHero />
           </div>
 
           {trends.length > 0 && (

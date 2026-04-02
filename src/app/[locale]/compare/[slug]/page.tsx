@@ -42,7 +42,6 @@ function toComparePlayer(p: DBPlayer): CmpPlayer {
     shirt_number:   p.shirt_number ?? 0,
     market_value:   p.market_value ?? '',
     image_url:      p.image_url ?? '',
-    sportmonks_id:  p.sportmonks_id ?? 0,
     season:         p.season ?? '2025-26',
     goals:          Number(p.goals)            || 0,
     assists:        Number(p.assists)          || 0,
@@ -257,8 +256,8 @@ export default async function ComparePage({ params }: Props) {
           </div>
 
           <div className="block lg:hidden">
-            <SimilarDuels 
-              duels={similar} locale={locale} 
+            <SimilarDuels
+              duels={similar}
               labels={{
                 title: t('similar.title'),
                 views: tc('units.views')
@@ -271,7 +270,7 @@ export default async function ComparePage({ params }: Props) {
           {insight && (
             <AIInsightBlock
               insight={insight} playerA={pA} playerB={pB}
-              winnerSlug={winnerSlug} locale={locale as Locale}
+              winnerSlug={winnerSlug}
               labels={{
                 title: t('insight.title'),
                 badge: t('insight.badge'),
@@ -332,8 +331,8 @@ export default async function ComparePage({ params }: Props) {
           />
 
           <div className="hidden lg:block">
-            <SimilarDuels 
-              duels={similar} locale={locale} 
+            <SimilarDuels
+              duels={similar}
               labels={{
                 title: t('similar.title'),
                 views: tc('units.views')

@@ -10,7 +10,11 @@ export const TTL = {
   player: 3600,        // 1h  — player profile
   stats: 1800,         // 30m — season stats
   comparison: 86400,   // 24h — comparison result
-  livescores: 60,      // 1m  — live data
+  livescores: 15,      // 15s — live data (API-Football recommends polling every 15s)
+  leagues: 86400,      // 24h — reference data (league list rarely changes per day)
+  topscorers: 86400,   // 24h — top scorers/assists change at most once a day
+  timezones: 2592000,  // 30d — timezone list never changes, cache permanently
+  career:    604800,   //  7j — historique de carrière (saisons passées immuables)
 };
 
 /**

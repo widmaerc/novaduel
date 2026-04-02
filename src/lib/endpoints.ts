@@ -1,15 +1,13 @@
-/**
- * Sportmonks v3 — Référence complète des endpoints
- *
- * Usage :
- *   import { EP } from '@/lib/endpoints';
- *   sm(EP.PLAYER_BY_ID.replace('{id}', String(playerId)))
- *   sm(EP.PLAYERS_SEARCH.replace('{name}', query))
- *
- * Les clés correspondent exactement à celles du fichier endpoints.params.
- * BASE Football : https://api.sportmonks.com/v3/football  (géré dans sportmonks.ts)
- * BASE Core     : https://api.sportmonks.com/v3/core
- */
+// SPORTMONKS DISABLED — remplacé par API-Football (endpoints-apifootball.ts)
+/*
+// Sportmonks v3 — Référence complète des endpoints
+//
+// Usage :
+//   import { EP } from '@/lib/endpoints';
+//   sm(EP.PLAYER_BY_ID.replace('{id}', String(playerId)))
+//
+// BASE Football : https://api.sportmonks.com/v3/football  (géré dans sportmonks.ts)
+// BASE Core     : https://api.sportmonks.com/v3/core
 
 // ── LIVESCORES ──────────────────────────────────────────────
 export const LIVESCORES_INPLAY           = '/livescores/inplay';
@@ -72,7 +70,6 @@ export const STANDINGS_LIVE_BY_LEAGUE    = '/standings/live/leagues/{leagueId}';
 export const TOPSCORERS_BY_SEASON        = '/topscorers/seasons/{seasonId}';
 export const TOPSCORERS_BY_STAGE         = '/topscorers/stages/{stageId}';
 
-// Filtres topscorers — usage : filters=seasontopscorerTypes:{id}
 export const TOPSCORE_FILTER_GOALS       = 'seasontopscorerTypes:208';
 export const TOPSCORE_FILTER_ASSISTS     = 'seasontopscorerTypes:209';
 
@@ -236,7 +233,6 @@ export const TOTW_BY_ROUND               = '/team-of-the-week/rounds/{roundId}';
 export const TOTW_LATEST                 = '/team-of-the-week/latest';
 
 // ── CORE (base: https://api.sportmonks.com/v3/core) ─────────
-// Usage : smCore(COUNTRIES_ALL) — nécessite un caller séparé avec base core
 export const COUNTRIES_ALL               = '/countries';
 export const COUNTRY_BY_ID               = '/countries/{id}';
 export const COUNTRIES_SEARCH            = '/countries/search/{name}';
@@ -248,68 +244,13 @@ export const CITIES_ALL                  = '/cities';
 export const CITY_BY_ID                  = '/cities/{id}';
 export const TIMEZONES_ALL               = '/timezones';
 
-
-// =============================================================
-// Helpers — résolution de paramètres dans les chemins
-// =============================================================
-
+// Helpers
 type Params = Record<string, string | number>;
 
-/**
- * Résout les paramètres dans un chemin d'endpoint.
- * @example
- * resolve(PLAYER_BY_ID, { id: 123 })
- * // → '/players/123'
- *
- * resolve(FIXTURES_BY_DATE_RANGE, { startDate: '2026-01-01', endDate: '2026-03-31' })
- * // → '/fixtures/between/2026-01-01/2026-03-31'
- */
 export function resolve(path: string, params: Params): string {
   return Object.entries(params).reduce(
     (p, [k, v]) => p.replace(`{${k}}`, String(v)),
     path
   );
 }
-
-/**
- * Regroupe tous les endpoints par catégorie pour référence.
- * Utile pour affichage ou génération de doc.
- */
-export const EP_CATEGORIES = {
-  livescores:        { LIVESCORES_INPLAY, LIVESCORES_ALL, LIVESCORES_LATEST },
-  fixtures:          { FIXTURES_ALL, FIXTURE_BY_ID, FIXTURES_BY_IDS, FIXTURES_BY_DATE, FIXTURES_BY_DATE_RANGE, FIXTURES_BY_DATE_RANGE_TEAM, FIXTURES_HEAD_TO_HEAD, FIXTURES_SEARCH, FIXTURES_LATEST, FIXTURES_BY_PLAYER },
-  players:           { PLAYERS_ALL, PLAYER_BY_ID, PLAYERS_BY_COUNTRY, PLAYERS_SEARCH, PLAYERS_LATEST },
-  teams:             { TEAMS_ALL, TEAM_BY_ID, TEAMS_BY_COUNTRY, TEAMS_BY_SEASON, TEAMS_SEARCH },
-  leagues:           { LEAGUES_ALL, LEAGUES_LIVE, LEAGUES_BY_DATE, LEAGUES_BY_COUNTRY, LEAGUES_SEARCH, LEAGUES_BY_TEAM, LEAGUES_CURRENT_BY_TEAM },
-  seasons:           { SEASONS_ALL, SEASON_BY_ID, SEASONS_BY_TEAM, SEASONS_SEARCH },
-  standings:         { STANDINGS_ALL, STANDINGS_BY_SEASON, STANDINGS_BY_ROUND, STANDINGS_CORRECTION, STANDINGS_LIVE_BY_LEAGUE },
-  topscorers:        { TOPSCORERS_BY_SEASON, TOPSCORERS_BY_STAGE },
-  statistics:        { STATISTICS_BY_SEASON, STATISTICS_BY_STAGE, STATISTICS_BY_ROUND },
-  schedules:         { SCHEDULES_BY_SEASON, SCHEDULES_BY_TEAM, SCHEDULES_BY_SEASON_TEAM },
-  stages:            { STAGES_ALL, STAGE_BY_ID, STAGES_BY_SEASON, STAGES_SEARCH },
-  rounds:            { ROUNDS_ALL, ROUND_BY_ID, ROUNDS_BY_SEASON, ROUNDS_SEARCH },
-  squads:            { SQUAD_BY_TEAM, SQUAD_EXTENDED_BY_TEAM, SQUAD_BY_TEAM_SEASON },
-  coaches:           { COACHES_ALL, COACH_BY_ID, COACHES_BY_COUNTRY, COACHES_SEARCH, COACHES_LATEST },
-  referees:          { REFEREES_ALL, REFEREE_BY_ID, REFEREES_BY_COUNTRY, REFEREES_BY_SEASON, REFEREES_SEARCH },
-  transfers:         { TRANSFERS_ALL, TRANSFER_BY_ID, TRANSFERS_LATEST, TRANSFERS_BY_DATE_RANGE, TRANSFERS_BY_TEAM, TRANSFERS_BY_PLAYER },
-  transfer_rumours:  { TRANSFER_RUMOURS_ALL, TRANSFER_RUMOUR_BY_ID, TRANSFER_RUMOURS_DATE_RANGE, TRANSFER_RUMOURS_BY_TEAM, TRANSFER_RUMOURS_BY_PLAYER },
-  venues:            { VENUES_ALL, VENUE_BY_ID, VENUES_BY_SEASON, VENUES_SEARCH },
-  tv_stations:       { TV_STATIONS_ALL, TV_STATION_BY_ID, TV_STATIONS_BY_FIXTURE },
-  states:            { STATES_ALL, STATE_BY_ID },
-  types:             { TYPES_ALL, TYPE_BY_ID, TYPES_BY_ENTITY },
-  news:              { NEWS_PRE_MATCH, NEWS_PRE_MATCH_BY_SEASON, NEWS_PRE_MATCH_UPCOMING, NEWS_POST_MATCH, NEWS_POST_MATCH_BY_SEASON },
-  commentaries:      { COMMENTARIES_ALL, COMMENTARIES_BY_FIXTURE },
-  rivals:            { RIVALS_ALL, RIVALS_BY_TEAM },
-  expected:          { EXPECTED_BY_TEAM, EXPECTED_BY_PLAYER },
-  expected_lineups:  { EXPECTED_LINEUP_BY_TEAM, EXPECTED_LINEUP_BY_PLAYER },
-  predictions:       { PREDICTIONS_ALL, PREDICTIONS_BY_LEAGUE, PREDICTIONS_BY_FIXTURE, PREDICTIONS_VALUE_BETS, PREDICTIONS_VALUE_BETS_FIXTURE },
-  odds:              { ODDS_ALL, ODDS_BY_FIXTURE, ODDS_BY_FIXTURE_BOOKMAKER, ODDS_BY_FIXTURE_MARKET, ODDS_LATEST },
-  odds_inplay:       { ODDS_INPLAY_ALL, ODDS_INPLAY_BY_FIXTURE, ODDS_INPLAY_FIXTURE_BK, ODDS_INPLAY_FIXTURE_MKT, ODDS_INPLAY_LATEST },
-  odds_premium:      { ODDS_PREMIUM_ALL, ODDS_PREMIUM_BY_FIXTURE, ODDS_PREMIUM_FIXTURE_BK, ODDS_PREMIUM_FIXTURE_MKT, ODDS_PREMIUM_RANGE, ODDS_PREMIUM_HIST_RANGE, ODDS_PREMIUM_HIST_ALL },
-  markets:           { MARKETS_ALL, MARKETS_PREMIUM, MARKET_BY_ID, MARKETS_SEARCH },
-  bookmakers:        { BOOKMAKERS_ALL, BOOKMAKERS_PREMIUM, BOOKMAKER_BY_ID, BOOKMAKERS_SEARCH, BOOKMAKERS_BY_FIXTURE, BOOKMAKERS_MATCH_ID_MAP },
-  match_facts:       { MATCH_FACTS_ALL, MATCH_FACTS_BY_FIXTURE, MATCH_FACTS_DATE_RANGE, MATCH_FACTS_BY_LEAGUE },
-  team_rankings:     { TEAM_RANKINGS_ALL, TEAM_RANKINGS_BY_TEAM, TEAM_RANKINGS_BY_DATE },
-  totw:              { TOTW_ALL, TOTW_BY_ROUND, TOTW_LATEST },
-  core:              { COUNTRIES_ALL, COUNTRY_BY_ID, COUNTRIES_SEARCH, CONTINENTS_ALL, CONTINENT_BY_ID, REGIONS_ALL, REGION_BY_ID, CITIES_ALL, CITY_BY_ID, TIMEZONES_ALL },
-} as const;
+*/

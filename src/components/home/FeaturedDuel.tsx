@@ -5,9 +5,9 @@ import { useBreakpoint } from '@/lib/useBreakpoint';
 import { useParams } from 'next/navigation';
 import { localizedHref } from '@/lib/localizedPaths';
 import PlayerAvatar from '@/components/compare/PlayerAvatar';
-import data from '@/data/fake_featured_duel_data.json';
-
-const { duel: DEMO_DUEL } = data;
+// import data from '@/data/fake_featured_duel_data.json';
+// const { duel: DEMO_DUEL } = data;
+const DEMO_DUEL = { p1: { name: '—', club: '—', pos: 'ATT', init: '??', g90: 0, duels: 0, passes: 0, slug: '' }, p2: { name: '—', club: '—', pos: 'ATT', init: '??', g90: 0, duels: 0, passes: 0, slug: '' }, views: 0 };
 
 type Player = { name: string; club: string; pos: string; init: string; g90: number; duels: number; passes: number; slug: string };
 

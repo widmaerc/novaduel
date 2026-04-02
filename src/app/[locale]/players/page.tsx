@@ -13,22 +13,30 @@ interface Player {
 }
 
 interface SearchResult {
-  id: number; slug: string; name: string
-  teams: { name: string }[]; position: { code: string }
-  image_path: string | null; initials: string
-  avatar_bg: string; avatar_color: string
-  statistics: { rating?: number }[]
+  id: number; slug: string; name: string; common_name: string
+  team: string; position: string
+  initials: string; avatar_bg: string; avatar_color: string; rating: number
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function Avatar({ p, size = 40 }: { p: Pick<Player,'initials'|'avatar_bg'|'avatar_color'|'image_url'|'name'>; size?: number }) {
+const POS_COLORS: Record<string, { bg: string; color: string }> = {
+  ATT: { bg: '#fffbeb', color: '#d97706' },  // amber-50  / amber-600
+  MIL: { bg: '#eff6ff', color: '#2563eb' },  // blue-50   / blue-600
+  DEF: { bg: '#f0fdf4', color: '#16a34a' },  // green-50  / green-600
+  GK:  { bg: '#faf5ff', color: '#9333ea' },  // purple-50 / purple-600
+}
+const fallbackPos = { bg: '#f3f4f5', color: '#727782' }
+
+function Avatar({ initials, position, size = 40 }: { initials: string; position: string; size?: number }) {
+  const { bg, color } = POS_COLORS[position] ?? { bg: '#eff6ff', color: '#004782' }
+  const display = initials || '?'
   return (
-    <div className="flex-shrink-0 rounded-full overflow-hidden border border-black/[.06]"
-      style={{ width: size, height: size, background: p.avatar_bg, color: p.avatar_color,
+    <div className="flex-shrink-0 rounded-full border border-black/[.06]"
+      style={{ width: size, height: size, background: bg, color,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: "'Manrope',sans-serif", fontWeight: 800, fontSize: Math.round(size * 0.3) }}>
-      {p.initials}
+        fontFamily: "'Manrope',sans-serif", fontWeight: 800, fontSize: Math.round(size * 0.34) }}>
+      {display}
     </div>
   )
 }
@@ -46,16 +54,7 @@ export default function PlayersPage() {
   const { locale } = useParams<{ locale: string }>()
   const router     = useRouter()
 
-  // Dynamic position styles
-  const getPosStyles = (code: string) => {
-    const maps: Record<string, { bg: string; color: string }> = {
-      ATT: { bg: '#fef2f2', color: '#dc2626' },
-      MIL: { bg: '#EFF6FF', color: '#004782' },
-      DEF: { bg: '#f0fdf4', color: '#15803d' },
-      GK:  { bg: '#f5f3ff', color: '#6d28d9' },
-    }
-    return maps[code] || { bg: '#f3f4f5', color: '#727782' }
-  }
+  const getPosStyles = (code: string) => POS_COLORS[code] ?? fallbackPos
 
   // Search state
   const [query,    setQuery]    = useState('')
@@ -173,27 +172,26 @@ export default function PlayersPage() {
               </div>
             )}
             {searchR.map((r, i) => {
-              const posS = getPosStyles(r.position?.code)
+              const posS = getPosStyles(r.position)
               return (
                 <div key={r.id}
                   className={`flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-[#f3f4f5] last:border-0 transition-colors
                     ${focusedI === i ? 'bg-[#EFF6FF]' : 'hover:bg-[#f8f9fa]'}`}
                   onClick={() => goToPlayer(r.slug)}
                   onMouseEnter={() => setFocusedI(i)}>
-                  <div className="flex-shrink-0 rounded-full overflow-hidden border border-black/[.06] w-9 h-9 flex items-center justify-center font-bold text-[11px]"
-                    style={{ background: r.avatar_bg, color: r.avatar_color }}>
-                    {r.initials}
-                  </div>
+                  <Avatar initials={r.initials} position={r.position} size={36} />
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-[13px] text-[#191c1d] truncate">{r.name}</div>
-                    <div className="text-[10px] text-[#727782] truncate">{r.teams?.[0]?.name}</div>
+                    <div className="font-semibold text-[13px] text-[#191c1d] truncate">{r.common_name || r.name}</div>
+                    <div className="text-[10px] text-[#727782] truncate">{r.team}</div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <span className="text-[9px] font-bold uppercase px-1.5 py-px rounded"
-                      style={{ background: posS.bg, color: posS.color }}>{r.position?.code}</span>
-                    {r.statistics?.[0]?.rating && (
+                      style={{ background: posS.bg, color: posS.color }}>
+                      {tc(`positions.${(r.position === 'MIL' ? 'mid' : r.position).toLowerCase()}`) || r.position}
+                    </span>
+                    {r.rating > 0 && (
                       <span className="font-headline font-black text-[12px] text-[#191c1d]">
-                        {Number(r.statistics[0].rating).toFixed(1)}
+                        {r.rating.toFixed(1)}
                       </span>
                     )}
                   </div>
@@ -248,7 +246,7 @@ export default function PlayersPage() {
 
         {/* En-tête tableau */}
         <div className="hidden sm:grid px-4 py-2 text-[10px] font-black uppercase tracking-[.08em] text-[#727782] bg-[#f3f4f5] border-b border-[#c2c6d2]"
-          style={{ gridTemplateColumns: '2fr 1fr 60px 48px 48px 48px 130px' }}>
+          style={{ gridTemplateColumns: '2fr 1fr 64px 56px 48px 48px 130px' }}>
           <span>{t('table.player')}</span>
           <span>{t('table.team')}</span>
           <span className="text-center">{t('table.position')}</span>
@@ -271,14 +269,14 @@ export default function PlayersPage() {
               onClick={() => goToPlayer(p.slug)}
               className={`flex sm:grid items-center gap-3 px-4 py-3 border-b border-[#f3f4f5] last:border-0
                 cursor-pointer hover:bg-[#f8f9fa] active:bg-[#f3f4f5] transition-colors`}
-              style={{ gridTemplateColumns: '2fr 1fr 60px 48px 48px 48px 130px' }}>
+              style={{ gridTemplateColumns: '2fr 1fr 64px 56px 48px 48px 130px' }}>
 
               {/* Joueur */}
               <div className="flex items-center gap-3 min-w-0 flex-1 sm:flex-none">
                 <div className="text-[11px] font-bold text-[#c2c6d2] w-5 text-right flex-shrink-0 hidden sm:block">
                   {idx + 1}
                 </div>
-                <Avatar p={p} size={36} />
+                <Avatar initials={p.initials} position={p.position} size={36} />
                 <div className="min-w-0">
                   <div className="font-semibold text-[13px] text-[#191c1d] truncate">{p.common_name || p.name}</div>
                   <div className="text-[10px] text-[#727782] truncate sm:hidden">{p.team} · {p.nationality}</div>
@@ -291,7 +289,9 @@ export default function PlayersPage() {
               {/* Poste */}
               <div className="hidden sm:flex justify-center">
                 <span className="text-[9px] font-black uppercase px-1.5 py-px rounded"
-                  style={{ background: posS.bg, color: posS.color }}>{p.position}</span>
+                  style={{ background: posS.bg, color: posS.color }}>
+                  {tc(`positions.${(p.position === 'MIL' ? 'mid' : p.position).toLowerCase()}`)}
+                </span>
               </div>
 
               {/* Note */}

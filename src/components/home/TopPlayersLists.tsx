@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import type { League } from '@/app/api/leagues/route';
 import { localizedHref } from '@/lib/localizedPaths';
 
-interface TopPlayer { rank: number; name: string; team: string; val: number; slug?: string | null }
+interface TopPlayer { rank: number; name: string; team: string; val: number; slug?: string | null; initials?: string }
 
 const AV_COLORS = [
   { bg: 'bg-blue-50',  text: 'text-blue-600' },
@@ -16,23 +16,7 @@ const AV_COLORS = [
   { bg: 'bg-purple-50',text: 'text-purple-600' },
 ];
 
-const FALLBACK_SCORERS: TopPlayer[] = [
-  { rank: 1, name: 'Kylian Mbappé',  team: 'Real Madrid',     val: 12, slug: 'kylian-mbappe' },
-  { rank: 2, name: 'Harry Kane',     team: 'Bayern München',  val: 11, slug: 'harry-kane' },
-  { rank: 3, name: 'Erling Haaland', team: 'Manchester City', val: 10, slug: 'erling-haaland' },
-  { rank: 4, name: 'Lamine Yamal',   team: 'Barcelona',       val: 8,  slug: 'lamine-yamal'  },
-  { rank: 5, name: 'Vinicius Jr.',   team: 'Real Madrid',     val: 7,  slug: 'vinicius-junior'  },
-];
 
-const FALLBACK_ASSISTERS: TopPlayer[] = [
-  { rank: 1, name: 'Lionel Messi',    team: 'Inter Miami',     val: 9, slug: 'lionel-messi' },
-  { rank: 2, name: 'Jude Bellingham', team: 'Real Madrid',     val: 8, slug: 'jude-bellingham' },
-  { rank: 3, name: 'Phil Foden',      team: 'Manchester City', val: 7, slug: 'phil-foden' },
-  { rank: 4, name: 'Kevin De Bruyne', team: 'Manchester City', val: 7, slug: 'kevin-de-bruyne' },
-  { rank: 5, name: 'Pedri',           team: 'Barcelona',       val: 6, slug: 'pedri' },
-];
-
-const initials = (n: string) => n.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
 function parseScorers(data: any[]): TopPlayer[] {
   return data.flatMap(entry =>
@@ -40,7 +24,7 @@ function parseScorers(data: any[]): TopPlayer[] {
   );
 }
 
-function Row({ rank, name, team, val, slug, isLast, unit, locale }: TopPlayer & { isLast: boolean; unit: string; locale: string }) {
+function Row({ rank, name, team, val, slug, initials, isLast, unit, locale }: TopPlayer & { isLast: boolean; unit: string; locale: string }) {
   const c = AV_COLORS[(rank - 1) % AV_COLORS.length];
   const barColor = rank === 1 ? 'bg-green-500' : rank <= 3 ? 'bg-green-400' : 'bg-green-300';
   const href = slug ? localizedHref(locale, `/player/${slug}`) : '#';
@@ -49,7 +33,7 @@ function Row({ rank, name, team, val, slug, isLast, unit, locale }: TopPlayer & 
     <Link href={href} className={`flex items-center gap-3 md:gap-4 px-4 py-3 hover:bg-gray-50 transition-colors ${!isLast ? 'border-b border-gray-50' : ''}`}>
       <span className="text-xs text-gray-400 w-4 text-center shrink-0">{rank}</span>
       <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-hl font-bold text-xs ${c.bg} ${c.text} shrink-0`}>
-        {initials(name)}
+        {initials ?? name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-sm text-dark font-medium truncate">{name}</div>
@@ -112,8 +96,8 @@ export default function TopPlayersLists() {
   const locale = (params?.locale as string) ?? 'fr';
 
   const [leagues,               setLeagues]               = useState<League[]>([]);
-  const [scorers,               setScorers]               = useState<TopPlayer[]>(FALLBACK_SCORERS);
-  const [assisters,             setAssisters]             = useState<TopPlayer[]>(FALLBACK_ASSISTERS);
+  const [scorers,               setScorers]               = useState<TopPlayer[]>([]);
+  const [assisters,             setAssisters]             = useState<TopPlayer[]>([]);
   const [selectedScorerLeague,  setSelectedScorerLeague]  = useState<string>('');
   const [selectedAssistLeague,  setSelectedAssistLeague]  = useState<string>('');
 

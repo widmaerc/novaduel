@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { buildAlternates } from '@/lib/hreflang';
-import { getGlobalPlayersCount, getGlobalLeaguesCount } from '@/lib/sportmonks';
+import { mapPosition } from '@/lib/data';
+import { getLeagues } from '@/lib/apifootball';
 import { supabaseAdmin } from '@/lib/supabase';
 import HeroSearch      from '@/components/home/HeroSearch';
 import StatsBar        from '@/components/home/StatsBar';
-import LiveMatches     from '@/components/home/LiveMatches';
+import LeagueTable     from '@/components/home/LeagueTable';
+import TopRatedPlayers from '@/components/home/TopRatedPlayers';
 import FeaturedDuel    from '@/components/home/FeaturedDuel';
 import PerformanceSurge from '@/components/home/PerformanceSurge';
 import TopPlayersLists from '@/components/home/TopPlayersLists';
@@ -29,26 +31,50 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 120
 
 export default async function HomePage() {
-  const [playersCount, leaguesCount, { data: topComparisons }] = await Promise.all([
-    getGlobalPlayersCount(),
-    getGlobalLeaguesCount(),
+  const [leagues, { count: playersCount }, { data: topComparisons }] = await Promise.all([
+    getLeagues(),
+    supabaseAdmin.from('dn_players').select('id', { count: 'exact', head: true }),
     supabaseAdmin
       .from('comparisons')
-      .select('slug, views, player_a:players!player_a_id(slug, name, common_name, team, position, initials, avatar_bg, avatar_color, goals, matches, duels_won, pass_accuracy), player_b:players!player_b_id(slug, name, common_name, team, position, initials, avatar_bg, avatar_color, goals, matches, duels_won, pass_accuracy)')
+      .select('slug, views, player_a:dn_players!player_a_id(id, name, firstname, lastname, slug, statistics), player_b:dn_players!player_b_id(id, name, firstname, lastname, slug, statistics)')
       .gt('views', 0)
       .order('views', { ascending: false })
       .limit(6),
   ])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function enrichDnPlayer(p: any) {
+    if (!p) return null;
+    const stats: any[] = p.statistics ?? [];
+    // Pick the stat entry with the most appearances
+    const best = stats.reduce((acc: any, s: any) =>
+      (s.games?.appearences ?? 0) > (acc?.games?.appearences ?? 0) ? s : acc, stats[0] ?? null);
+    const initials = (p.firstname && p.lastname)
+      ? `${p.firstname[0]}${p.lastname[0]}`.toUpperCase()
+      : (p.name ?? '??').split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
+    return {
+      name:         p.name,
+      common_name:  p.name,
+      slug:         p.slug,
+      initials,
+      team:         best?.team?.name    ?? '—',
+      position:     mapPosition(best?.games?.position ?? ''),
+      goals:        best?.goals?.total   ?? 0,
+      matches:      best?.games?.appearences ?? 0,
+      duels_won:    best?.duels?.won     ?? 0,
+      pass_accuracy: best?.passes?.accuracy ?? 0,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const topList = (topComparisons ?? []).map((c: any, i: number) => ({
     rank:   i + 1,
     slug:   c.slug as string,
-    labelA: (c.player_a?.common_name || c.player_a?.name) as string,
-    labelB: (c.player_b?.common_name || c.player_b?.name) as string,
+    labelA: (c.player_a?.name) as string,
+    labelB: (c.player_b?.name) as string,
     views:  c.views as number,
-    playerA: c.player_a,
-    playerB: c.player_b,
+    playerA: enrichDnPlayer(c.player_a),
+    playerB: enrichDnPlayer(c.player_b),
   }))
 
   const featuredDuel  = topList[0] ?? null
@@ -58,8 +84,11 @@ export default async function HomePage() {
   return (
     <>
       <HeroSearch trends={trends} />
-      <StatsBar playersCount={playersCount} leaguesCount={leaguesCount} />
-      <LiveMatches />
+      <StatsBar playersCount={playersCount ?? 0} leaguesCount={leagues?.length ?? 0} />
+      <div className="max-w-[1280px] mx-auto px-3 sm:px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-5 my-8">
+        <LeagueTable />
+        <TopRatedPlayers />
+      </div>
       <FeaturedDuel featuredDuel={featuredDuel} trends={sidebarTrends} />
       <PerformanceSurge />
       <TopPlayersLists />

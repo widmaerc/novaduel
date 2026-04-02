@@ -61,7 +61,11 @@
         "assists": "A",
         "yellow": "CJ",
         "red": "CR",
-        "competition": "Compétition"
+        "competition": "Compétition",
+        "played": "J",
+        "won": "G",
+        "drawn": "N",
+        "lost": "P"
       }
     },
     "radar": {
@@ -118,7 +122,9 @@
       "all_competitions": "Toutes",
       "database": "Base de données",
       "player": "Joueur",
-      "team": "Équipe"
+      "team": "Équipe",
+      "loading": "Chargement…",
+      "standings": "Classement"
     },
     "profile": {
       "born": "Né le",
@@ -189,6 +195,8 @@
       "label": "PROFONDEUR DES DONNÉES",
       "title": "Une profondeur de données inégalée.",
       "cta": "EXPLORER TOUTES LES DONNÉES",
+      "methodology_title": "Notre méthodologie",
+      "methodology_body": "NovaDuel agrège en temps réel les statistiques de plus de 2 500 joueurs issus de 9 ligues majeures — Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, Saudi Pro League, Ligue des Champions et Europa League. Chaque fiche joueur est enrichie par notre modèle IA basé sur Claude d'Anthropic, qui croise buts, assists, xG, dribbles, duels gagnés et précision des passes pour produire une analyse narrative exclusive. Les données sont mises à jour quotidiennement via l'API-Football et mises en cache pour garantir des temps de réponse instantanés.",
       "time": {
         "yesterday": "Hier",
         "two_hours_ago": "il y a 2 heures"
@@ -235,7 +243,8 @@
       "scorers_title": "Top Buteurs",
       "goals_unit": "Buts",
       "assisters_title": "Top Passeurs",
-      "assists_unit": "Assists"
+      "assists_unit": "Assists",
+      "in_form_title": "Joueurs en forme"
     }
   },
   "PlayersPage": {
@@ -280,12 +289,26 @@
       "birth": "Naissance",
       "value": "Valeur marchande",
       "quick_scout_title": "Fiche Express",
+      "weight": "Poids",
       "position": "Poste"
+    },
+    "filters": {
+      "title": "Filtrer les statistiques",
+      "reset": "Réinitialiser",
+      "season": "Saison",
+      "league": "Ligue",
+      "team": "Équipe",
+      "all_leagues": "Toutes les ligues",
+      "all_teams": "Toutes les équipes",
+      "loading": "Chargement…",
+      "unavailable": "non disponible",
+      "all_leagues_context": "Toutes ligues"
     },
     "stats": {
       "title": "Statistiques détaillées",
+      "section_title": "Statistiques",
       "kpi_goals": "Buts",
-      "kpi_assists": "Assists",
+      "kpi_assists": "Passes D.",
       "kpi_matches": "Matchs",
       "kpi_passes": "Passes %",
       "yellow_cards": "Cartons jaunes"
@@ -305,7 +328,11 @@
       "skill_matrix": "Matrice de compétences",
       "tactical_roles": "Rôles tactiques",
       "strengths_weaknesses": "Points forts & faibles",
-      "similar_profiles": "Profils similaires"
+      "similar_profiles": "Profils similaires",
+      "trophies": "Trophées & Palmarès",
+      "no_trophies": "Aucun trophée enregistré",
+      "trophies_winner": "Vainqueur",
+      "trophies_runner_up": "Finaliste"
     }
   },
   "Comparison": {

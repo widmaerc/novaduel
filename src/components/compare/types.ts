@@ -25,7 +25,6 @@ export interface Player {
   shirt_number: number;
   market_value: string;
   image_url: string;
-  sportmonks_id: number;
   season: string;
   goals: number;
   assists: number;

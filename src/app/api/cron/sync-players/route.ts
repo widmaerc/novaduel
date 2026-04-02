@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { syncPlayers } from '@/lib/sync'
+import { syncPlayers } from '@/lib/sync-players'
 
-// Vercel Cron calls this with the Authorization header
-// Protect with CRON_SECRET env var
 export async function GET(req: NextRequest) {
   const auth = req.headers.get('authorization')
 
@@ -16,17 +14,11 @@ export async function GET(req: NextRequest) {
   try {
     const result = await syncPlayers()
     const duration = ((Date.now() - start) / 1000).toFixed(1)
-
-    return NextResponse.json({
-      ok: true,
-      duration: `${duration}s`,
-      ...result,
-    })
+    return NextResponse.json({ ok: true, duration: `${duration}s`, ...result })
   } catch (e) {
     console.error('[cron] sync-players error:', e)
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 })
   }
 }
 
-// Allow long execution time on Vercel
 export const maxDuration = 300 // 5 min

@@ -1,25 +1,24 @@
 'use server';
 
-import { searchPlayers } from '@/lib/sportmonks';
+import { searchPlayerProfiles } from '@/lib/apifootball';
+import { makeInitials } from '@/lib/data';
 
 export async function smSearchAction(query: string) {
   if (!query || query.length < 2) return [];
 
-  const data = await searchPlayers(query);
-  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = await searchPlayerProfiles(query) as any[] | null;
   if (!data || !Array.isArray(data)) return [];
 
-  // Map to the simple format the UI expects
-  return data.map((p: any) => {
-    const team = p.teams?.[0]?.name || 'Sans club';
-    let pos = p.position?.name || 'Joueur';
-    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.map((e: any) => {
+    const p = e.player ?? e;
     return {
-      id: p.id.toString(),
-      name: p.display_name || p.name,
-      team,
-      position: pos,
-      initials: p.name.substring(0, 2).toUpperCase()
+      id:       String(p.id),
+      name:     p.name ?? `${p.firstname ?? ''} ${p.lastname ?? ''}`.trim(),
+      team:     '—',
+      position: 'Joueur',
+      initials: makeInitials(p.name, p.firstname, p.lastname),
     };
   });
 }

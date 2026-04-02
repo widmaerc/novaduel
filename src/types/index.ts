@@ -8,25 +8,24 @@ export interface Player {
   id: number;
   slug: string;
   name: string;
-  common_name: string;
-  team: string;
-  team_logo_url: string;
-  league: string;
-  league_slug: string;
-  nationality: string;
-  flag_url: string;
-  flag_emoji: string;
+  common_name: string | null;
+  team: string | null;
+  team_logo_url: string | null;
+  league: string | null;
+  league_slug: string | null;
+  nationality: string | null;
+  flag_url: string | null;
+  flag_emoji: string | null;
   position: Position;
-  position_name: string;
+  position_name: string | null;
   age: number;
-  date_of_birth: string;
+  date_of_birth: string | null;
   height: number;
   weight: number;
-  preferred_foot: string;
+  preferred_foot: string | null;
   shirt_number: number;
-  market_value: string;
-  image_url: string;
-  sportmonks_id: number;
+  market_value: string | null;
+  image_url: string | null;
   season: string;
   // Stats
   goals: number;
@@ -41,12 +40,16 @@ export interface Player {
   red_cards: number;
   rating: number;
   xg: number;
-  recent_form: string; // "V,V,N,D,V"
+  recent_form: string | null; // "V,V,N,D,V"
   // Avatar design system
   initials: string; // "LM"
   avatar_bg: string; // "rgba(0,71,130,.12)"
   avatar_color: string; // "#004782"
+  detailed_position: string | null;
   is_featured: boolean;
+  ai_insight: string | null;
+  trophies_json: unknown;
+  transfers_json: unknown; // also used to store sidelined data
   created_at: string;
   updated_at: string;
 }

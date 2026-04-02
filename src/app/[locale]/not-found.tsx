@@ -46,10 +46,9 @@ export default function NotFound() {
           <p className="text-[10px] font-black uppercase tracking-widest text-[#a0a6b2] mb-6">
              {t('search_placeholder')}
           </p>
-          <CompareSearchBar 
-            locale={locale} 
+          <CompareSearchBar
+            locale={locale}
             ctaLabel={t('search_button')}
-            placeholder={t('search_placeholder')}
             hideMode
             isHero={true}
           />

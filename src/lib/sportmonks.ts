@@ -1,7 +1,7 @@
-/**
- * Sportmonks Football API v3 — SERVER-SIDE ONLY
- * Never import this file in client components.
- */
+// SPORTMONKS DISABLED — remplacé par API-Football (apifootball.ts)
+/*
+// Sportmonks Football API v3 — SERVER-SIDE ONLY
+// Never import this file in client components.
 import { cached, TTL } from './redis';
 import {
   PLAYERS_ALL, PLAYER_BY_ID, PLAYERS_BY_IDS, PLAYERS_SEARCH,
@@ -24,14 +24,14 @@ async function smRaw(path: string, params: Record<string, string> = {}): Promise
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
 
   const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
-  
+
   // If free plan restricts access or throws 404, return null gracefully instead of crashing
   if (!res.ok) {
     if (res.status === 404 || res.status === 403) return null;
     console.error(`Sportmonks ${res.status}: ${path}`);
     return null;
   }
-  
+
   return res.json();
 }
 
@@ -324,3 +324,4 @@ export async function getPlayerRecentFixtures(playerId: number) {
     TTL.stats
   );
 }
+*/

@@ -21,7 +21,7 @@ function LeagueCard({ league }: { league: League }) {
             />
           ) : (
             <span className="font-hl font-black text-2xl text-gray-400 group-hover:text-primary transition-colors">
-              {league.short_code?.slice(0, 3) || '?'}
+              {league.name?.slice(0, 3) || '?'}
             </span>
           )}
         </div>

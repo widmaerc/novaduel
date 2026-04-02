@@ -1,112 +1,182 @@
 /**
  * NovaDuel — Couche de données centralisée
- * Ordre de priorité : Supabase → Redis → Sportmonks API
+ * Ordre de priorité : Supabase → Redis → API-Football
  * SERVER-SIDE ONLY
  */
 import { supabaseAdmin } from './supabase';
-import { getPlayer, searchPlayers, getPlayerRecentFixtures } from './sportmonks';
+import { getPlayer, getFixtures } from './apifootball';
 import { cached, TTL } from './redis';
+import { getCurrentSeason } from './season';
 import type { Player } from '@/types';
 
-const SEASON_ID = Number(process.env.SPORTMONKS_SEASON_ID ?? 23614);
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function makeInitials(name: string): string {
+export function slugify(name: string): string {
+  return (name ?? '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/**
+ * Construit un slug SEO propre.
+ * - Si `name` est abrégé (contient un point, ex: "L. Messi") → utilise
+ *   le 1er prénom + le 1er nom de famille : "Lionel Messi"
+ * - Sinon → utilise `name` tel quel : "Kylian Mbappé"
+ */
+export function buildSlug(name: string, _id: number, firstname?: string | null, lastname?: string | null): string {
+  // Toujours préférer prénom[0] + nom[0] : "Lionel Messi", "Cristiano Ronaldo"
+  if (firstname && lastname) {
+    const first = firstname.trim().split(/\s+/)[0]  // "Lionel" (pas "Andrés")
+    const last  = lastname.trim().split(/\s+/)[0]   // "Messi"  (pas "Cuccittini")
+    const s = slugify(`${first} ${last}`)
+    if (s) return s
+  }
+  // Fallback sur le name complet (mononym, données incomplètes)
+  return slugify(name) || 'joueur'
+}
+
+export function displayName(name: string, firstname?: string | null, lastname?: string | null): string {
+  if (firstname && lastname) {
+    const first = firstname.trim().split(/\s+/)[0]
+    const last  = lastname.trim().split(/\s+/)[0]
+    if (first && last) return `${first} ${last}`
+  }
   return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+}
+
+export function makeInitials(name: string, firstname?: string | null, lastname?: string | null): string {
+  if (firstname && lastname) {
+    const f = firstname.trim()[0] ?? ''
+    const l = lastname.trim()[0] ?? ''
+    if (f && l) return (f + l).toUpperCase()
+  }
+  return (name ?? '').split(' ').map(w => w[0] ?? '').join('').slice(0, 2).toUpperCase() || '??';
 }
 
 function calcAge(dob: string): number {
-  const diff = Date.now() - new Date(dob).getTime();
-  return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+  if (!dob) return 0;
+  return Math.floor((Date.now() - new Date(dob).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 }
 
-// ─── Mapper Sportmonks → Player ───────────────────────────────────────────────
+// Parse "178 cm" → 178 ou "73 kg" → 73
+function parseMeasure(val: string | number | null | undefined): number {
+  if (!val) return 0;
+  if (typeof val === 'number') return val;
+  return parseInt(val.toString().replace(/[^\d]/g, ''), 10) || 0;
+}
+
+export function mapPosition(pos: string): 'ATT' | 'MIL' | 'DEF' | 'GK' {
+  const p = (pos ?? '').toLowerCase();
+  if (p.includes('attack') || p.includes('forward')) return 'ATT';
+  if (p.includes('midfiel')) return 'MIL';
+  if (p.includes('defend')) return 'DEF';
+  if (p.includes('goal')) return 'GK';
+  return 'ATT';
+}
+
+// ─── Mapper API-Football → Player ────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapSportmonksToPlayer(p: any, recentFixtures: any[]): Omit<Player, 'id' | 'created_at' | 'updated_at'> {
-  const statsList = p.statistics ?? [];
-  // Pick the most recent season stats
+export function mapApiFootballToPlayer(entry: any): Omit<Player, 'created_at' | 'updated_at'> {
+  const p    = entry.player ?? entry;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const stats = statsList.sort((a: any, b: any) => (b.season_id ?? 0) - (a.season_id ?? 0))[0];
-  const details = stats?.details ?? [];
-  
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getDetail = (type: number) => details.find((d: any) => d.type_id === type)?.value?.total ?? 0;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getDetailFloat = (type: number) => parseFloat(details.find((d: any) => d.type_id === type)?.value?.average ?? details.find((d: any) => d.type_id === type)?.value?.total ?? 0) || 0;
+  const stats = (entry.statistics ?? []) as any[];
 
-  const dob = p.date_of_birth ?? '';
+  // Statistiques de la ligue principale (plus d'apparitions)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mainStats = [...stats].sort((a: any, b: any) =>
+    (b.games?.appearences ?? 0) - (a.games?.appearences ?? 0)
+  )[0] ?? {};
 
-  // Form (V-N-D based on recent fixtures played by their team)
-  // For free plan, fixtures might not include the player's direct form if limited, we make do with what we have.
-  // Actually, we are strictly faithful: if recentFixtures is empty, form is empty.
-  const formStr = (recentFixtures || []).slice(0, 5).map(f => {
-    // very loose heuristic for team won/draw/lost for free plan
-    // we don't have exact W/D/L for the player without parsing deeply, so we'll just check if their team won.
-    // just returning a default for now if we can't determine it, or empty if no fixtures
-    return 'N'; // simplify if no exact scores available on free tier easily without complex parsing
-  }).join(',') || '';
+  const dob  = p.birth?.date || null; // null au lieu de '' pour PostgreSQL
+  const apiName    = p.name ?? `${p.firstname ?? ''} ${p.lastname ?? ''}`.trim();
+  const shortName  = displayName(apiName, p.firstname, p.lastname);
+
+  const slug = buildSlug(apiName, p.id, p.firstname, p.lastname);
+
+  // pass_accuracy peut être "80%" (string) ou 80 (number)
+  const passAcc = (() => {
+    const raw = mainStats.passes?.accuracy;
+    if (!raw) return 0;
+    return parseFloat(raw.toString().replace('%', '')) || 0;
+  })();
 
   return {
-    slug: p.name?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') ?? '',
-    name: p.name ?? '',
-    common_name: p.display_name ?? p.common_name ?? p.name ?? '',
-    team: p.teams?.[0]?.name ?? '',
-    team_logo_url: p.teams?.[0]?.image_path ?? '',
-    league: p.teams?.[0]?.leagues?.[0]?.name ?? '',
-    league_slug: p.teams?.[0]?.leagues?.[0]?.name?.toLowerCase().replace(/\s+/g, '-') ?? '',
-    nationality: p.nationality?.name ?? p.country?.name ?? '',
-    flag_url: p.nationality?.image_path ?? p.country?.image_path ?? '',
-    flag_emoji: '', // could map if needed
-    position: (() => {
-      const c = (p.position?.code || '').toUpperCase();
-      if (c === 'ATT' || c === 'AT') return 'ATT';
-      if (c === 'DEF' || c === 'DF') return 'DEF';
-      if (c === 'MID' || c === 'MIL' || c === 'MF') return 'MIL';
-      if (c === 'GK'  || c === 'GL' || c === 'GOAL')  return 'GK';
-      return 'ATT'; // fallback
-    })(),
-    position_name: p.position?.name ?? '',
-    age: dob ? calcAge(dob) : 0,
-    date_of_birth: dob,
-    height: p.height ?? 0,
-    weight: p.weight ?? 0,
-    preferred_foot: p.preferred_foot ?? '',
-    shirt_number: p.shirt_number ?? 0,
-    market_value: '',
-    image_url: p.image_path ?? '',
-    sportmonks_id: p.id,
-    season: stats?.season?.name ?? '2025-26',
-    
-    // Strict direct API data (no hallucination)
-    // 52=Goals, 79/80=Assists, 321=Matches, 116=Minutes, etc. (based on Sportmonks types)
-    goals: getDetail(52) || getDetail(54) || 0,
-    assists: getDetail(79) || getDetail(80) || 0,
-    matches: getDetail(321) || getDetail(119) || (stats?.minutes_played ? Math.round((stats.minutes_played) / 90) : 0),
-    minutes: stats?.minutes_played ?? getDetail(116) ?? 0,
-    pass_accuracy: getDetailFloat(80) || 0,
-    dribbles: getDetailFloat(84) || 0,
-    duels_won: getDetailFloat(294) || 0,
-    shots_on_target: getDetailFloat(86) || 0,
-    yellow_cards: getDetail(84) || getDetail(83) || 0,
-    red_cards: getDetail(85) || 0,
-    rating: getDetailFloat(118) || 0,
-    xg: getDetailFloat(117) || 0,
-    recent_form: formStr,
-    initials: makeInitials(p.common_name ?? p.name ?? ''),
-    avatar_bg: 'rgba(0,71,130,.12)',
-    avatar_color: '#004782',
-    is_featured: false,
-    ai_insight: null,
+    slug,
+    name:             shortName || `Player ${p.id}`,
+    common_name:      shortName || null,
+    team:             mainStats.team?.name || null,
+    team_logo_url:    mainStats.team?.logo || null,
+    league:           mainStats.league?.name || null,
+    league_slug:      slugify(mainStats.league?.name ?? '') || null,
+    nationality:      p.nationality || null,
+    flag_url:         p.nationality
+                        ? `https://media.api-sports.io/flags/${p.nationality.toLowerCase().replace(/\s+/g, '-')}.svg`
+                        : null,
+    flag_emoji:       null,
+    position:         mapPosition(mainStats.games?.position ?? ''),
+    position_name:    mainStats.games?.position || null,
     detailed_position: null,
-    trophies_json: null,
-    transfers_json: null,
+    age:              dob ? calcAge(dob) : (p.age ?? 0),
+    date_of_birth:    dob,
+    height:           parseMeasure(p.height),
+    weight:           parseMeasure(p.weight),
+    preferred_foot:   null,
+    shirt_number:     mainStats.games?.number ?? 0,
+    market_value:     null,
+    id:               p.id as number,
+    image_url:        p.photo || null,
+    season:           String(mainStats.league?.season ?? 2025),
+    goals:            mainStats.goals?.total ?? 0,
+    assists:          mainStats.goals?.assists ?? 0,
+    matches:          mainStats.games?.appearences ?? 0,
+    minutes:          mainStats.games?.minutes ?? 0,
+    pass_accuracy:    passAcc,
+    dribbles:         mainStats.dribbles?.success ?? 0,
+    duels_won:        mainStats.duels?.won ?? 0,
+    shots_on_target:  mainStats.shots?.on ?? 0,
+    yellow_cards:     mainStats.cards?.yellow ?? 0,
+    red_cards:        mainStats.cards?.red ?? 0,
+    rating:           parseFloat(mainStats.games?.rating ?? '0') || 0,
+    xg:               0,
+    recent_form:      null,
+    initials:         makeInitials(apiName, p.firstname, p.lastname),
+    avatar_bg:        'rgba(0,71,130,.12)',
+    avatar_color:     '#004782',
+    is_featured:      false,
+    ai_insight:       null,
+    trophies_json:    null,
+    transfers_json:   null,
+  };
+}
+
+// ─── Reshape dn_players row → API-Football entry ─────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function dnRowToApiEntry(row: any) {
+  return {
+    player: {
+      id:          row.id,
+      name:        row.name,
+      firstname:   row.firstname,
+      lastname:    row.lastname,
+      birth: {
+        date:    row.birth_date    ?? null,
+        place:   row.birth_place   ?? null,
+        country: row.birth_country ?? null,
+      },
+      nationality: row.nationality ?? null,
+      height:      row.height ? `${row.height} cm` : null,
+      weight:      row.weight ? `${row.weight} kg` : null,
+      photo:       row.photo ?? null,
+      age:         row.age  ?? null,
+    },
+    statistics: row.statistics ?? [],
   };
 }
 
@@ -114,89 +184,91 @@ function mapSportmonksToPlayer(p: any, recentFixtures: any[]): Omit<Player, 'id'
 
 export async function getPlayerBySlug(slug: string, locale: string = 'fr'): Promise<Player | null> {
   return cached(
-    `player:v2:slug:${slug}:${locale}`,
+    `player:af:slug:${slug}:${locale}`,
     async () => {
-      // 1. Resolve ID and EXISTING data via Supabase or search
-      let smId: number | null = null;
-      let existingCustomData: any = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let afId: number | null = null;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let dnRow: any = null;
 
-      const { data: rowBySlug } = await supabaseAdmin
-        .from('players')
-        .select('*')
-        .eq('slug', slug)
-        .single();
-        
-      if (rowBySlug) {
-        smId = rowBySlug.sportmonks_id;
-        existingCustomData = rowBySlug;
-      } else if (/^\d+$/.test(slug)) {
-        smId = parseInt(slug, 10);
+      // 1. Slug purement numérique (legacy)
+      if (/^\d+$/.test(slug)) {
+        afId = parseInt(slug, 10);
+        const { data } = await supabaseAdmin.from('dn_players').select('*').eq('id', afId).single();
+        dnRow = data;
+      }
+
+      // 2. Slug avec ID en fin "nom-prenom-276" (legacy backward-compat)
+      if (!dnRow) {
+        const idMatch = slug.match(/-(\d+)$/);
+        if (idMatch) {
+          afId = parseInt(idMatch[1], 10);
+          const { data } = await supabaseAdmin.from('dn_players').select('*').eq('id', afId).single();
+          dnRow = data;
+        }
+      }
+
+      // 3. Lookup direct par colonne slug (peuplée lors du sync)
+      if (!dnRow) {
+        const { data } = await supabaseAdmin.from('dn_players').select('*').eq('slug', slug).single();
+        dnRow = data;
+        afId = dnRow?.id ?? null;
+      }
+
+      if (!afId) return null;
+
+      // 3. Mapper vers Player
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let playerObj: any;
+      if (dnRow) {
+        playerObj = mapApiFootballToPlayer(dnRowToApiEntry(dnRow));
+        // Enrichissement stocké dans dn_players
+        if (dnRow.ai_insight)     playerObj.ai_insight     = dnRow.ai_insight;
+        if (dnRow.insight_fr)     playerObj.insight_fr     = dnRow.insight_fr;
+        if (dnRow.insight_en)     playerObj.insight_en     = dnRow.insight_en;
+        if (dnRow.insight_es)     playerObj.insight_es     = dnRow.insight_es;
+        if (dnRow.trophies_json)  playerObj.trophies_json  = dnRow.trophies_json;
+        if (dnRow.transfers_json) playerObj.transfers_json = dnRow.transfers_json;
       } else {
-        const query = slug.replace(/-/g, ' ');
-        const results = await searchPlayers(query) as any[] | null;
-        if (results?.length && results[0]?.id) {
-          smId = results[0].id;
-        }
+        // dn_players pas encore synchronisé → appel direct API
+        const profile = await getPlayer(afId, await getCurrentSeason()).catch(() => null);
+        if (!profile) return null;
+        playerObj = mapApiFootballToPlayer(profile);
       }
 
-      if (smId && !existingCustomData.id) {
-        const { data: rowById } = await supabaseAdmin
-          .from('players')
-          .select('*')
-          .eq('sportmonks_id', smId)
-          .single();
-        if (rowById) existingCustomData = rowById;
-      }
-
-      if (!smId) return null;
-
-      // 2. Fetch fresh dynamic data if needed, or stick to DB if it's recent
-      let playerObj: any = existingCustomData;
-
-      if (!playerObj.id) {
-        const [profile, fixtures] = await Promise.all([
-          getPlayer(smId).catch(() => null),
-          getPlayerRecentFixtures(smId).catch(() => null)
+      // 4. Trophées + Blessés (on-demand si absents)
+      const needsTrophies  = !playerObj.trophies_json;
+      const needsSidelined = !playerObj.transfers_json;
+      if (needsTrophies || needsSidelined) {
+        const { getTrophies, getSidelined } = await import('./apifootball');
+        const [trophies, sidelined] = await Promise.all([
+          needsTrophies  ? getTrophies({ player: afId }).catch(() => null)  : Promise.resolve(null),
+          needsSidelined ? getSidelined({ player: afId }).catch(() => null) : Promise.resolve(null),
         ]);
-
-        if (!profile) {
-          return {
-            ...existingCustomData,
-            goals: 0, assists: 0, matches: 0, rating: 0, is_missing_data: true
-          } as unknown as Player;
-        }
-        playerObj = mapSportmonksToPlayer(profile, (fixtures as any) ?? []);
+        if (trophies)  playerObj.trophies_json  = trophies;
+        if (sidelined) playerObj.transfers_json = sidelined;
       }
 
-      // 3. Handle multilingual insights
+      // 5. Insights multilingues
       const insightKey = locale === 'es' ? 'insight_es' : locale === 'en' ? 'insight_en' : 'insight_fr';
-      
       if (locale === 'fr' && !playerObj.insight_fr && playerObj.ai_insight) {
         playerObj.insight_fr = playerObj.ai_insight;
       }
-
       if (!playerObj[insightKey]) {
         const { generatePlayerInsight } = await import('./claude');
         const insight = await generatePlayerInsight(playerObj as Player, locale).catch(() => '');
-        if (insight) {
-          playerObj[insightKey] = insight;
-          if (playerObj.id) {
-            await supabaseAdmin.from('players').update({ [insightKey]: insight }).eq('id', playerObj.id).catch(() => {});
-          }
-        }
+        if (insight) playerObj[insightKey] = insight;
       }
-
-      // 4. Upsert/Save if new
-      if (!playerObj.id) {
-        const { data: saved } = await supabaseAdmin
-          .from('players')
-          .upsert({ ...playerObj, updated_at: new Date().toISOString() }, { onConflict: 'slug' })
-          .select('*').single();
-        if (saved) playerObj = saved;
-      }
-
-      // 5. Overwrite ai_insight with the localized version for compatibility
       playerObj.ai_insight = playerObj[insightKey] || playerObj.ai_insight;
+
+      // 6. Persister l'enrichissement dans dn_players
+      const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
+      if (playerObj[insightKey])      updates[insightKey]      = playerObj[insightKey];
+      if (playerObj.trophies_json)    updates.trophies_json    = playerObj.trophies_json;
+      if (playerObj.transfers_json)   updates.transfers_json   = playerObj.transfers_json;
+      if (Object.keys(updates).length > 1) {
+        await supabaseAdmin.from('dn_players').update(updates).eq('id', afId).then(() => {}, () => {});
+      }
 
       return playerObj as Player;
     },
@@ -208,24 +280,22 @@ export async function getPlayerBySlug(slug: string, locale: string = 'fr'): Prom
 
 export async function getComparisonBySlug(slug: string, locale: string = 'fr') {
   return cached(
-    `comparison:v2:slug:${slug}:${locale}`,
+    `comparison:af:slug:${slug}:${locale}`,
     async () => {
-      // Parse slug → "player-a-name-vs-player-b-name"
       const parts = slug.split('-vs-');
       if (parts.length !== 2) return null;
 
       const [slugA, slugB] = parts;
-
       const [playerA, playerB] = await Promise.all([
         getPlayerBySlug(slugA, locale),
         getPlayerBySlug(slugB, locale),
       ]);
 
       if (!playerA || !playerB) return null;
-      
+
       const canonicalSlug = [playerA.slug, playerB.slug].sort().join('-vs-');
 
-      const { data, error } = await supabaseAdmin
+      const { data } = await supabaseAdmin
         .from('comparisons')
         .select('*')
         .eq('slug', canonicalSlug)
@@ -234,56 +304,45 @@ export async function getComparisonBySlug(slug: string, locale: string = 'fr') {
       const insightKey = locale === 'es' ? 'insight_es' : locale === 'en' ? 'insight_en' : 'insight_fr';
 
       if (!data) {
-        const { generateComparisonInsight } = await import('./claude')
-        const insight = await generateComparisonInsight(playerA, playerB, locale).catch(() => '')
+        const { generateComparisonInsight } = await import('./claude');
+        const insight = await generateComparisonInsight(playerA, playerB, locale).catch(() => '');
 
-        const newComparisonData = {
+        const newComp = {
           slug: canonicalSlug,
           player_a_id: playerA.id,
           player_b_id: playerB.id,
           [insightKey]: insight,
           is_generated: true,
-          views: 1,
+          views: 0,
           is_featured: false,
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         };
 
-        const { data: savedComp, error: insertError } = await supabaseAdmin
+        const { data: savedComp, error } = await supabaseAdmin
           .from('comparisons')
-          .insert(newComparisonData)
+          .insert(newComp)
           .select('*')
           .single();
 
-        if (insertError) {
-          console.error(`[Supabase Error] Failed to insert comparison ${canonicalSlug}:`, insertError.message);
-        }
+        if (error) console.error(`[Supabase] insert comparison ${canonicalSlug}:`, error.message);
 
-        return {
-          ...(savedComp || newComparisonData),
-          player_a: playerA,
-          player_b: playerB
-        };
+        return { ...(savedComp || newComp), player_a: playerA, player_b: playerB };
       }
 
-      // 4. Si insight manquant pour la langue demandée, le générer
       if (!data[insightKey]) {
-        const { generateComparisonInsight } = await import('./claude')
-        const insight = await generateComparisonInsight(playerA, playerB, locale).catch(() => '')
+        const { generateComparisonInsight } = await import('./claude');
+        const insight = await generateComparisonInsight(playerA, playerB, locale).catch(() => '');
         if (insight) {
           await supabaseAdmin
             .from('comparisons')
             .update({ [insightKey]: insight, updated_at: new Date().toISOString() })
-            .eq('slug', canonicalSlug)
-          data[insightKey] = insight
+            .eq('slug', canonicalSlug);
+          data[insightKey] = insight;
         }
       }
 
-      return {
-        ...data,
-        player_a: playerA,
-        player_b: playerB,
-      };
+      return { ...data, player_a: playerA, player_b: playerB };
     },
     TTL.comparison,
   );
@@ -295,13 +354,23 @@ export async function getFeaturedPlayers(): Promise<Player[]> {
   return cached(
     'players:featured',
     async () => {
+      const season = await getCurrentSeason();
       const { data } = await supabaseAdmin
-        .from('players')
-        .select('*')
-        .eq('is_featured', true)
-        .order('rating', { ascending: false })
-        .limit(10);
-      return (data ?? []) as Player[];
+        .from('dn_players')
+        .select('id, name, firstname, lastname, nationality, photo, age, birth_date, birth_place, birth_country, height, weight, statistics')
+        .eq('season', season)
+        .limit(200);
+      if (!data?.length) return [];
+      // Trier par apparitions pour obtenir les joueurs les plus actifs
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sorted = [...data].sort((a: any, b: any) =>
+        ((b.statistics as any)?.[0]?.games?.appearences ?? 0) -
+        ((a.statistics as any)?.[0]?.games?.appearences ?? 0)
+      ).slice(0, 10);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return sorted.map((row: any) =>
+        mapApiFootballToPlayer(dnRowToApiEntry(row)) as unknown as Player
+      );
     },
     TTL.player,
   );
@@ -331,51 +400,104 @@ export async function incrementComparisonViews(slug: string) {
 
 // ─── getMatchData ─────────────────────────────────────────────────────────────
 
-import { getFixture } from '@/lib/sportmonks';
+// ─── getPlayerCareer ──────────────────────────────────────────────────────────
+
+export interface CareerRow {
+  season:      string
+  team:        string
+  team_id:     number | null
+  team_logo:   string | null
+  competition: string
+  matches:     number
+  goals:       number
+  assists:     number
+  rating:      number
+  ratingColor: string
+  ratingText:  string
+}
+
+export async function getPlayerCareer(afId: number): Promise<CareerRow[]> {
+  return (await cached(
+    `player:career:${afId}`,
+    async () => {
+      const { afFetch } = await import('./apifootball');
+
+      // 1. Toutes les saisons du joueur
+      const seasonsRaw = await afFetch('/players/seasons', { player: afId });
+      const years: number[] = ((seasonsRaw?.response ?? []) as number[]).sort((a, b) => b - a);
+
+      if (!years.length) return null; // null = pas mis en cache → on réessaiera
+
+      // 2. Fetch stats pour chaque saison (séquentiel pour ne pas exploser le quota)
+      const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+      const rows: CareerRow[] = [];
+
+      for (const year of years) {
+        const res = await afFetch('/players', { id: afId, season: year });
+        const statistics: any[] = res?.response?.[0]?.statistics ?? [];
+
+        for (const s of statistics) {
+          if (!s.league?.name || !s.team?.name) continue;
+          if (!(s.games?.appearences > 0)) continue;
+
+          const rating = parseFloat(s.games?.rating ?? '0') || 0;
+          rows.push({
+            season:      `${year}/${year + 1}`,
+            team:        s.team.name,
+            team_id:     s.team.id ?? null,
+            team_logo:   s.team.logo ?? null,
+            competition: s.league.name,
+            matches:     s.games.appearences ?? 0,
+            goals:       s.goals?.total      ?? 0,
+            assists:     s.goals?.assists     ?? 0,
+            rating,
+            ratingColor: rating >= 7.5 ? '#dcfce7' : rating >= 6.5 ? '#fef9c3' : rating > 0 ? '#fee2e2' : '#f3f4f5',
+            ratingText:  rating >= 7.5 ? '#15803d' : rating >= 6.5 ? '#854d0e' : rating > 0 ? '#b91c1c' : '#727782',
+          });
+        }
+
+        await sleep(220); // respect 300 req/min
+      }
+
+      return rows.length ? rows : null;
+    },
+    TTL.career,
+  )) ?? [];
+}
 
 export async function getMatchData(id: number) {
   return cached(
-    `match:${id}`,
+    `match:af:${id}`,
     async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const matchRaw: any = await getFixture(id);
-      if (!matchRaw) return null;
-
-      const pA = matchRaw.participants?.[0];
-      const pB = matchRaw.participants?.[1];
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const getScore = (pId: number) => {
-        // FindCURRENT score or fallback
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const sc = matchRaw.scores?.find((s: any) => s.participant_id === pId && s.description === 'CURRENT');
-        return sc?.score?.goals ?? null;
-      };
+      const fixtures = await getFixtures({ id }) as any[] | null;
+      const match = fixtures?.[0];
+      if (!match) return null;
 
       return {
-        id: matchRaw.id,
-        name: matchRaw.name,
-        date: matchRaw.starting_at,
-        status: matchRaw.state?.name || matchRaw.state?.short_name || 'En attente',
-        result_info: matchRaw.result_info,
-        league: matchRaw.league?.name || '',
-        league_image: matchRaw.league?.image_path || '',
+        id:           match.fixture.id,
+        name:         `${match.teams.home.name} vs ${match.teams.away.name}`,
+        date:         match.fixture.date,
+        status:       match.fixture.status?.long ?? 'En attente',
+        result_info:  match.fixture.status?.short ?? '',
+        league:       match.league?.name ?? '',
+        league_image: match.league?.logo ?? '',
         team1: {
-          id: pA?.id,
-          name: pA?.name || 'Equipe A',
-          image: pA?.image_path,
-          score: pA ? getScore(pA.id) : null,
-          winner: pA?.meta?.winner,
+          id:     match.teams.home.id,
+          name:   match.teams.home.name,
+          image:  match.teams.home.logo,
+          score:  match.goals.home,
+          winner: match.teams.home.winner,
         },
         team2: {
-          id: pB?.id,
-          name: pB?.name || 'Equipe B',
-          image: pB?.image_path,
-          score: pB ? getScore(pB.id) : null,
-          winner: pB?.meta?.winner,
-        }
+          id:     match.teams.away.id,
+          name:   match.teams.away.name,
+          image:  match.teams.away.logo,
+          score:  match.goals.away,
+          winner: match.teams.away.winner,
+        },
       };
     },
-    TTL.comparison
+    TTL.comparison,
   );
 }

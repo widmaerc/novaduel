@@ -7,25 +7,19 @@ export async function POST(
 ) {
   const { slug } = await params
 
-  // Fetch current count
-  const { data, error } = await supabaseAdmin
-    .from('comparisons')
-    .select('views')
-    .eq('slug', slug)
-    .single()
+  const { data, error } = await supabaseAdmin.rpc('increment_comparison_views', { p_slug: slug })
 
-  if (error || !data) {
-    return NextResponse.json({ views: 0 }, { status: 404 })
+  if (error) {
+    // RPC might not exist yet — fall back to read-modify-write
+    const { data: row } = await supabaseAdmin
+      .from('comparisons').select('views').eq('slug', slug).single()
+    if (!row) return NextResponse.json({ views: 0 }, { status: 404 })
+    const newViews = (row.views ?? 0) + 1
+    await supabaseAdmin.from('comparisons').update({ views: newViews }).eq('slug', slug)
+    return NextResponse.json({ views: newViews })
   }
 
-  const newViews = (data.views ?? 0) + 1
-
-  await supabaseAdmin
-    .from('comparisons')
-    .update({ views: newViews })
-    .eq('slug', slug)
-
-  return NextResponse.json({ views: newViews })
+  return NextResponse.json({ views: data ?? 0 })
 }
 
 export async function GET(
@@ -33,12 +27,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params
-
   const { data } = await supabaseAdmin
-    .from('comparisons')
-    .select('views')
-    .eq('slug', slug)
-    .single()
-
+    .from('comparisons').select('views').eq('slug', slug).single()
   return NextResponse.json({ views: data?.views ?? 0 })
 }

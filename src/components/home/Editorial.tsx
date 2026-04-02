@@ -1,7 +1,8 @@
-import data from '@/data/fake_editorial_data.json';
+// import data from '@/data/fake_editorial_data.json';
 import { useTranslations } from 'next-intl';
 
-const { articles: ARTICLES } = data;
+// const { articles: ARTICLES } = data;
+const ARTICLES: { id: number; tag: string; title: string; excerpt: string }[] = [];
 
 const MOCK_IMAGES = [
   "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2670&auto=format&fit=crop",
@@ -28,6 +29,12 @@ export default function Editorial() {
           {t('cta')}
           <span className="w-8 h-8 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">→</span>
         </a>
+      </div>
+
+      {/* Methodology block — SEO text */}
+      <div className="mb-12 md:mb-16 max-w-3xl">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-3">{t('methodology_title')}</h3>
+        <p className="text-sm md:text-base text-gray-500 leading-relaxed">{t('methodology_body')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

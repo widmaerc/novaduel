@@ -15,11 +15,12 @@ interface AIInsightBlockProps {
 export function AIInsightBlock({ insight, playerA, playerB, winnerSlug, labels }: Omit<AIInsightBlockProps, 'locale'>) {
   const params = useParams()
   const locale = (params?.locale as string) ?? 'fr'
-  const configLabels = labels?.config ?? {
+  const defaultLabels: Record<string, string[]> = {
     fr: ['Régularité', 'Explosivité'],
     en: ['Consistency', 'Explosiveness'],
     es: ['Regularidad', 'Explosividad'],
-  }[locale]
+  }
+  const configLabels: string[] = labels?.config ?? defaultLabels[locale] ?? defaultLabels['fr']
 
   const winner = [playerA, playerB].find(p => p.slug === winnerSlug)
   const other  = [playerA, playerB].find(p => p.slug !== winnerSlug)

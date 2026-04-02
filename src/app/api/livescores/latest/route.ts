@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server';
-import { getLiveScoresLatest } from '@/lib/sportmonks';
+import { getLiveScores } from '@/lib/apifootball';
 import { normalize } from '../normalize';
 
-// GET /api/livescores/latest — only fixtures changed in last 10s (no cache)
-// Returns [] when nothing changed — client must handle empty gracefully
+// GET /api/livescores/latest — live scores, fresh (no extra cache)
 export async function GET() {
-  const data = await getLiveScoresLatest();
+  const data = await getLiveScores();
   if (!data) return NextResponse.json([], { status: 200 });
-
-  const matches = Array.isArray(data) ? normalize(data) : [];
-  return NextResponse.json(matches);
+  return NextResponse.json(normalize(data));
 }

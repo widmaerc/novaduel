@@ -10,9 +10,9 @@ export interface Player {
   slug: string;
   name: string;
   common_name: string | null;
-  team: string;
+  team: string | null;
   team_logo_url: string | null;
-  league: string;
+  league: string | null;
   league_slug: string | null;
   nationality: string | null;
   flag_url: string | null;
@@ -27,7 +27,6 @@ export interface Player {
   shirt_number: number | null;
   market_value: string | null;
   image_url: string | null;
-  sportmonks_id: number;
   season: string;
   goals: number;
   assists: number;
@@ -41,7 +40,7 @@ export interface Player {
   red_cards: number;
   rating: number | string;
   xg: number | string;
-  recent_form: string;
+  recent_form: string | null;
   initials: string | null;
   avatar_bg: string | null;
   avatar_color: string | null;

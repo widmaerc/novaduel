@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { useState, useRef, useEffect, useMemo, RefObject } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -27,15 +26,12 @@ interface Props {
 }
 
 const POS_STYLE: Record<string, { bg: string; color: string }> = {
-  ATT: { bg: '#fef2f2', color: '#dc2626' },
-  MIL: { bg: '#EFF6FF', color: '#004782' },
-  DEF: { bg: '#f0fdf4', color: '#15803d' },
-  GK:  { bg: '#f5f3ff', color: '#6d28d9' },
+  ATT: { bg: '#fffbeb', color: '#d97706' },  // amber-50 / amber-600
+  MIL: { bg: '#eff6ff', color: '#2563eb' },  // blue-50  / blue-600
+  DEF: { bg: '#f0fdf4', color: '#16a34a' },  // green-50 / green-600
+  GK:  { bg: '#faf5ff', color: '#9333ea' },  // purple-50/ purple-600
 }
 
-function normalize(s: string) {
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-}
 
 // ── Slot — défini HORS du composant parent pour éviter les remounts ───────────
 interface SlotProps {
@@ -58,13 +54,12 @@ interface SlotProps {
   isHero?:    boolean
   t:          any
   tc:         any
-  locale:     string
 }
 
 function Slot({
   isA, player, query, filtered, open, focused, loading, totalCount,
   wRef, iRef, onQuery, onOpen, onFocus, onSelect, onClear, onKey,
-  isHero, t, tc, locale
+  isHero, t, tc
 }: SlotProps) {
   const accent   = isA ? '#004782' : '#92000f'
   const accentBg = isA ? 'rgba(0,71,130,.08)' : 'rgba(146,0,15,.06)'
@@ -75,8 +70,9 @@ function Slot({
         <div className="flex items-center gap-2.5 px-4 py-2.5 transition-all"
           style={{ background: accentBg, borderRadius: 100, border: `1.5px solid ${accent}20` }}>
           <div className="flex flex-1 items-center gap-2.5 min-w-0 group transition-all">
-            <PlayerAvatar initials={player.initials}
-              avatarBg={player.avatar_bg} avatarColor={player.avatar_color} size={28} />
+            {(() => { const c = POS_STYLE[player.position] ?? { bg: '#f3f4f5', color: '#727782' }; return (
+              <PlayerAvatar initials={player.initials} avatarBg={c.bg} avatarColor={c.color} size={28} />
+            )})()}
             <div className="flex-1 min-w-0">
               <div className="font-headline font-bold text-[13px] truncate" style={{ color: accent }}>{player.name}</div>
               <div className="text-[10px] text-[#727782] truncate">{player.club}</div>
@@ -148,8 +144,10 @@ function Slot({
                       ${focused === i ? (isA ? 'bg-[#EFF6FF]' : 'bg-[#fef2f2]') : 'hover:bg-[#f8f9fa]'}`}
                     onClick={() => onSelect(p)}
                     onMouseEnter={() => onFocus(i)}>
-                    <PlayerAvatar initials={p.initials}
-                      avatarBg={p.avatar_bg} avatarColor={p.avatar_color} size={34} />
+                    {(() => { const c = POS_STYLE[p.position] ?? { bg: '#f3f4f5', color: '#727782' }; return (
+                      <PlayerAvatar initials={p.initials}
+                        avatarBg={c.bg} avatarColor={c.color} size={34} />
+                    )})()}
                     <div className="flex-1 min-w-0 pr-2">
                       <div className="text-[13px] md:text-sm font-semibold text-[#191c1d] truncate">
                         {p.common_name || p.name}
@@ -159,7 +157,7 @@ function Slot({
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-[9px] font-bold uppercase tracking-[.06em] px-1.5 py-px rounded"
                         style={{ background: pos.bg, color: pos.color }}>
-                        {tc(`positions.${(p.position === 'MIL' ? 'mid' : p.position).toLowerCase()}`)}
+                        {tc(`positions.${((p.position === 'MIL' ? 'mid' : p.position) ?? '').toLowerCase()}`) || p.position}
                       </span>
                       {p.rating > 0 && (
                         <span className="font-headline font-black text-[12px] text-[#191c1d]">{p.rating.toFixed(1)}</span>
@@ -185,8 +183,13 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
   const tc = useTranslations('Common')
   const defaultCta = ctaLabel || useTranslations('Comparison')('cta')
 
-  const [allPlayers, setAllPlayers] = useState<DBPlayer[]>([])
-  const [loadingAll, setLoadingAll]  = useState(true)
+  const [defaultPlayers, setDefaultPlayers] = useState<DBPlayer[]>([])
+  const [searchA,        setSearchA]         = useState<DBPlayer[]>([])
+  const [searchB,        setSearchB]         = useState<DBPlayer[]>([])
+  const [loadingA,       setLoadingA]        = useState(false)
+  const [loadingB,       setLoadingB]        = useState(false)
+  const [loadingInit,    setLoadingInit]     = useState(true)
+  const [totalCount,     setTotalCount]      = useState(0)
 
   const [pA, setPA] = useState<SelectedPlayer | null>(initialPlayerA ?? null)
   const [pB, setPB] = useState<SelectedPlayer | null>(initialPlayerB ?? null)
@@ -198,12 +201,43 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
   const wA = useRef<HTMLDivElement>(null); const wB = useRef<HTMLDivElement>(null)
   const iA = useRef<HTMLInputElement>(null); const iB = useRef<HTMLInputElement>(null)
 
+  // Chargement initial : top 50 par note pour le dropdown vide
   useEffect(() => {
-    fetch('/api/players?per_page=500&sort=name')
+    fetch('/api/players?per_page=50&sort=rating')
       .then(r => r.json())
-      .then(d => { setAllPlayers(d.players ?? []); setLoadingAll(false) })
-      .catch(() => setLoadingAll(false))
+      .then(d => { setDefaultPlayers(d.players ?? []); setTotalCount(d.total ?? 0); setLoadingInit(false) })
+      .catch(() => setLoadingInit(false))
   }, [])
+
+  // Recherche serveur debounced pour slot A
+  useEffect(() => {
+    const q = qA.trim()
+    if (q.length < 2) { setSearchA([]); return }
+    setLoadingA(true)
+    const id = setTimeout(() => {
+      fetch(`/api/players/search?q=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(d => setSearchA(d.results ?? []))
+        .catch(() => setSearchA([]))
+        .finally(() => setLoadingA(false))
+    }, 300)
+    return () => clearTimeout(id)
+  }, [qA])
+
+  // Recherche serveur debounced pour slot B
+  useEffect(() => {
+    const q = qB.trim()
+    if (q.length < 2) { setSearchB([]); return }
+    setLoadingB(true)
+    const id = setTimeout(() => {
+      fetch(`/api/players/search?q=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(d => setSearchB(d.results ?? []))
+        .catch(() => setSearchB([]))
+        .finally(() => setLoadingB(false))
+    }, 300)
+    return () => clearTimeout(id)
+  }, [qB])
 
   useEffect(() => {
     const fn = (e: MouseEvent) => {
@@ -215,22 +249,14 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
   }, [])
 
   const filteredA = useMemo(() => {
-    const q = normalize(qA)
-    const base = allPlayers.filter(p => p.slug !== pB?.slug)
-    if (!q) return base.slice(0, 50)
-    return base.filter(p =>
-      normalize(p.name).includes(q) || normalize(p.common_name).includes(q) || normalize(p.team).includes(q)
-    ).slice(0, 30)
-  }, [qA, allPlayers, pB])
+    if (qA.trim().length >= 2) return searchA.filter(p => p.slug !== pB?.slug)
+    return defaultPlayers.filter(p => p.slug !== pB?.slug).slice(0, 50)
+  }, [qA, searchA, defaultPlayers, pB])
 
   const filteredB = useMemo(() => {
-    const q = normalize(qB)
-    const base = allPlayers.filter(p => p.slug !== pA?.slug)
-    if (!q) return base.slice(0, 50)
-    return base.filter(p =>
-      normalize(p.name).includes(q) || normalize(p.common_name).includes(q) || normalize(p.team).includes(q)
-    ).slice(0, 30)
-  }, [qB, allPlayers, pA])
+    if (qB.trim().length >= 2) return searchB.filter(p => p.slug !== pA?.slug)
+    return defaultPlayers.filter(p => p.slug !== pA?.slug).slice(0, 50)
+  }, [qB, searchB, defaultPlayers, pA])
 
   function select(side: 'A' | 'B', p: DBPlayer) {
     const sp: SelectedPlayer = {
@@ -285,7 +311,7 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
       <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3 w-full flex-1 min-w-0">
         <Slot
           isA={true} player={pA} query={qA} filtered={filteredA}
-          open={oA} focused={fA} loading={loadingAll} totalCount={allPlayers.length}
+          open={oA} focused={fA} loading={loadingInit || loadingA} totalCount={totalCount}
           wRef={wA} iRef={iA}
           onQuery={setQA} onOpen={setOA} onFocus={setFA}
           onSelect={p => select('A', p)} onClear={() => clear('A')}
@@ -293,12 +319,12 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
           isHero={isHero}
           t={t}
           tc={tc}
-          locale={locale}
+
         />
         <div className={isHero ? "text-[11px] font-black bg-[#eef6ff] text-[#004782] px-4 py-1.5 rounded-lg tracking-widest flex-shrink-0 shadow-sm border border-[#d6e9ff] mx-1" : "text-[9px] font-black text-gray-400 px-1 py-1 md:bg-white md:border-2 md:border-primary/10 md:text-primary md:w-6 md:h-6 md:rounded-full flex items-center justify-start md:justify-center tracking-widest flex-shrink-0 z-10"}>vs</div>
         <Slot
           isA={false} player={pB} query={qB} filtered={filteredB}
-          open={oB} focused={fB} loading={loadingAll} totalCount={allPlayers.length}
+          open={oB} focused={fB} loading={loadingInit || loadingB} totalCount={totalCount}
           wRef={wB} iRef={iB}
           onQuery={setQB} onOpen={setOB} onFocus={setFB}
           onSelect={p => select('B', p)} onClear={() => clear('B')}
@@ -306,7 +332,7 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
           isHero={isHero}
           t={t}
           tc={tc}
-          locale={locale}
+
         />
         {inlineButton && duelButton}
       </div>

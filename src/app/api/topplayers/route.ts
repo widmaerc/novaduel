@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getTopPlayersCurrentSeason } from '@/lib/sportmonks';
+import { getTopScorers, getTopAssists } from '@/lib/apifootball';
+import { getCurrentSeason } from '@/lib/season';
+
+// Ligue 1 par défaut pour les top players
+const DEFAULT_LEAGUE = 61;
 
 export interface TopPlayer {
   rank: number;
   name: string;
   team: string;
-  val: number;
+  val:  number;
 }
 
 export interface TopPlayersResponse {
@@ -20,30 +24,37 @@ export interface TopPlayersResponse {
   assistersUnit:    string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function normalize(entries: any[]): TopPlayer[] {
-  return entries.map((e: any, i: number) => ({
-    rank: e.position ?? i + 1,
-    name: e.player?.display_name ?? e.player?.name ?? '—',
-    team: e.participant?.name ?? e.player?.teams?.[0]?.name ?? '—',
-    val:  e.total ?? 0,
-  }));
-}
-
 export async function GET() {
-  const data = await getTopPlayersCurrentSeason();
-  if (!data) return NextResponse.json(null, { status: 200 });
+  const season = await getCurrentSeason();
+  const [scorersRaw, assistsRaw] = await Promise.all([
+    getTopScorers(DEFAULT_LEAGUE, season),
+    getTopAssists(DEFAULT_LEAGUE, season),
+  ]);
+
+  if (!scorersRaw?.length && !assistsRaw?.length) return NextResponse.json(null, { status: 200 });
+
+  const seasonName = `${season}/${season + 1}`;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapEntry = (e: any, i: number, isAssists: boolean): TopPlayer => ({
+    rank: i + 1,
+    name: e.player?.name ?? '—',
+    team: e.statistics?.[0]?.team?.name ?? '—',
+    val:  isAssists
+      ? (e.statistics?.[0]?.goals?.assists ?? 0)
+      : (e.statistics?.[0]?.goals?.total   ?? 0),
+  });
 
   const response: TopPlayersResponse = {
-    seasonId:         data.seasonId,
-    seasonName:       data.seasonName,
-    assistSeasonName: data.assistSeasonName,
-    scorers:          normalize(data.scorers),
-    assisters:        normalize(data.assisters),
-    scorersLabel:     data.scorersLabel,
-    scorersUnit:      data.scorersUnit,
-    assistersLabel:   data.assistersLabel,
-    assistersUnit:    data.assistersUnit,
+    seasonId:         season,
+    seasonName,
+    assistSeasonName: seasonName,
+    scorers:          (scorersRaw ?? []).slice(0, 5).map((e, i) => mapEntry(e, i, false)),
+    assisters:        (assistsRaw ?? []).slice(0, 5).map((e, i) => mapEntry(e, i, true)),
+    scorersLabel:     'Top Scorers',
+    scorersUnit:      'buts',
+    assistersLabel:   'Top Passeurs',
+    assistersUnit:    'passes',
   };
 
   return NextResponse.json(response);
