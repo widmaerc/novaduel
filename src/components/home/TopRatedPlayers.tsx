@@ -40,10 +40,10 @@ const LEAGUES = [
 ]
 
 function ratingColor(r: number) {
-  if (r >= 8)   return { bg: '#dcfce7', text: '#15803d' }
-  if (r >= 7)   return { bg: '#fef9c3', text: '#854d0e' }
-  if (r >= 6.5) return { bg: '#fff7ed', text: '#c2410c' }
-  return { bg: '#f3f4f5', text: '#727782' }
+  if (r >= 8)   return { bg: 'var(--color-primary-fixed)', text: 'var(--color-primary)' }
+  if (r >= 7)   return { bg: 'var(--color-primary-light)', text: 'var(--color-primary-c)' }
+  if (r >= 6.5) return { bg: '#f8fafc', text: '#64748b' }
+  return { bg: '#f1f5f9', text: '#94a3b8' }
 }
 
 interface Props {
@@ -133,10 +133,10 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
                 {/* Stats */}
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="text-right hidden sm:block">
-                    <div className="label-caps !text-[10px] !text-slate-500 font-black">
-                      {p.goals}<small className="ml-0.5 opacity-50 font-medium">G</small> 
-                      <span className="mx-1 opacity-20">/</span>
-                      {p.assists}<small className="ml-0.5 opacity-50 font-medium">A</small>
+                    <div className="label-caps !text-[10px] !text-slate-400 font-black">
+                      {p.goals}<small className="ml-0.5 opacity-50 font-black">G</small> 
+                      <span className="mx-1.5 opacity-30">/</span>
+                      {p.assists}<small className="ml-0.5 opacity-50 font-black">A</small>
                     </div>
                   </div>
                   <div 

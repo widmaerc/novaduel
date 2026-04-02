@@ -13,30 +13,31 @@ type PlayerData = typeof PLAYERS[number];
 function PlayerCard({ player }: { player: PlayerData }) {
   const t = useTranslations('HomePage.performance');
   return (
-    <div className="pcard-hover bg-white rounded-3xl p-6 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer block shadow-sm hover:shadow-xl transition-all">
+    <div className="glass-card bg-white/40 border border-white/60 rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
       <div className="absolute top-0 right-0 p-4">
-        <div className="bg-green-50 text-green-600 font-hl font-black text-sm px-2 py-1 rounded shadow-sm border border-green-100">{player.delta}</div>
+        <div className="ai-gradient text-white font-mono font-bold text-[10px] px-3 py-1 rounded-full shadow-sm">
+          {player.delta}
+        </div>
       </div>
-      <div className="w-20 h-20 rounded-full bg-gray-100 mb-4 border-2 border-transparent group-hover:border-primary p-1 overflow-hidden transition-colors flex items-center justify-center">
-        <span className="font-hl font-black text-primary/30 text-3xl">{player.init}</span>
+      <div className="w-20 h-20 rounded-full bg-slate-50 mb-4 border-2 border-white shadow-inner p-1 overflow-hidden flex items-center justify-center">
+        <span className="font-mono font-bold text-primary/40 text-2xl">{player.init}</span>
       </div>
-      <h3 className="font-hl font-bold text-lg text-dark mb-1">{player.name}</h3>
-      <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-4">{player.league} · {player.club}</p>
+      <h3 className="font-sans font-bold text-lg text-slate-900 mb-1 tracking-tight">{player.name}</h3>
+      <p className="text-[10px] text-slate-400 uppercase tracking-[0.2em] mb-6">{player.league} · {player.club}</p>
       
       <div className="w-full flex flex-col gap-2 mb-6">
         {player.stats.map(s => (
-          <div key={s.l} className="w-full bg-gray-50 rounded-xl p-3 text-left border border-gray-100/50">
-            <div className="text-[9px] text-gray-500 uppercase tracking-widest mb-1 truncate">{t(`stats_labels.${s.l}` as any)}</div>
-            <div className="font-hl font-black text-primary text-lg leading-none">
-              {s.v} <span className="text-xs text-gray-400 font-bold">/100</span>
+          <div key={s.l} className="w-full bg-slate-50/50 rounded-xl p-3 text-left border border-slate-100">
+            <div className="text-[9px] text-slate-400 uppercase tracking-widest mb-1 truncate">{t(`stats_labels.${s.l}` as any)}</div>
+            <div className="font-mono font-black text-primary text-lg leading-none">
+              {s.v} <span className="text-[10px] text-slate-300 font-bold">/100</span>
             </div>
           </div>
         ))}
       </div>
 
       <div className="w-full mt-auto">
-         <span className="inline-block w-full py-5 bg-primary !text-white font-hl font-black text-[10px] uppercase tracking-[0.2em] rounded-xl group-hover:bg-primary-c transition-all active:scale-95 shadow-lg shadow-primary/10"
-               style={{ color: 'white' }}>
+         <span className="inline-block w-full py-4 bg-slate-900 text-white font-bold text-[10px] uppercase tracking-[0.2em] rounded-xl group-hover:bg-primary transition-all active:scale-95">
            {t('analyse_cta')}
          </span>
       </div>
@@ -52,13 +53,13 @@ export default function PerformanceSurge() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">{t('subtitle')}</div>
-          <h2 className="font-hl font-bold text-3xl md:text-5xl text-dark uppercase tracking-tighter">
+          <h2 className="font-sans font-extrabold text-3xl md:text-5xl text-slate-900 uppercase tracking-tighter">
             {t('title')}
           </h2>
         </div>
         <div className="flex gap-2 hidden md:flex">
-          <button className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center hover:border-primary text-dark hover:text-primary transition-colors">←</button>
-          <button className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center hover:border-primary text-dark hover:text-primary transition-colors">→</button>
+          <button className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:border-primary text-slate-400 hover:text-primary transition-colors">←</button>
+          <button className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:border-primary text-slate-400 hover:text-primary transition-colors">→</button>
         </div>
       </div>
 

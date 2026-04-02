@@ -51,28 +51,28 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
   return (
     <section
       id="hero-section"
-      className="hero-mesh relative z-20 pt-10 md:pt-16 2xl:pt-40 pb-20 px-6 md:px-12 bg-white"
+      className="hero-mesh relative z-20 pt-10 md:pt-16 2xl:pt-40 pb-24 px-6 md:px-12 border-b border-slate-100"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-8 lg:gap-12 items-center">
         {/* Left column - Content */}
         <div className="z-10 space-y-4 md:space-y-6 lg:space-y-4 xl:space-y-6">
-          <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-full px-4 py-2 shadow-sm w-fit">
-            <span className="label-caps text-primary">{ts('badge')}</span>
+          <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-full px-4 py-2 shadow-sm w-fit">
+            <span className="label-caps text-primary tracking-[0.2em] text-[9px]">{ts('badge')}</span>
           </div>
 
-          <h1 className="font-hl font-black text-4xl md:text-6xl lg:text-[2.8rem] xl:text-[3.5rem] 2xl:text-[4.5rem] leading-[1.05] tracking-tighter text-slate-900">
+          <h1 className="font-hl font-black text-4xl md:text-6xl lg:text-[2.8rem] xl:text-[3.5rem] 2xl:text-[4.5rem] leading-[1.05] tracking-tighter text-slate-900 drop-shadow-sm">
             {titleLines.map((line, i) => (
               <span key={i} className={`block ${i === titleLines.length - 1 ? 'text-gradient' : ''}`}>{line}</span>
             ))}
           </h1>
 
           <div className="space-y-3 md:space-y-4 lg:space-y-3">
-            <h2 className="label-caps tracking-[0.2em] opacity-80 uppercase whitespace-pre-line">
+            <h2 className="label-caps tracking-[0.25em] opacity-60 uppercase whitespace-pre-line text-[10px] sm:text-[11px]">
               {ts('seo_h2')}
             </h2>
-            <p className="text-slate-500 text-sm md:text-lg lg:text-base xl:text-lg leading-relaxed max-w-lg">
+            <p className="text-slate-500 text-sm md:text-lg lg:text-base xl:text-lg leading-relaxed max-w-lg font-medium">
               {ts('subtitle')}
             </p>
           </div>
@@ -82,8 +82,8 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
           </div>
 
           {trends.length > 0 && (
-            <div className="pt-8 mt-2 lg:mt-0 lg:pt-6 space-y-3">
-              <div className="label-caps !text-slate-400">
+            <div className="pt-8 mt-2 lg:mt-0 lg:pt-6 space-y-4">
+              <div className="label-caps !text-slate-400 !text-[9px] tracking-[0.2em]">
                 {ts('trends')}
               </div>
               <div className="flex flex-wrap items-center gap-2 md:gap-x-4 gap-y-3">
@@ -91,10 +91,10 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
                   <Link
                     key={slug}
                     href={localizedHref(locale, `/compare/${slug}`)}
-                    className="group bg-white border border-slate-200 text-slate-600 px-5 py-2 rounded-full hover:border-primary hover:text-primary transition-all text-[11px] md:text-[13px] font-bold shadow-sm whitespace-nowrap flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5"
+                    className="group bg-white/80 backdrop-blur-md border border-slate-200 text-slate-600 px-6 py-2.5 rounded-full hover:border-primary hover:text-primary transition-all text-[11px] md:text-[13px] font-bold shadow-sm whitespace-nowrap flex items-center gap-2.5 hover:shadow-xl hover:-translate-y-1"
                   >
                     <span>{labelA}</span>
-                    <span className="text-[9px] text-slate-300 group-hover:text-primary/30 font-black">VS</span>
+                    <span className="text-[9px] text-slate-300 group-hover:text-primary/40 font-black">VS</span>
                     <span>{labelB}</span>
                   </Link>
                 ))}
@@ -113,30 +113,31 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
             >
               <div
                 ref={el => { cardRefs.current[0] = el; }}
-                className="glass-card p-5 flex flex-col justify-between transition-transform duration-300 max-w-[220px] mx-auto overflow-hidden"
-                style={{ height: 380, willChange: 'transform', transformStyle: 'preserve-3d' }}
+                className="glass-card p-5 flex flex-col justify-between transition-transform duration-300 max-w-[224px] mx-auto overflow-hidden bg-white/60 border-white/60"
+                style={{ height: 390, willChange: 'transform', transformStyle: 'preserve-3d' }}
               >
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-100 rounded-full text-[10px] font-black text-red-600 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+                <div className="flex justify-between items-start z-10">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-red-500/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                     {t('hot_badge')}
                   </div>
-                  <div className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center font-black text-[11px] text-primary border border-slate-100">
+                  <div className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center font-black text-[11px] text-primary border border-slate-100">
                     RM
                   </div>
                 </div>
 
                 <div className="flex-1 flex items-center justify-center relative w-full h-full">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(30,64,175,0.08),transparent_70%)]" />
                   <img
                     src="/images/fp1.png"
                     alt="Player KM"
-                    className="absolute inset-x-0 bottom-0 w-full h-[85%] object-contain"
+                    className="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain drop-shadow-2xl brightness-110"
                   />
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <div className="label-caps mb-1">{t('card1_label')}</div>
-                  <div className="font-hl font-black text-4xl text-primary">A+</div>
+                <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-sm z-10 translate-z-10 mt-2">
+                  <div className="label-caps mb-1.5 opacity-60 text-[9px]">{t('card1_label')}</div>
+                  <div className="font-hl font-black text-4xl text-primary tracking-tight">A+</div>
                 </div>
               </div>
             </div>
@@ -148,30 +149,31 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
             >
               <div
                 ref={el => { cardRefs.current[1] = el; }}
-                className="glass-card p-5 flex flex-col justify-between transition-transform duration-300 max-w-[220px] mx-auto overflow-hidden"
-                style={{ height: 380, willChange: 'transform', transformStyle: 'preserve-3d' }}
+                className="glass-card p-5 flex flex-col justify-between transition-transform duration-300 max-w-[224px] mx-auto overflow-hidden bg-white/60 border-white/60"
+                style={{ height: 390, willChange: 'transform', transformStyle: 'preserve-3d' }}
               >
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full text-[10px] font-black text-primary shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                <div className="flex justify-between items-start z-10">
+                  <div className="flex items-center gap-1.5 px-4 py-1.5 ai-gradient rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-primary/25">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                     {t('live_badge')}
                   </div>
-                  <div className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center font-black text-[11px] text-primary border border-slate-100">
+                  <div className="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center font-black text-[11px] text-primary border border-slate-100">
                     MC
                   </div>
                 </div>
 
                 <div className="flex-1 flex items-center justify-center relative w-full h-full">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(59,130,246,0.08),transparent_70%)]" />
                   <img
                     src="/images/fp4.png"
                     alt="Player EH"
-                    className="absolute inset-x-0 bottom-0 w-full h-[85%] object-contain"
+                    className="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain drop-shadow-2xl brightness-110"
                   />
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <div className="label-caps mb-1">{t('card2_label')}</div>
-                  <div className="font-hl font-black text-4xl text-slate-900">98.4</div>
+                <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-sm z-10 translate-z-10 mt-2">
+                  <div className="label-caps mb-1.5 opacity-60 text-[9px]">{t('card2_label')}</div>
+                  <div className="font-hl font-black text-4xl text-slate-900 tracking-tight">98.4</div>
                 </div>
               </div>
             </div>

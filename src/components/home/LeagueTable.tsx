@@ -27,7 +27,9 @@ interface StandingsData {
 }
 
 const FORM_COLOR: Record<string, string> = {
-  W: '#22c55e', D: '#f59e0b', L: '#ef4444',
+  W: 'var(--color-primary)', 
+  D: 'var(--color-primary-dim)', 
+  L: 'var(--color-slate-500)',
 }
 
 function formLetter(c: string) {
@@ -124,16 +126,16 @@ export default function LeagueTable({ defaultLeagueId = 39, className = '' }: Pr
             </thead>
             <tbody>
               {rows.map((row) => (
-                <tr key={row.team_id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
+                <tr key={row.team_id} className="border-b border-slate-100/60 last:border-0 hover:bg-blue-50/30 transition-colors">
                   <td className="py-3 px-3 text-center">
-                    <span className={`text-xs font-black ${row.rank <= 4 ? 'text-primary' : row.rank <= 6 ? 'text-amber-600' : 'text-slate-400'}`}>
+                    <span className={`text-xs font-black ${row.rank <= 4 ? 'text-primary' : row.rank <= 6 ? 'text-indigo-500' : 'text-slate-400'}`}>
                       {row.rank}
                     </span>
                   </td>
                   <td className="py-3 px-3">
-                    <div className="flex items-center gap-2">
-                      <TeamBadge teamId={row.team_id} teamName={row.team_name} size={18} />
-                      <span className="text-xs font-bold text-slate-800 truncate max-w-[100px]">{row.team_name}</span>
+                    <div className="flex items-center gap-3">
+                      <TeamBadge teamId={row.team_id} teamName={row.team_name} size={20} />
+                      <span className="text-xs font-black text-slate-800 truncate max-w-[120px]">{row.team_name}</span>
                     </div>
                   </td>
                   <td className="py-3 px-3 text-center text-[11px] font-medium text-slate-500">{row.played}</td>
