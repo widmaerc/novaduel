@@ -110,31 +110,33 @@ export default function LeagueTable({ defaultLeagueId = 39, className = '' }: Pr
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-50/50">
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center w-6">#</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-left">
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center w-6">#</th>
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-left">
                   {tc('labels.team')}
                 </th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center">{tc('stats.header.played')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center">{tc('stats.header.won')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center">{tc('stats.header.drawn')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center">{tc('stats.header.lost')}</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center">Pts</th>
-                <th className="py-2.5 px-3 text-[9px] font-bold text-gray-400 uppercase tracking-wider text-center hidden sm:table-cell">
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.played')}</th>
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.won')}</th>
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.drawn')}</th>
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">{tc('stats.header.lost')}</th>
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">Pts</th>
+                <th className="py-2.5 px-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center hidden sm:table-cell">
                   {tc('stats.form')}
                 </th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row) => (
-                <tr key={row.team_id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                <tr key={row.team_id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors group">
                   <td className="py-1.5 px-3 text-center">
-                    <span className="text-xs font-bold text-gray-400">
+                    <span className="text-xs font-bold text-slate-500">
                       {row.rank}
                     </span>
                   </td>
                   <td className="py-1.5 px-3">
                     <div className="flex items-center gap-3">
-                      <TeamBadge teamId={row.team_id} teamName={row.team_name} size={18} />
+                      <div className="p-1 bg-white rounded-lg shadow-sm border border-gray-50 group-hover:scale-110 transition-transform">
+                        <TeamBadge teamId={row.team_id} teamName={row.team_name} size={16} />
+                      </div>
                       <span className="text-sm font-bold text-slate-700 truncate max-w-[120px]">{row.team_name}</span>
                     </div>
                   </td>
@@ -168,17 +170,17 @@ export default function LeagueTable({ defaultLeagueId = 39, className = '' }: Pr
       {/* Footer */}
       {data && (
         <div className="px-5 py-2.5 border-t border-gray-50 flex justify-between items-center bg-gray-50/20">
-          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tight">
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tight">
             {tc('labels.season')} {data.season}/{data.season + 1}
           </span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-[8px] font-bold text-gray-400 uppercase">UCL</span>
+              <span className="text-[8px] font-bold text-slate-600 uppercase">UCL</span>
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              <span className="text-[8px] font-bold text-gray-400 uppercase">UEL</span>
+              <span className="text-[8px] font-bold text-slate-600 uppercase">UEL</span>
             </span>
           </div>
         </div>

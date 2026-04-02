@@ -60,9 +60,15 @@ export default async function HomePage() {
       team:         best?.team?.name    ?? '—',
       position:     mapPosition(best?.games?.position ?? ''),
       goals:        best?.goals?.total   ?? 0,
+      assists:      best?.goals?.assists ?? 0,
       matches:      best?.games?.appearences ?? 0,
-      duels_won:    best?.duels?.won     ?? 0,
+      minutes:      best?.games?.minutes ?? 0,
+      dribbles:     best?.dribbles?.success ?? 0,
+      shots_on_target: best?.shots?.on ?? 0,
+      yellow_cards:  best?.cards?.yellow ?? 0,
+      red_cards:     best?.cards?.red ?? 0,
       pass_accuracy: best?.passes?.accuracy ?? 0,
+      duels_won:     best?.duels?.total > 0 ? Math.round((best?.duels?.won / best?.duels?.total) * 100) : 0,
     };
   }
 

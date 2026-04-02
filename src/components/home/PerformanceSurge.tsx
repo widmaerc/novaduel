@@ -10,8 +10,17 @@ const PLAYERS = [
 
 type PlayerData = typeof PLAYERS[number];
 
-function PlayerCard({ player }: { player: PlayerData }) {
+const AV_COLORS = [
+  { bg: 'bg-blue-50',   text: 'text-blue-600'   },
+  { bg: 'bg-green-50',  text: 'text-green-600'  },
+  { bg: 'bg-amber-50',  text: 'text-amber-600'  },
+  { bg: 'bg-red-50',    text: 'text-red-600'    },
+  { bg: 'bg-purple-50', text: 'text-purple-600' },
+];
+
+function PlayerCard({ player, index }: { player: PlayerData, index: number }) {
   const t = useTranslations('HomePage.performance');
+  const c = AV_COLORS[index % AV_COLORS.length];
   return (
     <div className="glass-card bg-white border border-slate-200 rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-primary/20 hover:shadow-2xl transition-all duration-300">
       <div className="absolute top-0 right-0 p-4">
@@ -19,16 +28,16 @@ function PlayerCard({ player }: { player: PlayerData }) {
           {player.delta}
         </div>
       </div>
-      <div className="w-20 h-20 rounded-full bg-slate-50 mb-4 border-2 border-white shadow-inner p-1 overflow-hidden flex items-center justify-center">
-        <span className="font-mono font-bold text-primary/40 text-2xl">{player.init}</span>
+      <div className={`w-20 h-20 rounded-3xl ${c.bg} mb-4 border-2 border-white shadow-inner p-1 overflow-hidden flex items-center justify-center`}>
+        <span className={`font-mono font-bold ${c.text} text-2xl`}>{player.init}</span>
       </div>
       <h3 className="font-sans font-bold text-lg text-slate-900 mb-1 tracking-tight">{player.name}</h3>
-      <p className="text-[10px] text-slate-400 uppercase tracking-[0.2em] mb-6">{player.league} · {player.club}</p>
+      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mb-6">{player.league} · {player.club}</p>
       
       <div className="w-full flex flex-col gap-2 mb-6">
         {player.stats.map(s => (
           <div key={s.l} className="w-full bg-slate-50/50 rounded-xl p-3 text-left border border-slate-100">
-            <div className="text-[9px] text-slate-400 uppercase tracking-widest mb-1 truncate">{t(`stats_labels.${s.l}` as any)}</div>
+            <div className="text-[9px] text-slate-500 uppercase tracking-widest mb-1 truncate">{t(`stats_labels.${s.l}` as any)}</div>
             <div className="font-mono font-black text-primary text-lg leading-none">
               {s.v} <span className="text-[10px] text-slate-300 font-bold">/100</span>
             </div>
@@ -64,7 +73,7 @@ export default function PerformanceSurge() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {PLAYERS.map(p => <PlayerCard key={p.name} player={p} />)}
+        {PLAYERS.map((p, i) => <PlayerCard key={p.name} player={p} index={i} />)}
       </div>
     </section>
   );

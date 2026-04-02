@@ -77,7 +77,7 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
     <div className={`glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm ${className}`}>
       {/* Header */}
       <div className="px-4 py-2.5 border-b border-gray-50 flex items-center justify-between gap-2">
-        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-dark truncate">{t('in_form_title')}</span>
+        <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-slate-600 truncate">{t('in_form_title')}</span>
         <div className="relative inline-flex items-center shrink-0 max-w-[140px]">
           <select
             value={leagueId ?? ''}
@@ -99,7 +99,7 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
       {/* List */}
       {loading ? (
         <div className="p-8 flex justify-center">
-          <span className="text-xs text-slate-400 animate-pulse font-bold tracking-widest uppercase">{tc('labels.loading')}</span>
+          <span className="text-xs text-slate-500 animate-pulse font-bold tracking-widest uppercase">{tc('labels.loading')}</span>
         </div>
       ) : (
         <div className="flex flex-col">
@@ -112,7 +112,7 @@ export default function TopRatedPlayers({ limit = 10, defaultLeagueId = null, cl
                   className={`flex items-center gap-3 md:gap-4 px-4 py-2 hover:bg-gray-50 transition-colors no-underline group${i < players.length - 1 ? ' border-b border-gray-50' : ''}`}
                 >
                 {/* Rang */}
-                <span className="font-hl font-black text-xs text-slate-300 w-4 text-center shrink-0 group-hover:text-primary/40 transition-colors">{i + 1}</span>
+                <span className="font-hl font-black text-xs text-slate-400 w-4 text-center shrink-0 group-hover:text-primary/40 transition-colors">{i + 1}</span>
 
                 {/* Avatar coloré (carré) */}
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-hl font-bold text-[10px] shrink-0 ${AV_COLORS[i % AV_COLORS.length].bg} ${AV_COLORS[i % AV_COLORS.length].text} group-hover:scale-105 transition-all shadow-sm`}>

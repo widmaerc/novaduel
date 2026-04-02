@@ -35,7 +35,7 @@ export default function StatsBar({ playersCount = 0, leaguesCount = 0 }: StatsBa
                   {s.value}
                 </div>
               </div>
-              <div className="label-caps !text-slate-400 !text-[10px] tracking-[0.2em] font-bold">
+              <div className="label-caps !text-slate-600 !text-[10px] tracking-[0.2em] font-bold">
                 {s.label}
               </div>
             </div>
