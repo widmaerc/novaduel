@@ -398,8 +398,9 @@
     },
     "palmares": {
       "title": "Honors & Verdict",
-      "subtitle": "Career honors and AI-powered verdict",
-      "footer": "Based on career statistics and AI analysis"
+      "subtitle": "Records and AI verdict",
+      "footer": "Based on career statistics and AI analysis",
+      "analysis_footer": "Analysis based on consolidated performance indicators"
     },
     "insight": {
       "title": "AI Insight",

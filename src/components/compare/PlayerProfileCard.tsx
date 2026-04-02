@@ -70,7 +70,7 @@ export default function PlayerProfileCard({ player, side, locale = 'fr', labels 
           <div className="relative">
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-black/10 blur-md rounded-full scale-x-75" />
             <PlayerAvatar initials={player.initials}
-              avatarBg={player.avatar_bg} avatarColor={player.avatar_color} size={36} />
+              avatarBg={player.avatar_bg} avatarColor={player.avatar_color} size={32} />
           </div>
           <div className="flex flex-col min-w-0">
             <span className="font-hl font-black text-sm truncate text-slate-900 group-hover/n:text-primary transition-colors uppercase tracking-tight">
@@ -82,21 +82,21 @@ export default function PlayerProfileCard({ player, side, locale = 'fr', labels 
         <div className={`w-2 h-2 rounded-full ${side === 'A' ? 'bg-blue-600' : 'bg-red-600'} opacity-30`} />
       </div>
       
-      <div className="p-5 space-y-1">
+      <div className="p-3 space-y-0.5">
         {rows.map((row, i) => (
           <div key={i}
-            className="flex items-center justify-between gap-3 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded-lg transition-all group-hover:first:translate-y-0">
-            <span className="label-caps !text-[10px] !text-slate-400 !font-bold">{row.label}</span>
-            <span className="font-bold text-slate-700 text-right text-[13px]">{row.value}</span>
+            className="flex items-center justify-between gap-3 py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded-lg transition-all">
+            <span className="label-caps !text-[9px] !text-slate-400 !font-bold">{row.label}</span>
+            <span className="font-bold text-slate-700 text-right text-[12px]">{row.value}</span>
           </div>
         ))}
       </div>
       
-      <div className="px-5 pb-5 pt-2">
+      <div className="px-3 pb-4 pt-1">
         <Link href={localizedHref(locale, `/player/${player.slug}`)}
-          className={`group/btn relative flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-[12px] font-hl font-black no-underline transition-all overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 text-white ${side === 'A' ? 'ai-gradient' : 'bg-gradient-to-br from-red-700 via-red-600 to-red-500'}`}>
+          className={`group/btn relative flex items-center justify-center gap-2 w-full py-3 rounded-xl text-[11px] font-hl font-black no-underline transition-all overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 !text-white ${side === 'A' ? 'bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500' : 'bg-gradient-to-br from-red-700 via-red-600 to-red-500'}`}>
           <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform" />
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="relative z-10">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="relative z-10">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>
           </svg>
           <span className="relative z-10 uppercase tracking-wider">{labels?.viewProfile ?? 'Consulter la Fiche'}</span>

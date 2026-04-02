@@ -43,7 +43,6 @@ function MirrorStat({ label, v1, v2, lowerIsBetter = false, emoji, unit = '' }: 
           <span className={`font-hl font-black text-xl transition-colors ${w1 ? 'text-blue-600' : 'text-blue-400 opacity-60'}`}>
             {display1}
           </span>
-          {w1 && !w2 && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />}
         </div>
 
         {/* Label center - Dark & Clear */}
@@ -64,7 +63,6 @@ function MirrorStat({ label, v1, v2, lowerIsBetter = false, emoji, unit = '' }: 
 
         {/* Value Right - Always Red */}
         <div className="flex items-center gap-1.5 w-16 shrink-0 justify-end text-right">
-          {w2 && !w1 && <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />}
           <span className={`font-hl font-black text-xl transition-colors ${w2 ? 'text-red-600' : 'text-red-400 opacity-60'}`}>
             {display2}
           </span>
@@ -178,8 +176,7 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
           <div className="flex items-center justify-between mb-2">
             <h2 className="font-hl font-black text-2xl text-dark tracking-tight uppercase"> {t('title')} </h2>
             <div className="px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
-               <span className="text-[10px] label-caps text-amber-600 font-bold tracking-widest flex items-center gap-1.5">
-                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+               <span className="text-[10px] label-caps text-amber-600 font-bold tracking-widest">
                  {tc('labels.hot_badge')}
                </span>
             </div>

@@ -47,13 +47,11 @@ function MirrorStatRow({
           <span className={`font-hl font-black text-xl transition-colors ${w1 ? 'text-blue-600' : 'text-blue-300'}`}>
             {val1}
           </span>
-          {w1 && !w2 && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />}
         </div>
 
         {/* Label & Bar Center */}
         <div className="flex-1 flex flex-col items-center gap-1.5 px-2 min-w-0">
           <span className="label-caps !text-[9px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-1.5 font-bold">
-            {emoji && <span className="opacity-100 grayscale-[0.5] group-hover/stat:grayscale-0 transition-all">{emoji}</span>}
             <span className="font-extrabold tracking-wider">{label}</span>
           </span>
 
@@ -73,7 +71,6 @@ function MirrorStatRow({
 
         {/* Value Right - Red side */}
         <div className="flex items-center gap-1.5 w-16 shrink-0 justify-end text-right">
-          {w2 && !w1 && <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" />}
           <span className={`font-hl font-black text-xl transition-colors ${w2 ? 'text-red-600' : 'text-red-300'}`}>
             {val2}
           </span>
@@ -157,14 +154,11 @@ export default function StatsDetails({ playerA, playerB, labels }: StatsDetailsP
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
              <div className="w-1.5 h-8 bg-primary rounded-full shadow-lg shadow-primary/20" />
-             <div>
-               <h3 className="font-hl font-black text-xl text-slate-900 uppercase tracking-tight leading-none">
-                 {labels?.title ?? 'Tablero comparativo'}
-               </h3>
-               <p className="label-caps !text-[9px] !text-slate-400 font-bold mt-1 tracking-widest opacity-80 uppercase">
-                 Advanced Technical Data
-               </p>
-             </div>
+              <div>
+                <h3 className="font-hl font-black text-xl text-slate-900 uppercase tracking-tight leading-none">
+                  {labels?.title ?? 'Tablero comparativo'}
+                </h3>
+              </div>
           </div>
 
           <div className="flex items-center gap-6 self-end sm:self-auto">

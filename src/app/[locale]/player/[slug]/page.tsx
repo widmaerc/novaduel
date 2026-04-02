@@ -8,6 +8,8 @@ import { getCurrentSeason } from '@/lib/season';
 import { FormattedInsight } from '@/components/FormattedInsight';
 import { buildAlternates } from '@/lib/hreflang';
 import { localizedHref } from '@/lib/localizedPaths';
+import Breadcrumbs from '@/components/layout/Breadcrumbs';
+import PlayerAvatar from '@/components/compare/PlayerAvatar';
 import PlayerStatsSection from '@/components/player/PlayerStatsSection';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -181,18 +183,14 @@ export default async function PlayerPage({ params }: Props) {
 
           {/* Left: player visual */}
           <div className="relative">
-            {/* Breadcrumb */}
-            <div className="text-[12px] font-medium text-slate-500 mb-6 flex items-center gap-2">
-              <Link href={`/${locale}`} className="hover:text-primary transition-colors no-underline">
-                {t('breadcrumb.home')}
-              </Link> 
-              <span className="text-slate-300">/</span>
-              <Link href={localizedHref(locale, '/players')} className="hover:text-primary transition-colors no-underline">
-                {t('breadcrumb.players')}
-              </Link> 
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-900 font-semibold">{p.name}</span>
-            </div>
+            <Breadcrumbs 
+              locale={locale}
+              items={[
+                { label: t('breadcrumb.home'), href: '/' },
+                { label: t('breadcrumb.players'), href: '/players' },
+                { label: p.common_name || p.name }
+              ]}
+            />
 
             {/* Avatar area */}
             {(() => {
@@ -344,7 +342,7 @@ export default async function PlayerPage({ params }: Props) {
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-2 mb-6">
                 <span className="material-symbols-outlined text-white/80 text-[20px]">people</span>
-                <h3 className="label-caps text-white text-[11px] !opacity-100">{t('sections.similar_profiles')}</h3>
+                <h3 className="label-caps !text-white text-[11px] !opacity-100 tracking-[0.12em] font-black">{t('sections.similar_profiles')}</h3>
               </div>
               <div className="flex flex-col gap-2">
                 {p.similar.map((s) => (
@@ -387,7 +385,7 @@ export default async function PlayerPage({ params }: Props) {
             <div className="glass-card bg-white p-0 shadow-sm relative overflow-hidden border-blue-100/50">
               <div className="ai-gradient text-white p-5 flex items-center gap-3">
                 <span className="material-symbols-outlined text-[24px] !text-white">auto_awesome</span>
-                <h3 className="label-caps text-white text-[12px] !opacity-100">{t('ai.title')}</h3>
+                <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">{t('ai.title')}</h3>
                 <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-wider py-1 px-3 rounded-full ml-auto backdrop-blur-md border border-white/10">{t('ai.badge')}</span>
               </div>
               <div className="p-8 relative z-1 bg-gradient-to-b from-blue-50/30 to-transparent">
@@ -411,47 +409,64 @@ export default async function PlayerPage({ params }: Props) {
                   </div>
                   
                   {Array.from(byComp.entries()).map(([comp, rows]) => (
-                    <div key={comp} className="glass-card bg-white/40 overflow-hidden shadow-xl shadow-slate-200/40 border-white/60">
-                      <div className="px-8 py-3 bg-slate-50/50 border-b border-slate-100/60 flex items-center justify-between">
-                        <span className="text-[15px] font-bold text-slate-900 uppercase tracking-tight">{comp}</span>
+                    <div key={comp} className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                      {/* Section Header - Standings Style */}
+                      <div className="px-4 py-3 md:px-5 md:py-3.5 border-b border-gray-50 flex items-center justify-between gap-2 bg-slate-50/30">
+                        <span className="label-caps !text-slate-900 !text-[10px] font-black font-hl tracking-[0.15em]">{comp}</span>
                         <div className="flex items-center gap-2">
-                          <span className="label-caps text-primary bg-primary/5 px-2 py-0.5 rounded-md text-[9px]">{rows.length} {rows.length > 1 ? tc('labels.seasons') : tc('labels.season')}</span>
+                          <span className="label-caps text-primary bg-primary/5 px-2 py-0.5 rounded-md text-[8px] font-black">{rows.length} {rows.length > 1 ? tc('labels.seasons') : tc('labels.season')}</span>
                         </div>
                       </div>
+
                       <div className="overflow-x-auto">
                         <table className="w-full border-collapse">
                           <thead>
-                            <tr className="bg-slate-50/30">
-                              {[tc('labels.season'), tc('labels.team'), tc('stats.matches_played_abbr'), tc('stats.goals_assists_abbr'), tc('stats.rating')].map((h) => (
-                                <th key={h} className={`py-1.5 ${h === tc('labels.season') ? 'px-4' : 'px-8'} label-caps text-[10px] opacity-60 ${h === tc('labels.season') || h === tc('labels.team') ? 'text-left' : 'text-center'}`}>{h}</th>
-                              ))}
+                            <tr className="bg-slate-50/50 border-b border-gray-50">
+                              <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-left w-20">{tc('labels.season')}</th>
+                              <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-left">{tc('labels.team')}</th>
+                              <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-12">{tc('stats.matches_played_abbr')}</th>
+                              <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-16">{tc('stats.goals_assists_abbr')}</th>
+                              <th className="py-2 px-3 text-[9px] font-black text-slate-900 uppercase tracking-widest text-center w-16">{tc('stats.rating')}</th>
                             </tr>
                           </thead>
-                          <tbody>
+                          <tbody className="divide-y divide-gray-50">
                             {rows.map((row) => (
-                              <tr key={`${row.season}-${row.team}`} className="border-b border-slate-50 last:border-0 hover:bg-blue-50/20 transition-all group/row">
-                                <td className="py-1.5 px-4 text-[13px] font-semibold text-slate-900">{row.season}</td>
-                                <td className="py-1.5 px-8">
-                                  <div className="flex items-center gap-3">
-                                    <div className="p-1 bg-white rounded-lg shadow-sm border border-slate-100 group-hover/row:scale-110 transition-transform">
-                                      <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={16} />
+                              <tr key={`${row.season}-${row.team}`} className="hover:bg-slate-50/50 transition-all group">
+                                <td className="py-2 px-3">
+                                  <span className="label-caps !text-slate-400 !text-[9px] font-black group-hover:text-primary transition-colors">
+                                    {row.season}
+                                  </span>
+                                </td>
+                                <td className="py-2 px-3">
+                                  <div className="flex items-center gap-2.5">
+                                    <div className="p-1 px-1.5 bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-slate-100 group-hover:scale-110 transition-transform">
+                                      <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={14} />
                                     </div>
-                                    <span className="text-[13px] text-slate-700 font-medium group-hover/row:text-primary transition-colors">{row.team}</span>
+                                    <span className="text-[12px] font-bold text-slate-800 truncate max-w-[150px] tracking-tight group-hover:text-primary transition-colors">
+                                      {row.team}
+                                    </span>
                                   </div>
                                 </td>
-                                <td className="py-1.5 px-8 text-center font-hl font-semibold text-[14px] text-slate-900">{row.matches || 0}</td>
-                                <td className="py-1.5 px-8">
-                                  <div className="flex items-center justify-center gap-1.5 font-hl text-[13px]">
-                                    <span className="text-slate-900 font-semibold">{row.goals || 0}</span>
+                                <td className="py-2 px-3 text-center text-[10px] font-bold font-hl text-slate-500">
+                                  {row.matches || 0}
+                                </td>
+                                <td className="py-2 px-3">
+                                  <div className="flex items-center justify-center gap-1.5 font-hl text-[10px]">
+                                    <span className="text-slate-900 font-extrabold">{row.goals || 0}</span>
                                     <span className="text-slate-300 font-medium">/</span>
-                                    <span className="text-primary font-semibold">{row.assists || 0}</span>
+                                    <span className="text-primary font-extrabold">{row.assists || 0}</span>
                                   </div>
                                 </td>
-                                <td className="py-1.5 px-8 text-center">
-                                  {row.rating > 0
-                                    ? <span className="inline-block min-w-[34px] font-hl font-bold text-[11px] py-0.5 px-2 rounded-lg shadow-sm border border-black/5" style={{ backgroundColor: row.ratingColor, color: row.ratingText }}>{row.rating.toFixed(1)}</span>
-                                    : <span className="text-[11px] text-slate-300 font-semibold">—</span>
-                                  }
+                                <td className="py-2 px-3 text-center">
+                                  {row.rating > 0 ? (
+                                    <span 
+                                      className="inline-block min-w-[32px] font-hl font-black text-[10px] py-0.5 px-1.5 rounded-lg shadow-sm border border-blue-100 bg-blue-50/50 text-blue-600"
+                                    >
+                                      {row.rating.toFixed(1)}
+                                    </span>
+                                  ) : (
+                                    <span className="label-caps text-slate-300 !text-[8px] font-semibold">—</span>
+                                  )}
                                 </td>
                               </tr>
                             ))}
@@ -617,7 +632,7 @@ export default async function PlayerPage({ params }: Props) {
             <div className="rounded-3xl p-7 text-white bg-slate-900 relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
               <div className="relative z-1">
-                <div className="label-caps !text-blue-400 text-[10px] mb-3">{tc('labels.pro_scouting')}</div>
+                <div className="label-caps !text-white text-[10px] mb-3 font-black tracking-[0.12em]">{tc('labels.pro_scouting')}</div>
                 <div className="text-[14px] font-medium text-slate-300 leading-relaxed mb-6">{tc('labels.pro_scouting_sub')}</div>
                 <button className="w-full py-3.5 ai-gradient border-0 rounded-xl font-hl font-black text-[12px] uppercase tracking-widest text-white cursor-pointer hover:scale-[1.02] transition-transform shadow-lg shadow-blue-900/40">
                   {tc('labels.pro_scouting_cta')}

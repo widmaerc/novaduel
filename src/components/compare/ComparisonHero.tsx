@@ -20,7 +20,7 @@ export function SeasonFilterTabs({ tabs, active, onChange }: SeasonFilterTabsPro
         <button 
           key={tab} 
           onClick={() => onChange(tab)}
-          className={`flex-1 min-w-[80px] px-3 py-2.5 rounded-lg text-[10px] label-caps transition-all duration-200 ${
+          className={`flex-1 min-w-[80px] px-3 py-1.5 rounded-lg text-[10px] label-caps transition-all duration-200 ${
             active === tab
               ? 'bg-white text-primary font-black shadow-sm border border-slate-200/50'
               : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100/50'
@@ -43,7 +43,7 @@ function FormDots({ form, t }: { form: string; t: any }) {
     D: t('stats.loss') || 'Défaite' 
   }
   return (
-    <div className="flex gap-1 mt-2">
+    <div className="flex gap-1 mt-1">
       {results.map((r, i) => (
         <div 
           key={i} 
@@ -59,7 +59,6 @@ function FormDots({ form, t }: { form: string; t: any }) {
 
 // ── PlayerCard ────────────────────────────────────────────────────────────────
 function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Player; side: 'left' | 'right'; winnerSlug: string; locale: string; t: any; tc: any }) {
-  const isRight  = side === 'right'
   const isWinner = player.slug === winnerSlug
   const posKey = (player.position === 'MIL' ? 'mid' : player.position).toLowerCase();
   
@@ -71,17 +70,17 @@ function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Playe
   }[player.position] || { background: '#f8fafc', color: '#64748b' }
 
   return (
-    <div className={`flex items-center gap-4 group ${isRight ? 'flex-row-reverse' : ''}`}>
+    <div className="flex flex-col items-center text-center gap-2 group">
       <div className="relative shrink-0">
         <a href={localizedHref(locale, `/player/${player.slug}`)} className="block relative transition-transform hover:scale-105 duration-300">
           <PlayerAvatar
             initials={player.initials}
             avatarBg={player.avatar_bg} avatarColor={player.avatar_color}
-            size={72} showBadge={false}
+            size={74} showBadge={false}
           />
           {player.rating > 0 && (
             <div 
-              className="absolute -top-1 -right-1 px-1.5 py-1 rounded-lg text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all"
+              className="absolute -top-1 -right-1 px-1.5 py-1 rounded-lg text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all z-20"
               style={{ color: player.rating >= 8 ? '#15803d' : '#1e40af' }}
             >
               {player.rating.toFixed(1)}
@@ -90,24 +89,24 @@ function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Playe
         </a>
       </div>
       
-      <div className={`flex-1 min-w-0 ${isRight ? 'text-right' : ''}`}>
+      <div className="flex-1 min-w-0 w-full px-2">
         <a href={localizedHref(locale, `/player/${player.slug}`)} className="no-underline">
-          <h2 className="font-hl font-black text-xl sm:text-2xl text-slate-900 truncate leading-tight hover:text-primary transition-colors">
+          <h2 className="font-hl font-black text-lg sm:text-xl text-slate-900 truncate leading-tight hover:text-primary transition-colors">
             {player.common_name || player.name}
           </h2>
         </a>
-        <div className={`flex items-center gap-2 mt-1.5 flex-wrap ${isRight ? 'justify-end' : ''}`}>
+        <div className="flex items-center justify-center gap-2 mt-0.5 flex-wrap">
           <span className="label-caps !text-[9px] !text-slate-400 opacity-80">{player.flag_emoji} {player.team}</span>
-          <span className="label-caps !text-[8px] px-2 py-0.5 rounded-lg whitespace-nowrap" style={posStyle}>
+          <span className="label-caps !text-[8.5px] px-2 py-0.5 rounded-lg whitespace-nowrap" style={posStyle}>
             {tc(`positions.${posKey}`) || player.position}
           </span>
         </div>
-        <div className={`flex ${isRight ? 'justify-end' : ''}`}>
+        <div className="flex justify-center">
           <FormDots form={player.recent_form} t={tc} />
         </div>
         {isWinner && (
-          <div className={`mt-3 flex ${isRight ? 'justify-end' : ''}`}>
-            <span className="label-caps !text-[8px] bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-lg shadow-sm">
+          <div className="mt-1.5 flex justify-center">
+            <span className="label-caps !text-[8.5px] bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1.5 pl-1.5 pr-2 py-0.5 rounded-lg shadow-sm">
               <span className="text-[10px] leading-none">⭐</span> {t('hero.winner')}
             </span>
           </div>
@@ -141,13 +140,13 @@ export default function ComparisonHero({
   function handleTab(tab: string) { setInternalTab(tab); onTabChange?.(tab) }
   
   return (
-    <div className="glass-card !p-0 overflow-hidden mb-8 border-slate-200/50 shadow-2xl shadow-slate-200/50 relative">
+    <div className="glass-card !p-0 overflow-hidden mb-3 border-slate-200/50 shadow-2xl shadow-slate-200/50 relative">
       {/* Premium Background Elements */}
       <div className="absolute inset-0 hero-mesh opacity-30 pointer-events-none" />
       <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-red-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col md:flex-row items-stretch md:items-center gap-8 md:gap-4 px-6 md:px-10 py-10 md:py-14">
+      <div className="relative z-10 flex flex-col md:flex-row items-stretch md:items-center gap-8 md:gap-4 px-6 md:px-10 py-4 md:py-6">
         <div className="flex-1 min-w-0 order-1 md:order-1">
           <PlayerCard player={playerA} side="left" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} />
         </div>
@@ -159,8 +158,8 @@ export default function ComparisonHero({
               <span className="font-hl font-black text-white text-xl md:text-2xl italic tracking-tighter">VS</span>
             </div>
           </div>
-          <div className="px-4 py-1.5 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
-            <span className="label-caps !text-[9px] !text-slate-400 whitespace-nowrap">
+          <div className="px-3 py-1 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
+            <span className="label-caps !text-[8px] !text-slate-400 whitespace-nowrap">
               {t('hero.career_badge')}
             </span>
           </div>

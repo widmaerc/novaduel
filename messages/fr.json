@@ -399,7 +399,8 @@
     "palmares": {
       "title": "Palmarès & Verdict",
       "subtitle": "Palmarès et verdict IA",
-      "footer": "Basé sur les statistiques de carrière et l'analyse IA"
+      "footer": "Basé sur les statistiques de carrière et l'analyse IA",
+      "analysis_footer": "Analyse basée sur les indicateurs de performance consolidés"
     },
     "insight": {
       "title": "Analyse IA",

@@ -5,6 +5,7 @@ import { getFeaturedPlayers } from '@/lib/data'
 import CompareSearchBar from '@/components/compare/CompareSearchBar'
 import { buildAlternates } from '@/lib/hreflang'
 import { localizedHref } from '@/lib/localizedPaths'
+import Breadcrumbs from '@/components/layout/Breadcrumbs'
 
 // Revalidate every 2 minutes so view counts stay fresh
 export const revalidate = 120
@@ -66,6 +67,16 @@ export default async function CompareIndexPage({ params }: Props) {
     <div className="relative overflow-hidden">
       {/* Background decoration */}
       <div className="hero-mesh absolute inset-0 opacity-40 pointer-events-none" />
+      
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-2 relative z-20">
+        <Breadcrumbs 
+          locale={locale}
+          items={[
+            { label: tc('nav.home'), href: '/' },
+            { label: t('breadcrumb.comparisons') }
+          ]}
+        />
+      </div>
       
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative z-10">
         {/* Header */}

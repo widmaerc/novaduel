@@ -10,6 +10,7 @@ import type { Player as CmpPlayer, Locale } from '@/components/compare/types'
 
 import CompareSearchBar            from '@/components/compare/CompareSearchBar'
 import ComparisonHero              from '@/components/compare/ComparisonHero'
+import Breadcrumbs from '@/components/layout/Breadcrumbs'
 import ViewCounter                 from '@/components/compare/ViewCounter'
 import StatsDetails                from '@/components/compare/StatsDetails'
 import { PalmaresCard, GlobalVerdict, CompetitionStatsTable } from '@/components/compare/PalmaresVerdictCompetition'
@@ -161,17 +162,15 @@ export default async function ComparePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-[11px] text-[#727782] pt-3 pb-2 overflow-x-auto whitespace-nowrap">
-        <a href={`/${locale}`} className="hover:text-[#004782] transition-colors">{tc('nav.home')}</a>
-        <span>›</span>
-        <a href={localizedHref(locale, '/compare')} className="hover:text-[#004782] transition-colors">{t('breadcrumb.comparisons')}</a>
-        <span>›</span>
-        <span className="text-[#191c1d] font-medium">{pA.common_name} vs {pB.common_name}</span>
-        <span className="ml-auto flex-shrink-0">
-          <ViewCounter slug={slug} initialViews={comparison.views ?? 0} />
-        </span>
-      </nav>
+      <Breadcrumbs 
+        locale={locale}
+        items={[
+          { label: tc('nav.home'), href: '/' },
+          { label: t('breadcrumb.comparisons'), href: '/compare' },
+          { label: `${pA.common_name} vs ${pB.common_name}` }
+        ]}
+        extra={<ViewCounter slug={slug} initialViews={comparison.views ?? 0} />}
+      />
 
       <div className="mb-3">
         <CompareSearchBar locale={locale} initialPlayerA={initA} initialPlayerB={initB} />
@@ -292,7 +291,8 @@ export default async function ComparePage({ params }: Props) {
               best_scorer: t('verdict.best_scorer'),
               best_passer: t('verdict.best_passer'),
               physics: tc('stats.physical'),
-              technique: tc('radar.passing') // Using passing as technical proxy
+              technique: tc('radar.passing'), // Using passing as technical proxy
+              analysis_footer: t('palmares.analysis_footer')
             }}
           />
 

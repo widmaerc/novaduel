@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/navigation'
+import Breadcrumbs from '@/components/layout/Breadcrumbs'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface Player {
@@ -133,6 +134,15 @@ export default function PlayersPage() {
       
       {/* ── Hero Mesh Section ── */}
       <div className="hero-mesh border-b border-slate-200">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-2">
+          <Breadcrumbs 
+            locale={locale}
+            items={[
+              { label: tc('nav.home'), href: '/' },
+              { label: t('title') }
+            ]}
+          />
+        </div>
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8 md:py-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>

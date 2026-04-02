@@ -33,7 +33,7 @@ export function PalmaresCard({ playerA, playerB, tropheesA, tropheesB, labels }:
       <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
         <div className="flex items-center gap-3">
           <span className="text-xl">🏆</span>
-          <h3 className="font-hl font-black text-lg text-slate-900">
+          <h3 className="font-hl font-black text-lg text-slate-900 uppercase tracking-tight">
             {labels?.title ?? 'Palmarès & Titres'}
           </h3>
         </div>
@@ -91,9 +91,11 @@ function GlobalVerdictBadge({ label, slug, players, playerA }: { label: string; 
 // ── GlobalVerdict ─────────────────────────────────────────────────────────────
 interface GlobalVerdictProps {
   playerA: Player; playerB: Player; winnerSlug: string
-  verdictScorer: string; verdictAssist: string
-  verdictPhysical: string; verdictTechnical: string
-  labels?: { title: string; winner: string; best_scorer: string; best_passer: string; physics: string; technique: string }
+  verdictScorer: string; verdictAssist: string; verdictPhysical: string; verdictTechnical: string
+  labels?: { 
+    title: string; winner: string; best_scorer: string; best_passer: string; 
+    physics: string; technique: string; analysis_footer?: string 
+  }
 }
 
 export function GlobalVerdict({
@@ -106,37 +108,31 @@ export function GlobalVerdict({
 
   return (
     <div className="glass-card !p-0 overflow-hidden shadow-2xl border-primary/20 bg-gradient-to-br from-white via-white to-blue-50/30">
-      <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <div className="px-6 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <span className="text-primary text-sm">✦</span>
+            <span className="text-primary text-sm">📊</span>
           </div>
-          <h3 className="label-caps !text-[12px] !text-slate-900 !font-black">
-            {labels?.title ?? 'Verdict de l\'IA Scouting'}
+          <h3 className="label-caps !text-[12px] !text-slate-900 !font-black uppercase tracking-wider">
+            {labels?.title ?? 'Verdict Technique'}
           </h3>
-        </div>
-        <div className="flex gap-1">
-          <div className="w-1 h-1 rounded-full bg-primary animate-ping" />
-          <div className="w-1 h-1 rounded-full bg-primary animate-ping delay-75" />
-          <div className="w-1 h-1 rounded-full bg-primary animate-ping delay-150" />
         </div>
       </div>
 
-      <div className="flex flex-col items-center px-6 py-12 border-b border-slate-50 relative overflow-hidden">
+      <div className="flex flex-col items-center px-6 py-8 border-b border-slate-50 relative overflow-hidden">
         <div className="absolute inset-0 hero-mesh opacity-30 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
         
-        <div className="relative mb-6">
-          <div className="absolute inset-0 bg-primary/30 blur-2xl rounded-full scale-125 animate-pulse" />
-          <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center ai-gradient p-[1px] shadow-2xl rotate-3 transform group-hover:rotate-0 transition-transform">
+        <div className="relative mb-5">
+          <div className="relative w-16 h-16 rounded-2xl flex items-center justify-center bg-slate-50 border-2 border-slate-100 p-[1px] shadow-xl">
             <div className="w-full h-full rounded-2xl bg-white flex items-center justify-center shadow-inner">
-              <span className="text-4xl">🤖</span>
+              <span className="text-3xl text-primary/20">🏆</span>
             </div>
           </div>
         </div>
         
-        <div className="label-caps !text-[10px] !text-slate-400 mb-2 tracking-[0.2em]">{labels?.winner ?? 'Algorithme Vainqueur'}</div>
-        <div className="font-hl font-black text-3xl md:text-4xl text-slate-900 text-center uppercase tracking-tighter drop-shadow-sm px-4">
+        <div className="label-caps !text-[9px] !text-slate-400 mb-1 tracking-[0.2em]">{labels?.winner ?? 'Gagnant Comparatif'}</div>
+        <div className="font-hl font-black text-2xl md:text-3xl text-slate-900 text-center uppercase tracking-tighter drop-shadow-sm px-4">
           {winner?.common_name || winner?.name || '—'}
         </div>
         
@@ -151,11 +147,11 @@ export function GlobalVerdict({
 
       <div className="grid grid-cols-2 border-b border-slate-50 bg-slate-50/10">
         {[playerA, playerB].map((p, i) => (
-          <div key={i} className={`px-6 py-6 text-center ${i === 0 ? 'border-r border-slate-100' : ''}`}>
-            <div className="label-caps !text-[8px] !text-slate-400 mb-2 truncate px-2 opacity-80">
+          <div key={i} className={`px-6 py-4 text-center ${i === 0 ? 'border-r border-slate-100' : ''}`}>
+            <div className="label-caps !text-[8px] !text-slate-400 mb-1 truncate px-2 opacity-80">
               Score Global {p.initials}
             </div>
-            <div className="font-hl font-black text-3xl tracking-tighter"
+            <div className="font-hl font-black text-2xl tracking-tighter"
               style={{ color: i === 0 ? '#1e40af' : '#dc2626' }}>
               {p.rating.toFixed(2)}
             </div>
@@ -163,15 +159,17 @@ export function GlobalVerdict({
         ))}
       </div>
 
-      <div className="p-6 gap-2 flex flex-col">
+      <div className="p-4 gap-1.5 flex flex-col">
         <GlobalVerdictBadge label={labels?.best_scorer ?? "Capacité de Finition"}  slug={verdictScorer}    players={players} playerA={playerA} />
         <GlobalVerdictBadge label={labels?.best_passer ?? "Influence Créative"}  slug={verdictAssist}    players={players} playerA={playerA} />
         <GlobalVerdictBadge label={labels?.physics ?? "Impact Athlétique"}   slug={verdictPhysical}  players={players} playerA={playerA} />
         <GlobalVerdictBadge label={labels?.technique ?? "Maîtrise Technique"} slug={verdictTechnical} players={players} playerA={playerA} />
       </div>
       
-      <div className="px-6 py-4 bg-blue-50/50 flex items-center justify-center border-t border-slate-50">
-        <span className="label-caps !text-[8px] !text-slate-400 font-bold">Données générées par Deep Duel Neural Engine v4.2</span>
+      <div className="px-6 py-4 bg-slate-50 flex items-center justify-center border-t border-slate-100">
+        <span className="label-caps !text-[8px] !text-slate-400 font-bold">
+          {labels?.analysis_footer ?? "Analyse basée sur les indicateurs de performance consolidés"}
+        </span>
       </div>
     </div>
   )
