@@ -33,22 +33,28 @@ export async function generateComparisonInsight(
   return cached(
     key,
     async () => {
+      const dataSummary = `
+        Données réelles pour la comparaison (NE PAS INVENTER D'AUTRES DONNÉES) :
+        - ${playerA.name} : ${playerA.age} ans, ${playerA.height}cm, équipe: ${playerA.team}, poste: ${playerA.position_name}, buts: ${playerA.goals}, assists: ${playerA.assists}, rating: ${playerA.rating}/10.
+        - ${playerB.name} : ${playerB.age} ans, ${playerB.height}cm, équipe: ${playerB.team}, poste: ${playerB.position_name}, buts: ${playerB.goals}, assists: ${playerB.assists}, rating: ${playerB.rating}/10.
+      `;
+
       const prompts: Record<string, string> = {
-        fr: `Tu es un analyste football expert. Compare ${playerA.name} et ${playerB.name} en français. 
-            Structure ta réponse exactement avec ces trois sections :
-            #### Profils comparés : (brève comparaison physique/âge/statut)
-            #### Analyse technique & tactique : (comparaison des styles, forces et faiblesses avec données)
-            #### Verdict NovaDuel : (qui est le plus complet ou le plus adapté à un rôle spécifique)`,
-        en: `You are an expert football analyst. Compare ${playerA.name} and ${playerB.name} in English. 
+        fr: `Tu es un analyste football expert. Compare ${playerA.name} et ${playerB.name} en français en te basant exclusivement sur les données fournies.\n${dataSummary}
+            Structure ta réponse exactement avec ces trois sections (utilise des #### titres) :
+            #### Profils comparés : (comparaison physique, âge et statut actuel)
+            #### Analyse technique & tactique : (comparaison des styles et forces basée sur les stats fournies)
+            #### Verdict NovaDuel : (conclusion sur qui est le plus performant ou adapté)`,
+        en: `You are an expert football analyst. Compare ${playerA.name} and ${playerB.name} in English based exclusively on the provided data.\n${dataSummary}
             Structure your response exactly with these three sections:
-            #### Compared Profiles: (brief physical/age/status comparison)
-            #### Technical & Tactical Analysis: (comparison of styles, strengths and weaknesses with data)
-            #### NovaDuel Verdict: (who is more complete or better suited for a specific role)`,
-        es: `Eres un analista de fútbol experto. Compara a ${playerA.name} y ${playerB.name} en español. 
+            #### Compared Profiles: (physical, age and status comparison)
+            #### Technical & Tactical Analysis: (comparison of styles and strengths based on stats)
+            #### NovaDuel Verdict: (conclusion on who is more performing or better suited)`,
+        es: `Eres un analista de fútbol experto. Compara a ${playerA.name} y ${playerB.name} en español basándote exclusivamente en los datos proporcionados.\n${dataSummary}
             Estructura tu respuesta exactamente con estas tres secciones:
-            #### Perfiles comparados: (breve comparación física/edad/estatus)
-            #### Análisis técnico y táctico: (comparación de estilos, fortalezas y debilidades con datos)
-            #### Veredicto de NovaDuel: (quién es más completo o se adapta mejor a un rol específico)`
+            #### Perfiles comparados: (comparación física, edad y estatus actual)
+            #### Análisis técnico y táctico: (comparación de estilos y fortalezas basada en las estadísticas)
+            #### Veredicto de NovaDuel: (conclusión sobre quién es más completo o adecuado)`
       };
 
       const msg = await anthropic.messages.create({
@@ -57,7 +63,7 @@ export async function generateComparisonInsight(
         messages: [
           {
             role: 'user',
-            content: (prompts[locale] || prompts.fr) + '\n\nBe analytical, precise and impactful.',
+            content: (prompts[locale] || prompts.fr) + '\n\nBe analytical, precise and impactful. Use ONLY the provided data for ages and physical traits.',
           },
         ],
       });
