@@ -12,6 +12,7 @@
 import { supabaseAdmin } from './supabase';
 import { getCurrentSeason } from './season';
 import { buildSlug } from './data';
+import { redis } from './redis';
 
 const BASE  = 'https://v3.football.api-sports.io';
 const TOKEN = process.env.API_FOOTBALL_KEY!;
@@ -143,18 +144,23 @@ export async function syncPlayers(): Promise<SyncPlayersResult> {
   result.players = playerMap.size;
   console.log(`[sync-players] ${playerMap.size} joueurs uniques collectés (${result.requests} req API)`);
 
-  // ── 2. Charger les slugs existants pour gérer les doublons ───────────────
-  
-  const { data: existingSlugs, error: slugError } = await supabaseAdmin
+  // ── 2. Charger les slugs + apparitions existantes ────────────────────────
+
+  const { data: existingRows, error: slugError } = await supabaseAdmin
     .from('dn_players')
-    .select('id, slug');
+    .select('id, slug, statistics');
 
   if (slugError) {
-    console.error('[sync-players] Error fetching existing slugs:', slugError);
+    console.error('[sync-players] Error fetching existing rows:', slugError);
   }
 
-  const usedSlugs = new Set(existingSlugs?.map(s => s.slug) || []);
-  const playerSlugs = new Map(existingSlugs?.map(s => [s.id, s.slug]) || []);
+  const usedSlugs   = new Set(existingRows?.map(s => s.slug) || []);
+  const playerSlugs = new Map(existingRows?.map(s => [s.id, s.slug]) || []);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const prevAppsMap = new Map(existingRows?.map(s => [
+    s.id,
+    (s.statistics as any)?.[0]?.games?.appearences ?? 0
+  ]) || []);
 
   // ── 3. Mapper + filtrer ───────────────────────────────────────────────────
 
@@ -228,6 +234,40 @@ export async function syncPlayers(): Promise<SyncPlayersResult> {
     }
 
     console.log(`[sync-players] dn_players : ${Math.min(i + CHUNK, rows.length)}/${rows.length}`);
+  }
+
+  // ── 4. Invalider les insights des joueurs dont les stats ont changé ────────
+
+  const changed = rows.filter(row => {
+    const newApps  = (row.statistics as any)?.[0]?.games?.appearences ?? 0;
+    const prevApps = prevAppsMap.get(row.id) ?? 0;
+    return newApps !== prevApps;
+  });
+
+  if (changed.length > 0) {
+    console.log(`[sync-players] ${changed.length} joueurs avec stats changées → invalidation insights`);
+
+    // Nuller les insights en DB par lots de 100
+    const changedIds = changed.map(r => r.id);
+    for (let i = 0; i < changedIds.length; i += CHUNK) {
+      const chunk = changedIds.slice(i, i + CHUNK);
+      await supabaseAdmin
+        .from('dn_players')
+        .update({ insight_fr: null, insight_en: null, insight_es: null, ai_analysis: null })
+        .in('id', chunk)
+        .then(() => {}, (e) => console.error('[sync-players] insight null error:', e));
+    }
+
+    // Invalider les clés Redis correspondantes
+    const redisKeys = changed.flatMap(r => {
+      const slug = playerSlugs.get(r.id) ?? r.slug;
+      return ['fr', 'en', 'es'].map(l => `player:af:slug:${slug}:${l}`);
+    });
+    if (redisKeys.length > 0) {
+      await redis.del(...redisKeys).catch(() => {});
+    }
+
+    console.log(`[sync-players] ${redisKeys.length} clés Redis invalidées`);
   }
 
   console.log(`[sync-players] Done:`, result);

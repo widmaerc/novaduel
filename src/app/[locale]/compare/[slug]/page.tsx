@@ -4,9 +4,10 @@ import { getTranslations }    from 'next-intl/server'
 import { buildAlternates }    from '@/lib/hreflang'
 import { localizedHref }      from '@/lib/localizedPaths'
 import { getComparisonBySlug } from '@/lib/data'
-import { getTrophies, getCompetStats, getRadarSkills, getSimilarDuels } from '@/lib/compareHelpers'
+import { getTrophies, getCompetStats, getRadarSkills } from '@/lib/compareHelpers'
 import type { Player as DBPlayer } from '@/types'
 import type { Player as CmpPlayer, Locale } from '@/components/compare/types'
+import { Suspense } from 'react'
 
 import CompareSearchBar            from '@/components/compare/CompareSearchBar'
 import ComparisonHero              from '@/components/compare/ComparisonHero'
@@ -16,6 +17,8 @@ import StatsDetails                from '@/components/compare/StatsDetails'
 import { PalmaresCard, GlobalVerdict, CompetitionStatsTable } from '@/components/compare/PalmaresVerdictCompetition'
 import { AIInsightBlock, SkillRadar, SimilarDuels }           from '@/components/compare/AIRadarSimilar'
 import PlayerProfileCard           from '@/components/compare/PlayerProfileCard'
+import CompareAITrigger            from '@/components/compare/CompareAITrigger'
+import SimilarDuelsSection         from '@/components/compare/SimilarDuelsSection'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -111,12 +114,11 @@ export default async function ComparePage({ params }: Props) {
   const winnerSlug = comparison.winner_slug
     ?? (pA.rating >= pB.rating ? pA.slug : pB.slug)
 
-  const [tropheesA, tropheesB, skillsA, skillsB, similar] = await Promise.all([
+  const [tropheesA, tropheesB, skillsA, skillsB] = await Promise.all([
     Promise.resolve(getTrophies(dbA)),
     Promise.resolve(getTrophies(dbB)),
     Promise.resolve(getRadarSkills(dbA)),
     Promise.resolve(getRadarSkills(dbB)),
-    getSimilarDuels(dbA.id ?? 0, dbB.id ?? 0, 4),
   ])
   
   const insightKey = locale === 'es' ? 'insight_es' : locale === 'en' ? 'insight_en' : 'insight_fr';
@@ -255,28 +257,23 @@ export default async function ComparePage({ params }: Props) {
           </div>
 
           <div className="block lg:hidden">
-            <SimilarDuels
-              duels={similar}
-              labels={{
-                title: t('similar.title'),
-                views: tc('units.views')
-              }}
-            />
+            <Suspense fallback={<div className="h-32 bg-slate-50 rounded-2xl animate-pulse" />}>
+              <SimilarDuelsSection playerAId={dbA.id ?? 0} playerBId={dbB.id ?? 0} locale={locale} />
+            </Suspense>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          {insight && (
-            <AIInsightBlock
-              insight={insight} playerA={pA} playerB={pB}
-              winnerSlug={winnerSlug}
-              labels={{
-                title: t('insight.title'),
-                badge: t('insight.badge'),
-                config: [t('insight.consistency'), t('insight.explosivity')]
-              }}
-            />
-          )}
+          <AIInsightBlock
+            insight={insight} playerA={pA} playerB={pB}
+            winnerSlug={winnerSlug}
+            labels={{
+              title: t('insight.title'),
+              badge: t('insight.badge'),
+              config: [t('insight.consistency'), t('insight.explosivity')]
+            }}
+          />
+          <CompareAITrigger slug={slug} locale={locale} hasInsight={!!insight} />
 
           <GlobalVerdict
             playerA={pA} playerB={pB}
@@ -331,13 +328,9 @@ export default async function ComparePage({ params }: Props) {
           />
 
           <div className="hidden lg:block">
-            <SimilarDuels
-              duels={similar}
-              labels={{
-                title: t('similar.title'),
-                views: tc('units.views')
-              }}
-            />
+            <Suspense fallback={<div className="h-32 bg-slate-50 rounded-2xl animate-pulse" />}>
+              <SimilarDuelsSection playerAId={dbA.id ?? 0} playerBId={dbB.id ?? 0} locale={locale} />
+            </Suspense>
           </div>
         </div>
       </div>

@@ -76,7 +76,8 @@
       "Bash(grep -n \"placeholder\" src/app/[locale]/not-found.tsx)",
       "Bash(python3 -c \":*)",
       "Bash(sed -n '264,320p' c:/Users/Wid/Documents/widmaer_org/novaduel/messages/en.json)",
-      "Bash(sed -n '264,320p' c:/Users/Wid/Documents/widmaer_org/novaduel/messages/es.json)"
+      "Bash(sed -n '264,320p' c:/Users/Wid/Documents/widmaer_org/novaduel/messages/es.json)",
+      "Bash(python3 -c ':*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\Wid\\Documents\\widmaer_org\\novaduel\\.next"

@@ -254,40 +254,14 @@ export async function getPlayerBySlug(slug: string, locale: string = 'fr'): Prom
         playerObj = mapApiFootballToPlayer(profile);
       }
 
-      // 4. Trophées + Blessés (on-demand si absents)
-      const needsTrophies  = !playerObj.trophies_json;
-      const needsSidelined = !playerObj.transfers_json;
-      if (needsTrophies || needsSidelined) {
-        const { getTrophies, getSidelined } = await import('./apifootball');
-        const [trophies, sidelined] = await Promise.all([
-          needsTrophies  ? getTrophies({ player: afId }).catch(() => null)  : Promise.resolve(null),
-          needsSidelined ? getSidelined({ player: afId }).catch(() => null) : Promise.resolve(null),
-        ]);
-        if (trophies)  playerObj.trophies_json  = trophies;
-        if (sidelined) playerObj.transfers_json = sidelined;
-      }
-
-      // 5. Insights multilingues
+      // 4. Normaliser insight legacy
       const insightKey = locale === 'es' ? 'insight_es' : locale === 'en' ? 'insight_en' : 'insight_fr';
       if (locale === 'fr' && !playerObj.insight_fr && playerObj.ai_insight) {
         playerObj.insight_fr = playerObj.ai_insight;
       }
-      if (!playerObj[insightKey]) {
-        const { generatePlayerInsight } = await import('./claude');
-        const insight = await generatePlayerInsight(playerObj as Player, locale).catch(() => '');
-        if (insight) playerObj[insightKey] = insight;
-      }
       playerObj.ai_insight = playerObj[insightKey] || playerObj.ai_insight;
 
-      // 6. Persister l'enrichissement dans dn_players
-      const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
-      if (playerObj[insightKey])      updates[insightKey]      = playerObj[insightKey];
-      if (playerObj.trophies_json)    updates.trophies_json    = playerObj.trophies_json;
-      if (playerObj.transfers_json)   updates.transfers_json   = playerObj.transfers_json;
-      if (Object.keys(updates).length > 1) {
-        await supabaseAdmin.from('dn_players').update(updates).eq('id', afId).then(() => {}, () => {});
-      }
-
+      // Trophées, sidelined et insights sont générés de façon asynchrone par AITrigger
       return playerObj as Player;
     },
     TTL.player,
@@ -348,14 +322,10 @@ export async function getComparisonBySlug(slug: string, locale: string = 'fr') {
       const insightKey = locale === 'es' ? 'insight_es' : locale === 'en' ? 'insight_en' : 'insight_fr';
 
       if (!data) {
-        const { generateComparisonInsight } = await import('./claude');
-        const insight = await generateComparisonInsight(playerA, playerB, locale).catch(() => '');
-
         const newComp = {
           slug: canonicalSlug,
           player_a_id: playerA.id,
           player_b_id: playerB.id,
-          [insightKey]: insight,
           is_generated: true,
           views: 0,
           is_featured: false,
@@ -372,18 +342,6 @@ export async function getComparisonBySlug(slug: string, locale: string = 'fr') {
         if (error) console.error(`[Supabase] insert comparison ${canonicalSlug}:`, error.message);
 
         return { ...(savedComp || newComp), player_a: playerA, player_b: playerB };
-      }
-
-      if (!data[insightKey]) {
-        const { generateComparisonInsight } = await import('./claude');
-        const insight = await generateComparisonInsight(playerA, playerB, locale).catch(() => '');
-        if (insight) {
-          await supabaseAdmin
-            .from('comparisons')
-            .update({ [insightKey]: insight, updated_at: new Date().toISOString() })
-            .eq('slug', canonicalSlug);
-          data[insightKey] = insight;
-        }
       }
 
       return { ...data, player_a: playerA, player_b: playerB };

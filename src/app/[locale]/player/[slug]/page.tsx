@@ -2,7 +2,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getPlayerBySlug, getPlayerCareer } from '@/lib/data';
+import { getPlayerBySlug } from '@/lib/data';
 import TeamBadge from '@/components/ui/TeamBadge';
 import { getCurrentSeason } from '@/lib/season';
 import { FormattedInsight } from '@/components/FormattedInsight';
@@ -13,6 +13,8 @@ import PlayerAvatar from '@/components/compare/PlayerAvatar';
 import PlayerStatsSection from '@/components/player/PlayerStatsSection';
 import SimilarProfilesWidget from '@/components/player/SimilarProfilesWidget';
 import AITrigger from '@/components/player/AITrigger';
+import PlayerCareerSection from '@/components/player/PlayerCareerSection';
+import { Suspense } from 'react';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -41,8 +43,6 @@ export default async function PlayerPage({ params }: Props) {
     params.then(p => getPlayerBySlug(p.slug, p.locale)),
     getCurrentSeason(),
   ]);
-
-  const career = player ? await getPlayerCareer(player.id) : [];
 
   if (!player) notFound();
 
@@ -94,7 +94,6 @@ export default async function PlayerPage({ params }: Props) {
     form: isMissingData ? [] : form,
     aiInsight,
     aiTags: [] as string[],
-    career,
     radar: { 
       creativity: isMissingData ? 0 : Math.round(Number(player.pass_accuracy)), 
       vision: isMissingData ? 0 : Math.round(Number(player.pass_accuracy) * 0.97) 
@@ -384,91 +383,29 @@ export default async function PlayerPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Career — un tableau par compétition */}
-            {(() => {
-              const byComp = new Map<string, typeof p.career>()
-              for (const row of p.career) {
-                if (!byComp.has(row.competition)) byComp.set(row.competition, [])
-                byComp.get(row.competition)!.push(row)
-              }
-              if (!byComp.size) return null
-              return (
-                <div className="flex flex-col gap-6 mt-4">
-                  <div className="flex items-center gap-2 px-1">
-                    <span className="material-symbols-outlined text-primary text-[20px]">history_edu</span>
-                    <h3 className="label-caps text-primary text-[12px]">{t('career.title')}</h3>
-                  </div>
-                  
-                  {Array.from(byComp.entries()).map(([comp, rows]) => (
-                    <div key={comp} className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-                      {/* Section Header - Standings Style */}
-                      <div className="px-4 py-3 md:px-5 md:py-3.5 border-b border-gray-50 flex items-center justify-between gap-2 bg-slate-50/30">
-                        <span className="label-caps !text-slate-900 !text-[10px] font-black font-hl tracking-[0.15em]">{comp}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="label-caps text-primary bg-primary/5 px-2 py-0.5 rounded-md text-[8px] font-black">{rows.length} {rows.length > 1 ? tc('labels.seasons') : tc('labels.season')}</span>
-                        </div>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <table className="w-full border-collapse">
-                          <thead>
-                            <tr className="bg-slate-50/50 border-b border-gray-50">
-                              <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-left w-20">{tc('labels.season')}</th>
-                              <th className="py-2 px-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-left">{tc('labels.team')}</th>
-                              <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-12">{tc('stats.matches_played_abbr')}</th>
-                              <th className="py-2 px-3 text-[9px] font-black font-hl text-slate-500 uppercase tracking-widest text-center w-16">{tc('stats.goals_assists_abbr')}</th>
-                              <th className="py-2 px-3 text-[9px] font-black text-slate-900 uppercase tracking-widest text-center w-16">{tc('stats.rating')}</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-50">
-                            {rows.map((row) => (
-                              <tr key={`${row.season}-${row.team}`} className="hover:bg-slate-50/50 transition-all group">
-                                <td className="py-2 px-3">
-                                  <span className="label-caps !text-slate-400 !text-[9px] font-black group-hover:text-primary transition-colors">
-                                    {row.season}
-                                  </span>
-                                </td>
-                                <td className="py-2 px-3">
-                                  <div className="flex items-center gap-2.5">
-                                    <div className="p-1 px-1.5 bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-slate-100 group-hover:scale-110 transition-transform">
-                                      <TeamBadge teamId={row.team_id ?? 0} teamName={row.team} size={14} />
-                                    </div>
-                                    <span className="text-[12px] font-bold text-slate-800 truncate max-w-[150px] tracking-tight group-hover:text-primary transition-colors">
-                                      {row.team}
-                                    </span>
-                                  </div>
-                                </td>
-                                <td className="py-2 px-3 text-center text-[10px] font-bold font-hl text-slate-500">
-                                  {row.matches || 0}
-                                </td>
-                                <td className="py-2 px-3">
-                                  <div className="flex items-center justify-center gap-1.5 font-hl text-[10px]">
-                                    <span className="text-slate-900 font-extrabold">{row.goals || 0}</span>
-                                    <span className="text-slate-300 font-medium">/</span>
-                                    <span className="text-primary font-extrabold">{row.assists || 0}</span>
-                                  </div>
-                                </td>
-                                <td className="py-2 px-3 text-center">
-                                  {row.rating > 0 ? (
-                                    <span 
-                                      className="inline-block min-w-[32px] font-hl font-black text-[10px] py-0.5 px-1.5 rounded-lg shadow-sm border border-blue-100 bg-blue-50/50 text-blue-600"
-                                    >
-                                      {row.rating.toFixed(1)}
-                                    </span>
-                                  ) : (
-                                    <span className="label-caps text-slate-300 !text-[8px] font-semibold">—</span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  ))}
+            {/* Career — chargement différé via Suspense */}
+            <Suspense fallback={
+              <div className="flex flex-col gap-3 mt-4">
+                <div className="flex items-center gap-2 px-1">
+                  <span className="material-symbols-outlined text-primary/30 text-[20px]">history_edu</span>
+                  <div className="h-3 w-32 bg-slate-100 rounded animate-pulse" />
                 </div>
-              )
-            })()}
+                {[1, 2].map(i => (
+                  <div key={i} className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                    <div className="px-4 py-3 bg-slate-50/30 border-b border-gray-50">
+                      <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
+                    </div>
+                    <div className="p-4 flex flex-col gap-2">
+                      {[1, 2, 3].map(j => (
+                        <div key={j} className="h-8 bg-slate-50 rounded animate-pulse" />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            }>
+              <PlayerCareerSection playerId={player.id} locale={locale} />
+            </Suspense>
           </div>
 
           {/* ─ RIGHT SIDEBAR ─ */}

@@ -1,69 +1,81 @@
+'use client'
+
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface FormattedInsightProps {
   text: string;
   isDark?: boolean;
 }
 
-/**
- * FormattedInsight — Convertit le texte de l'IA (Markdown ou formaté) en HTML sémantique.
- * Supporte :
- * - #### Titre -> <h4>
- * - **Titre:** -> <h4> (pour la compatibilité)
- */
 export const FormattedInsight: React.FC<FormattedInsightProps> = ({ text, isDark = false }) => {
   if (!text) return null;
 
-  // Séparer par lignes pour traiter les blocs
   const lines = text.split('\n').filter(l => l.trim() !== '');
 
-  const headerClass = isDark 
-    ? "text-[#93bdfd] font-extrabold text-[13px] mt-5 first:mt-0 uppercase tracking-wider"
-    : "text-[#004782] font-extrabold text-[15px] mt-6 first:mt-0 uppercase tracking-wider";
-  
+  // Grouper les lignes en sections : [{ title, paragraphs[] }]
+  type Section = { title: string | null; paragraphs: string[] };
+  const sections: Section[] = [];
+  let current: Section = { title: null, paragraphs: [] };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const isHeader =
+      trimmed.startsWith('####') ||
+      (trimmed.startsWith('**') && (trimmed.includes(':**') || trimmed.endsWith('**')));
+
+    if (isHeader) {
+      if (current.title !== null || current.paragraphs.length > 0) {
+        sections.push(current);
+      }
+      const title = trimmed.startsWith('####')
+        ? trimmed.replace(/^####\s*/, '')
+        : (trimmed.match(/\*\*(.*?)\*\*/)?.[1] ?? trimmed).replace(':', '');
+      current = { title, paragraphs: [] };
+    } else {
+      current.paragraphs.push(trimmed.replace(/\*\*/g, ''));
+    }
+  }
+  if (current.title !== null || current.paragraphs.length > 0) sections.push(current);
+
+  const headerClass = isDark
+    ? "text-[#93bdfd] font-extrabold text-[11px] uppercase tracking-widest mb-2"
+    : "text-[#004782] font-extrabold text-[11px] uppercase tracking-widest mb-2";
+
   const pClass = isDark
     ? "text-[12px] text-white/85 leading-relaxed"
     : "text-[14px] text-[#424751] leading-relaxed";
 
+  const container = {
+    hidden: { opacity: 0, height: 0 },
+    show: {
+      opacity: 1,
+      height: 'auto',
+      transition: { height: { duration: 0.1 }, staggerChildren: 0.15 },
+    },
+  };
+
+  const section = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+
   return (
-    <div className={isDark ? "space-y-3" : "space-y-4"}>
-      {lines.map((line, i) => {
-        const trimmed = line.trim();
-
-        // Cas 1 : Titre Markdown ####
-        if (trimmed.startsWith('####')) {
-          const content = trimmed.replace(/^####\s*/, '');
-          return (
-            <h4 key={i} className={headerClass}>
-              {content}
-            </h4>
-          );
-        }
-
-        // Cas 2 : Titre Ancien Format **Titre:** ou **Titre**
-        if (trimmed.startsWith('**') && (trimmed.includes(':**') || trimmed.endsWith('**'))) {
-          // Extraire le contenu entre les étoiles
-          const content = trimmed.match(/\*\*(.*?)\*\*/)?.[1] || trimmed;
-          const rest = trimmed.replace(/\*\*(.*?)\*\*/, '').trim();
-          
-          if (rest === '' || rest === ':') {
-             return (
-              <h4 key={i} className={headerClass}>
-                {content.replace(':', '')}
-              </h4>
-            );
-          }
-        }
-
-        // Cas 3 : Paragraphe normal
-        const cleanText = trimmed.replace(/\*\*/g, '');
-
-        return (
-          <p key={i} className={pClass}>
-            {cleanText}
-          </p>
-        );
-      })}
-    </div>
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      style={{ overflow: 'hidden' }}
+      className={isDark ? "space-y-5" : "space-y-6"}
+    >
+      {sections.map((sec, i) => (
+        <motion.div key={i} variants={section}>
+          {sec.title && <h4 className={headerClass}>{sec.title}</h4>}
+          {sec.paragraphs.map((p, j) => (
+            <p key={j} className={pClass}>{p}</p>
+          ))}
+        </motion.div>
+      ))}
+    </motion.div>
   );
 };

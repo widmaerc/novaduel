@@ -11,9 +11,9 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
  * Claude Official Model IDs (April 2026)
  */
 export const MODELS = {
-  OPUS: 'claude-3-opus-20260205',    // Claude 4.6 Opus
-  SONNET: 'claude-3-sonnet-20260217', // Claude 4.6 Sonnet
-  HAIKU: 'claude-3-haiku-20251022',  // Claude 4.5 Haiku
+  OPUS: 'claude-opus-4-6',
+  SONNET: 'claude-sonnet-4-6',
+  HAIKU: 'claude-haiku-4-5-20251001',
 } as const;
 
 export interface StructuredAnalysis {
