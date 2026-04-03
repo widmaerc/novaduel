@@ -108,27 +108,48 @@ function PlayerCard({ player, side, winnerSlug, locale, t, tc, isMobile }: { pla
           </h2>
         </a>
 
-        {/* High-Density Player Info */}
-        <div className="flex flex-col gap-1.5 sm:gap-2 items-center mt-2">
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 flex-wrap">
-            <span className="label-caps !text-[11px] sm:!text-[13px] px-2 py-1 bg-slate-100 text-slate-600 rounded-md font-bold transition-transform hover:scale-105">
+        {/* Fiche Express High-Density Grid */}
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-2 w-full max-w-[280px] mt-4 mx-auto">
+          {/* Âge */}
+          <div className="flex flex-col items-center p-2 bg-slate-50/80 rounded-xl border border-slate-100 shadow-sm transition-transform hover:scale-105 duration-300">
+            <span className="label-caps !text-[7px] sm:!text-[8px] !text-slate-400 mb-1 tracking-widest uppercase">
+              {tc('profile.age') || 'Âge'}
+            </span>
+            <span className="text-[10px] sm:text-[12px] font-black text-slate-800 leading-none">
               {playerAge} {tc('units.years') || 'ans'}
-            </span>
-            <span className="label-caps !text-[11px] sm:!text-[13px] px-2 py-1 bg-slate-100 text-slate-600 rounded-md font-bold transition-transform hover:scale-105">
-              {player.height} {tc('units.cm') || 'cm'}
-            </span>
-            <span className="hidden sm:inline-block label-caps !text-[12px] px-2 py-1 bg-slate-100 text-slate-600 rounded-md font-bold transition-transform hover:scale-105">
-              {player.preferred_foot}
             </span>
           </div>
           
-          <div className="flex flex-col items-center gap-1 sm:gap-1.5 mt-1">
-            <span className="label-caps !text-[11px] sm:!text-[13px] !text-slate-500 flex items-center gap-1 sm:gap-1.5 font-bold">
-              <span className="text-[14px] sm:text-[16px] drop-shadow-sm">{player.flag_emoji}</span> 
-              <span className="truncate max-w-[120px] sm:max-w-none">{player.team}</span>
+          {/* Nationalité */}
+          <div className="flex flex-col items-center p-2 bg-slate-50/80 rounded-xl border border-slate-100 shadow-sm transition-transform hover:scale-105 duration-300">
+            <span className="label-caps !text-[7px] sm:!text-[8px] !text-slate-400 mb-1 tracking-widest uppercase">
+              {tc('profile.nationality') || 'Nationalité'}
             </span>
-            <span className="label-caps !text-[10px] sm:!text-[11px] px-2 sm:px-3 py-0.5 rounded-lg whitespace-nowrap shadow-sm font-black border border-white/20" style={posStyle}>
+            <div className="flex items-center gap-1 min-w-0">
+              <span className="text-[12px] sm:text-[14px] leading-none shrink-0">{player.flag_emoji}</span>
+              <span className="text-[9px] sm:text-[11px] font-black text-slate-800 truncate leading-none uppercase">
+                {player.nationality}
+              </span>
+            </div>
+          </div>
+
+          {/* Poste */}
+          <div className="flex flex-col items-center p-2 bg-slate-50/80 rounded-xl border border-slate-100 shadow-sm transition-transform hover:scale-105 duration-300">
+            <span className="label-caps !text-[7px] sm:!text-[8px] !text-slate-400 mb-1 tracking-widest uppercase">
+              {tc('profile.position') || 'Poste'}
+            </span>
+            <span className="text-[9px] sm:text-[11px] font-black leading-none uppercase truncate w-full text-center px-1" style={{ color: posStyle.color }}>
               {tc(`positions.${posKey}`) || player.position}
+            </span>
+          </div>
+
+          {/* Club */}
+          <div className="flex flex-col items-center p-2 bg-slate-50/80 rounded-xl border border-slate-100 shadow-sm transition-transform hover:scale-105 duration-300">
+            <span className="label-caps !text-[7px] sm:!text-[8px] !text-slate-400 mb-1 tracking-widest uppercase">
+              {tc('profile.club') || 'Club'}
+            </span>
+            <span className="text-[9px] sm:text-[11px] font-black text-slate-800 truncate leading-none uppercase w-full text-center px-1">
+              {player.team}
             </span>
           </div>
         </div>
