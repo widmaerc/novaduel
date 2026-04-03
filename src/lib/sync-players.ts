@@ -143,7 +143,20 @@ export async function syncPlayers(): Promise<SyncPlayersResult> {
   result.players = playerMap.size;
   console.log(`[sync-players] ${playerMap.size} joueurs uniques collectés (${result.requests} req API)`);
 
-  // ── 2. Mapper + filtrer ───────────────────────────────────────────────────
+  // ── 2. Charger les slugs existants pour gérer les doublons ───────────────
+  
+  const { data: existingSlugs, error: slugError } = await supabaseAdmin
+    .from('dn_players')
+    .select('id, slug');
+
+  if (slugError) {
+    console.error('[sync-players] Error fetching existing slugs:', slugError);
+  }
+
+  const usedSlugs = new Set(existingSlugs?.map(s => s.slug) || []);
+  const playerSlugs = new Map(existingSlugs?.map(s => [s.id, s.slug]) || []);
+
+  // ── 3. Mapper + filtrer ───────────────────────────────────────────────────
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rows: ReturnType<typeof mapPlayerRow>[] = [];
@@ -158,7 +171,33 @@ export async function syncPlayers(): Promise<SyncPlayersResult> {
     }
 
     try {
-      rows.push(mapPlayerRow(entry, season));
+      const p = entry.player;
+      
+      // 1. Calculer le slug de base selon la règle (Abréviation vs Nom Complet)
+      // buildSlug gère déjà le cas : name avec '.' -> firstname+lastname, sinon -> name
+      const baseSlug = buildSlug(p.name as string, p.id as number, p.firstname ?? null, p.lastname ?? null);
+      
+      // 2. Gérer l'ID déjà existant pour ce joueur pour éviter de changer son slug s'il est déjà bon
+      // Mais on ne garde l'ancien que s'il respecte le nouveau format de buildSlug
+      let finalSlug = baseSlug;
+      const currentSlugInDb = playerSlugs.get(p.id);
+
+      if (currentSlugInDb && (currentSlugInDb === baseSlug || currentSlugInDb.startsWith(baseSlug + '-'))) {
+        finalSlug = currentSlugInDb;
+      } else {
+        // Nouveau ou format incorrect -> On cherche un slug unique
+        let counter = 1;
+        while (usedSlugs.has(finalSlug)) {
+          finalSlug = `${baseSlug}-${counter}`;
+          counter++;
+        }
+      }
+
+      usedSlugs.add(finalSlug);
+
+      const row = mapPlayerRow(entry, season);
+      row.slug = finalSlug; // On force le slug calculé
+      rows.push(row);
     } catch (e) {
       console.error(`[sync-players] map error player ${entry.player?.id}:`, e);
       result.errors++;

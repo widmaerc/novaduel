@@ -274,9 +274,14 @@ export default function PlayersPage() {
                 ['GK', tc('positions.gk')]
               ].map(([v, l]) => (
                 <button key={v} onClick={() => setPosition(v)}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-hl font-black transition-all whitespace-nowrap
-                    ${position === v ? 'bg-white text-primary shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}`}>
+                  disabled={loading}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-hl font-black transition-all whitespace-nowrap flex items-center gap-2
+                    ${position === v ? 'bg-white text-primary shadow-md scale-105' : 'text-slate-500 hover:text-slate-800'}
+                    ${loading && position === v ? 'opacity-80' : ''}`}>
                   {l}
+                  {loading && position === v && (
+                    <div className="w-3 h-3 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+                  )}
                 </button>
               ))}
             </div>

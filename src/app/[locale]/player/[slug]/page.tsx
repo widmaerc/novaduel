@@ -11,6 +11,8 @@ import { localizedHref } from '@/lib/localizedPaths';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
 import PlayerAvatar from '@/components/compare/PlayerAvatar';
 import PlayerStatsSection from '@/components/player/PlayerStatsSection';
+import SimilarProfilesWidget from '@/components/player/SimilarProfilesWidget';
+import AITrigger from '@/components/player/AITrigger';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -46,8 +48,9 @@ export default async function PlayerPage({ params }: Props) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isMissingData = (player as any).is_missing_data === true;
-
-  const aiInsight = player.ai_insight ?? '';
+  const typedPlayer = player as any;
+  const aiInsight = typedPlayer[`insight_${locale}`] || player.ai_insight || '';
+  const analysis = (typeof player.ai_analysis === 'object' && player.ai_analysis) ? (player.ai_analysis as any) : null;
 
   // ─── Derived values ───────────────────────────────────────────────
   const minPerGoal      = (!isMissingData && player.goals > 0) ? Math.round(player.minutes / player.goals) : 0;
@@ -92,18 +95,16 @@ export default async function PlayerPage({ params }: Props) {
     aiInsight,
     aiTags: [] as string[],
     career,
-    similar: [
-      { name: 'Kylian Mbappé', initials: 'KM', match: '98', slug: 'kylian-mbappe' },
-      { name: 'Erling Haaland', initials: 'EH', match: '94', slug: 'erling-haaland' },
-      { name: 'Vinícius Jr.', initials: 'VJ', match: '92', slug: 'vinicius-junior' },
-    ] as { name: string; initials: string; match: string; slug: string }[],
-    radar: { creativity: isMissingData ? 0 : Math.round(Number(player.pass_accuracy)), vision: isMissingData ? 0 : Math.round(Number(player.pass_accuracy) * 0.97) },
-    tacticalRoles: isMissingData ? [] : [
+    radar: { 
+      creativity: isMissingData ? 0 : Math.round(Number(player.pass_accuracy)), 
+      vision: isMissingData ? 0 : Math.round(Number(player.pass_accuracy) * 0.97) 
+    },
+    tacticalRoles: (analysis && analysis.roles) ? analysis.roles : (isMissingData ? [] : [
       { role: t('sections.tactical_roles'), pct: 90 },
       { role: tc(`positions.${(player.position === 'MIL' ? 'mid' : player.position).toLowerCase()}_full`), pct: 75 },
-    ],
-    strengths: isMissingData ? [] : [tc("labels.not_available")],
-    weaknesses: isMissingData ? [] : [tc("labels.not_available")],
+    ]),
+    strengths: (analysis && analysis.strengths) ? analysis.strengths : (isMissingData ? [] : [tc("labels.not_available")]),
+    weaknesses: (analysis && analysis.weaknesses) ? analysis.weaknesses : (isMissingData ? [] : [tc("labels.not_available")]),
   };
 
   const formColor = (r: string) =>
@@ -305,7 +306,7 @@ export default async function PlayerPage({ params }: Props) {
         </section>
 
         {/* ── BENTO GRID ──────────────────────────────────── */}
-        <div className="grid grid-cols-[280px_1fr_280px] gap-3 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-[280px_1fr_280px] gap-6 items-start">
 
           {/* ─ LEFT SIDEBAR ─ */}
           <div className="flex flex-col gap-4">
@@ -337,25 +338,9 @@ export default async function PlayerPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Similar profiles */}
-            <div className="ai-gradient rounded-3xl p-6 relative overflow-hidden shadow-lg shadow-blue-900/10">
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-              <div className="flex items-center gap-2 mb-6">
-                <span className="material-symbols-outlined text-white/80 text-[20px]">people</span>
-                <h3 className="label-caps !text-white text-[11px] !opacity-100 tracking-[0.12em] font-black">{t('sections.similar_profiles')}</h3>
-              </div>
-              <div className="flex flex-col gap-2">
-                {p.similar.map((s) => (
-                  <Link key={s.name} href={localizedHref(locale, `/player/${s.slug}`)} className="flex items-center justify-between p-2.5 bg-white/10 rounded-2xl no-underline hover:bg-white/20 transition-all border border-white/5 hover:border-white/20 group/s">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center font-hl font-extrabold text-[9px] text-white uppercase shadow-inner border border-white/10">{s.initials}</div>
-                      <span className="text-[12px] font-semibold text-white group-hover/s:translate-x-0.5 transition-transform">{s.name}</span>
-                    </div>
-                    <span className="text-[9px] font-extrabold text-white bg-white/20 px-2 py-1 rounded-lg border border-white/10 group-hover:bg-white/30 transition-colors">{s.match}%</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
+            {/* Similar profiles (Autonomous Widget) */}
+            <SimilarProfilesWidget playerId={player.id} />
+
           </div>
 
           {/* ─ MIDDLE COLUMN ─ */}
@@ -390,6 +375,12 @@ export default async function PlayerPage({ params }: Props) {
               </div>
               <div className="p-8 relative z-1 bg-gradient-to-b from-blue-50/30 to-transparent">
                 <FormattedInsight text={p.aiInsight} />
+                <AITrigger 
+                  playerId={player.id} 
+                  locale={locale} 
+                  slug={slug} 
+                  hasInsight={!!p.aiInsight} 
+                />
               </div>
             </div>
 
@@ -490,51 +481,73 @@ export default async function PlayerPage({ params }: Props) {
                 <h3 className="label-caps text-primary text-[11px]">{t('sections.skill_matrix')}</h3>
               </div>
               <div className="relative h-[240px] flex items-center justify-center -mt-4">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" className="drop-shadow-[0_8px_32px_rgba(30,64,175,0.2)] overflow-visible">
-                  <defs>
-                    <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
-                      <stop offset="100%" stopColor="#1e40af" stopOpacity="0.1" />
-                    </radialGradient>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                  </defs>
+                {(() => {
+                  const rScale = 0.35; // Max radius roughly 35 units from center (50,50)
+                  const center = 50;
                   
-                  {/* Axis */}
-                  <polygon points="50,15 85,38 72,82 28,82 15,38" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
-                  <polygon points="50,25 75,41 66,72 34,72 25,41" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
-                  <polygon points="50,35 65,45 60,62 40,62 35,45" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
-                  
-                  {/* Potential Area (Dashed) */}
-                  <polygon points="50,12 87,36 74,85 26,85 13,36" 
-                    className="radar-area-potential opacity-40 transition-all duration-1000" />
+                  // Helper to get coords for a specific axis (0-4) and value (0-100)
+                  const getCoords = (angleDeg: number, val: number) => {
+                    const r = (val / 100) * 35;
+                    const angleRad = (angleDeg - 90) * Math.PI / 180;
+                    return {
+                      x: center + r * Math.cos(angleRad),
+                      y: center + r * Math.sin(angleRad)
+                    };
+                  };
 
-                  {/* Radar Area (Filled) */}
-                  <polygon points="50,18 82,40 68,78 32,75 20,42" 
-                    fill="url(#radarGradient)" 
-                    stroke="var(--color-primary)" 
-                    strokeWidth="1.5" 
-                    filter="url(#glow)"
-                    className="radar-area-current shadow-xl transition-all duration-1000" />
+                  const pts = [
+                    getCoords(0,   player.radar_finish),
+                    getCoords(72,  player.radar_dribble),
+                    getCoords(144, player.radar_passes),
+                    getCoords(216, player.radar_vision),
+                    getCoords(288, player.radar_creativity)
+                  ];
                   
-                  {/* Data Points */}
-                  {[
-                    { x: 50, y: 18 }, { x: 82, y: 40 }, { x: 68, y: 78 }, { x: 32, y: 75 }, { x: 20, y: 42 }
-                  ].map((pt, i) => (
-                    <circle key={i} cx={pt.x} cy={pt.y} r="1.5" fill="var(--color-primary)" stroke="white" strokeWidth="0.5" />
-                  ))}
-                  
-                  {/* Labels */}
-                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="50" y="8" textAnchor="middle">{tRadar('speed')}</text>
-                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="92" y="42" textAnchor="start">{tRadar('dribble')}</text>
-                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="72" y="90" textAnchor="middle">{tRadar('passes')}</text>
-                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="28" y="90" textAnchor="middle">{tRadar('tech')}</text>
-                  <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4.5px' }} x="8" y="42" textAnchor="end">{tRadar('finish')}</text>
-                </svg>
+                  const pointsStr = pts.map(p => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+
+                  return (
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" className="drop-shadow-[0_8px_32px_rgba(30,64,175,0.2)] overflow-visible">
+                      <defs>
+                        <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+                          <stop offset="100%" stopColor="#1e40af" stopOpacity="0.1" />
+                        </radialGradient>
+                        <filter id="glow">
+                          <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                          <feMerge>
+                            <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
+                          </feMerge>
+                        </filter>
+                      </defs>
+                      
+                      {/* Grid Layers */}
+                      {[1, 0.75, 0.5, 0.25].map(scale => {
+                        const gridPts = [0, 72, 144, 216, 288].map(a => getCoords(a, scale * 100));
+                        return <polygon key={scale} points={gridPts.map(p => `${p.x},${p.y}`).join(' ')} fill="none" stroke="#e2e8f0" strokeWidth="0.3" />;
+                      })}
+                      
+                      {/* Radar Area (Filled) */}
+                      <polygon points={pointsStr} 
+                        fill="url(#radarGradient)" 
+                        stroke="var(--color-primary)" 
+                        strokeWidth="1.5" 
+                        filter="url(#glow)"
+                        className="radar-area-current shadow-xl transition-all duration-1000" />
+                      
+                      {/* Data Points */}
+                      {pts.map((pt, i) => (
+                        <circle key={i} cx={pt.x} cy={pt.y} r="1.2" fill="var(--color-primary)" stroke="white" strokeWidth="0.4" />
+                      ))}
+                      
+                      {/* Labels */}
+                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="50" y="8" textAnchor="middle">{tRadar('finish')}</text>
+                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="92" y="42" textAnchor="start">{tRadar('dribble')}</text>
+                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="72" y="90" textAnchor="middle">{tRadar('passes')}</text>
+                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="28" y="90" textAnchor="middle">{tRadar('vision')}</text>
+                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="8" y="42" textAnchor="end">{tRadar('creativity')}</text>
+                    </svg>
+                  );
+                })()}
               </div>
               <div className="grid grid-cols-2 gap-3 mt-4">
                 <div className="text-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
@@ -555,14 +568,14 @@ export default async function PlayerPage({ params }: Props) {
                 <h3 className="label-caps text-primary text-[11px]">{t('sections.tactical_roles')}</h3>
               </div>
               <div className="flex flex-col gap-4">
-                {p.tacticalRoles.map((role) => (
-                  <div key={role.role}>
+                {p.tacticalRoles.map((role: any) => (
+                  <div key={typeof role === 'string' ? role : role.role}>
                     <div className="flex justify-between items-end mb-1.5">
-                      <span className="text-[12px] font-semibold text-slate-900">{role.role}</span>
-                      <span className="font-hl font-extrabold text-[14px] text-primary">{role.pct}%</span>
+                      <span className="text-[12px] font-semibold text-slate-900">{typeof role === 'string' ? role : role.role}</span>
+                      <span className="font-hl font-extrabold text-[14px] text-primary">{typeof role === 'string' ? 90 : role.pct}%</span>
                     </div>
-                    <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden shadow-inner">
-                      <div className="bar-grow h-full rounded-full shadow-sm" style={{ width:`${role.pct}%`, backgroundColor: role.pct >= 70 ? 'var(--color-primary)' : '#94a3b8' }} />
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                      <div className="bar-grow h-full rounded-full shadow-sm" style={{ width:`${typeof role === 'string' ? 90 : role.pct}%`, backgroundColor: 'var(--color-primary)' }} />
                     </div>
                   </div>
                 ))}
@@ -576,13 +589,13 @@ export default async function PlayerPage({ params }: Props) {
                 <h3 className="label-caps text-primary text-[11px]">{t('sections.strengths_weaknesses')}</h3>
               </div>
               <div className="flex flex-col gap-3">
-                {p.strengths.map((s) => (
+                {p.strengths.map((s: string) => (
                   <div key={s} className="flex items-start gap-3 p-2.5 bg-emerald-50/50 rounded-2xl border border-emerald-100/50 group hover:bg-emerald-50 transition-colors">
                     <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
                     <div className="text-[12px] font-semibold text-slate-800 leading-snug">{s}</div>
                   </div>
                 ))}
-                {p.weaknesses.map((w) => (
+                {p.weaknesses.map((w: string) => (
                   <div key={w} className="flex items-start gap-3 p-2.5 bg-amber-50/50 rounded-2xl border border-amber-100/50 group hover:bg-amber-50 transition-colors">
                     <span className="material-symbols-outlined text-amber-600 text-[18px]">warning</span>
                     <div className="text-[12px] font-normal text-slate-600 leading-snug">{w}</div>

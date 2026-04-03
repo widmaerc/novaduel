@@ -61,45 +61,54 @@ create table if not exists public.dn_players (
 
 create index if not exists dn_players_statistics_gin on public.dn_players using gin (statistics);
 create index if not exists dn_players_season_idx     on public.dn_players (season);
+
+### SQL Functions & RPC
+
+#### `get_similar_players(target_slug TEXT, limit_count INT DEFAULT 4)`
+Calculates player similarity using a weighted Euclidean distance based on properties in the `players` table. Matches Target by `slug` (bridge between `dn_players` and `players`).
+- **Rating** (Weight: 5.0)
+- **xG** (Weight: 3.0)
+- **Dribbles** (Weight: 2.0)
+- **Pass Accuracy** (Weight: 1.5)
+- **Goals Per 90** (Weight: 2.0)
+
+Filters by same position and ensures minimum play time (minutes > 200).
+
 ```
 
 ---
 
-## Scripts manuels
+## Scripts manuels (Shortcuts)
 
-Tous les scripts nécessitent les variables d'environnement de `.env.local`.
+Tous les scripts utilisent automatiquement `.env.local`. Plus besoin de spécifier `--env-file`.
 
-### Synchronisation des données
+### Synchronisation & Migration
 
 ```bash
-# Synchroniser les équipes → dn_teams + dn_team_leagues
-npx tsx --env-file=.env.local scripts/run-sync-teams.ts
+# Synchroniser les joueurs (SEO friendly & unique slugs)
+npm run sync-players
 
-# Synchroniser les joueurs → dn_players (9 ligues, ~500-800 req API, ~3-5 min)
-npx tsx --env-file=.env.local scripts/run-sync-players.ts
+# Synchroniser les équipes
+npm run sync-teams
+
+# Migration massive des slugs vers le format SEO
+npm run migrate-slugs
+
+# Seeder la base avec des joueurs de test
+npm run seed
 ```
 
-### Inspection / debug
+### Inspection & Debug
 
 ```bash
-# Vérifier le quota et le plan API-Football
-npx tsx --env-file=.env.local scripts/inspect-account.ts
+# Inspecter un joueur spécifique par ID
+npm run inspect-player
 
-# Vérifier la saison courante détectée par l'API
-npx tsx --env-file=.env.local scripts/inspect-season.ts
+# Inspecter les équipes d'une ligue
+npm run inspect-teams
 
-# Inspecter un joueur brut depuis l'API (modifier l'ID dans le script)
-npx tsx --env-file=.env.local scripts/inspect-player.ts
-
-# Inspecter les équipes d'une ligue (modifier l'ID dans le script)
-npx tsx --env-file=.env.local scripts/inspect-teams.ts
-```
-
-### Maintenance
-
-```bash
-# Vider tout le cache Redis
-npx tsx --env-file=.env.local scripts/clear-redis.ts
+# Vider le cache Redis
+npm run clear-cache
 ```
 
 ---

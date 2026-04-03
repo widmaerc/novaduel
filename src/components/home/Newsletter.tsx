@@ -15,12 +15,26 @@ export default function Newsletter() {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center text-center">
-        <h2 className="font-hl font-black text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight tracking-tight w-full text-center uppercase">
-          {t('title')}
+        {/* Kicker Tag */}
+        <div className="label-caps mb-8 text-[#004782] bg-white px-4 py-1.5 rounded-lg text-[10px] md:text-[11px] inline-block font-black tracking-[0.25em] shadow-xl shadow-black/10">
+          GLOBAL INSIDER
+        </div>
+
+        <h2 className="font-hl font-black text-5xl md:text-7xl lg:text-8xl text-white mb-8 leading-[1.05] tracking-tight w-full text-center uppercase">
+          {t('title').split('\n')[0]} 
+          <br/> 
+          <span className="text-white/30">{t('title').split('\n')[1]}</span>
         </h2>
-        <p className="text-white/70 text-sm md:text-lg max-w-3xl mb-12 font-medium leading-relaxed text-center w-full block">
-          {t('subtitle')}
-        </p>
+        
+        {/* Benefit List instead of simple paragraph */}
+        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 mb-16 text-white/70 text-xs md:text-sm font-bold uppercase tracking-[0.15em]">
+          {t('subtitle').split(' · ').map((benefit, i) => (
+            <div key={i} className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 bg-white/20 rounded-full" />
+              <span>{benefit}</span>
+            </div>
+          ))}
+        </div>
 
         {sent ? (
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/10 text-center text-white font-hl font-bold text-lg shadow-sm w-full">

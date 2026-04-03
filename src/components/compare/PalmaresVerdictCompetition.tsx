@@ -29,17 +29,21 @@ interface PalmaresCardProps {
 
 export function PalmaresCard({ playerA, playerB, tropheesA, tropheesB, labels }: PalmaresCardProps) {
   return (
-    <div className="glass-card !p-0 overflow-hidden mb-8 border-slate-200/50">
-      <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+    <div className="glass-card !p-0 overflow-hidden mb-8 border-slate-200/50 shadow-sm bg-white">
+      <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
         <div className="flex items-center gap-3">
-          <span className="text-xl">🏆</span>
+          <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-sm shadow-sm group-hover:scale-110 transition-transform">
+            🏆
+          </div>
           <h3 className="font-hl font-black text-lg text-slate-900 uppercase tracking-tight">
             {labels?.title ?? 'Palmarès & Titres'}
           </h3>
         </div>
-        <span className="label-caps !text-[9px] !text-slate-400 opacity-60 hidden sm:block">
-          {labels?.subtitle ?? 'Club + Sélection'}
-        </span>
+        <div className="px-3 py-1 bg-slate-100/50 rounded-full border border-slate-100">
+          <span className="label-caps !text-[9px] !text-slate-400 !font-bold">
+            {labels?.subtitle ?? 'Club + Sélection'}
+          </span>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="p-6 md:border-r border-slate-100">
@@ -57,13 +61,13 @@ export function PalmaresCard({ playerA, playerB, tropheesA, tropheesB, labels }:
           <TrophyList trophees={tropheesB} accent="#dc2626" />
         </div>
       </div>
-      <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-start gap-3">
-        <div className="mt-0.5 text-slate-400">
+      <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center gap-3">
+        <div className="text-slate-300">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
           </svg>
         </div>
-        <span className="text-[10px] font-bold text-slate-500 leading-relaxed italic opacity-80">
+        <span className="label-caps !text-[9px] !text-slate-400 font-bold opacity-70">
           {labels?.footer ?? '* Statistiques antérieures à 1960 : estimations historiques reconstituées.'}
         </span>
       </div>
@@ -76,13 +80,13 @@ function GlobalVerdictBadge({ label, slug, players, playerA }: { label: string; 
   const p = players.find(x => x.slug === slug)
   const isA = p?.slug === playerA.slug
   return (
-    <div className="flex items-center justify-between py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded-lg transition-colors group">
-      <span className="label-caps !text-[10px] !text-slate-400 font-bold">{label}</span>
-      <div className="flex items-center gap-2 max-w-[60%]">
-        <span className="font-hl font-black truncate text-sm" style={{ color: isA ? '#1e40af' : '#dc2626' }}>
+    <div className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 rounded-xl transition-all group">
+      <span className="label-caps !text-[10px] !text-slate-500 font-black tracking-wide">{label}</span>
+      <div className="flex items-center gap-2.5 max-w-[60%]">
+        <span className="font-hl font-black truncate text-sm uppercase tracking-tight" style={{ color: isA ? '#1e40af' : '#dc2626' }}>
           {p?.common_name ?? '—'}
         </span>
-        <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${isA ? 'bg-blue-500 shadow-blue-500/20' : 'bg-red-500 shadow-red-500/20'} opacity-0 group-hover:opacity-100 transition-opacity`} />
+        <div className={`w-1.5 h-4 rounded-full shrink-0 ${isA ? 'bg-blue-600 shadow-[0_0_8px_rgba(30,64,175,0.2)]' : 'bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.2)]'} transition-all`} />
       </div>
     </div>
   )
@@ -107,51 +111,50 @@ export function GlobalVerdict({
   const winner  = players.find(p => p.slug === winnerSlug)
 
   return (
-    <div className="glass-card !p-0 overflow-hidden shadow-2xl border-primary/20 bg-gradient-to-br from-white via-white to-blue-50/30">
-      <div className="px-6 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+    <div className="glass-card !p-0 overflow-hidden shadow-2xl border-slate-100 bg-white">
+      <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <span className="text-primary text-sm">📊</span>
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/5 shadow-sm">
+            <span className="text-primary text-sm font-black">📊</span>
           </div>
-          <h3 className="label-caps !text-[12px] !text-slate-900 !font-black uppercase tracking-wider">
+          <h3 className="font-hl font-black text-lg text-slate-900 uppercase tracking-tight">
             {labels?.title ?? 'Verdict Technique'}
           </h3>
         </div>
       </div>
 
-      <div className="flex flex-col items-center px-6 py-8 border-b border-slate-50 relative overflow-hidden">
-        <div className="absolute inset-0 hero-mesh opacity-30 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="relative mb-5">
-          <div className="relative w-16 h-16 rounded-2xl flex items-center justify-center bg-slate-50 border-2 border-slate-100 p-[1px] shadow-xl">
-            <div className="w-full h-full rounded-2xl bg-white flex items-center justify-center shadow-inner">
-              <span className="text-3xl text-primary/20">🏆</span>
+      <div className="flex flex-col items-center px-6 py-12 border-b border-slate-50 relative overflow-hidden bg-white">
+        <div className="relative mb-6">
+          <div className="relative w-20 h-20 rounded-[24px] flex items-center justify-center bg-white border border-slate-100 p-0.5 shadow-xl ring-8 ring-slate-50/50 group-hover:scale-105 transition-transform duration-500">
+            <div className="w-full h-full rounded-[22px] bg-slate-50/50 flex items-center justify-center">
+              <span className="text-4xl filter drop-shadow-sm">🏆</span>
             </div>
           </div>
         </div>
         
-        <div className="label-caps !text-[9px] !text-slate-400 mb-1 tracking-[0.2em]">{labels?.winner ?? 'Gagnant Comparatif'}</div>
-        <div className="font-hl font-black text-2xl md:text-3xl text-slate-900 text-center uppercase tracking-tighter drop-shadow-sm px-4">
+        <div className="label-caps !text-[9px] !text-slate-400 mb-1.5 tracking-[0.25em] font-black opacity-60">
+          {labels?.winner ?? 'WINNER'}
+        </div>
+        <div className="font-hl font-black text-3xl md:text-4xl text-slate-950 text-center uppercase tracking-tighter drop-shadow-sm px-4 leading-none">
           {winner?.common_name || winner?.name || '—'}
         </div>
         
         {winner && (
-          <div className="mt-4 flex gap-1.5">
+          <div className="mt-6 flex gap-2">
             {[1, 2, 3, 4, 5].map(s => (
-              <span key={s} className="text-amber-400 text-sm drop-shadow-sm">★</span>
+              <span key={s} className="text-amber-400 text-base drop-shadow-sm">★</span>
             ))}
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-2 border-b border-slate-50 bg-slate-50/10">
+      <div className="grid grid-cols-2 divide-x divide-slate-100 bg-slate-50/20 border-b border-slate-50">
         {[playerA, playerB].map((p, i) => (
-          <div key={i} className={`px-6 py-4 text-center ${i === 0 ? 'border-r border-slate-100' : ''}`}>
-            <div className="label-caps !text-[8px] !text-slate-400 mb-1 truncate px-2 opacity-80">
-              Score Global {p.initials}
+          <div key={i} className="px-6 py-6 text-center hover:bg-white transition-colors group/score">
+            <div className="label-caps !text-[8px] !text-slate-400 mb-2 truncate px-2 font-black tracking-widest opacity-70 group-hover/score:opacity-100">
+              SCORE GLOBAL {p.initials}
             </div>
-            <div className="font-hl font-black text-2xl tracking-tighter"
+            <div className="font-hl font-black text-3xl md:text-4xl tracking-tighter transition-transform group-hover/score:scale-110"
               style={{ color: i === 0 ? '#1e40af' : '#dc2626' }}>
               {p.rating.toFixed(2)}
             </div>
@@ -159,15 +162,15 @@ export function GlobalVerdict({
         ))}
       </div>
 
-      <div className="p-4 gap-1.5 flex flex-col">
+      <div className="p-5 gap-1.5 flex flex-col bg-white">
         <GlobalVerdictBadge label={labels?.best_scorer ?? "Capacité de Finition"}  slug={verdictScorer}    players={players} playerA={playerA} />
         <GlobalVerdictBadge label={labels?.best_passer ?? "Influence Créative"}  slug={verdictAssist}    players={players} playerA={playerA} />
         <GlobalVerdictBadge label={labels?.physics ?? "Impact Athlétique"}   slug={verdictPhysical}  players={players} playerA={playerA} />
         <GlobalVerdictBadge label={labels?.technique ?? "Maîtrise Technique"} slug={verdictTechnical} players={players} playerA={playerA} />
       </div>
       
-      <div className="px-6 py-4 bg-slate-50 flex items-center justify-center border-t border-slate-100">
-        <span className="label-caps !text-[8px] !text-slate-400 font-bold">
+      <div className="px-6 py-4 bg-slate-50/50 flex items-center justify-center border-t border-slate-100">
+        <span className="label-caps !text-[9px] !text-slate-400 font-bold opacity-60 tracking-wider">
           {labels?.analysis_footer ?? "Analyse basée sur les indicateurs de performance consolidés"}
         </span>
       </div>
@@ -218,13 +221,13 @@ function CompSection({
         {/* Table View (shared desktop/mobile simplified) */}
         <div className="min-w-full">
           <thead>
-            <div className="grid px-6 py-2.5 border-b border-slate-100 bg-slate-50/50"
+            <div className="grid px-6 py-3 border-b border-slate-100 bg-slate-50/50 items-center"
               style={{ gridTemplateColumns: colsSm }}>
-              <span className="label-caps !text-[9px] !text-slate-400 font-black tracking-widest">{headers[0]}</span>
-              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-widest">{headers[2]}</span>
-              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-widest">{headers[3]}</span>
-              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-widest">{headers[4]}</span>
-              <span className="label-caps !text-[9px] !text-slate-400 text-right font-black tracking-widest">{headers[1]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 font-black tracking-[0.15em]">{headers[0]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">{headers[2]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">{headers[3]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">{headers[4]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-right font-black tracking-[0.15em]">{headers[1]}</span>
             </div>
           </thead>
           <tbody>
@@ -239,7 +242,7 @@ function CompSection({
                         ? <img src={s.competition_logo} alt="" className="w-4 h-4 object-contain" />
                         : <div className="w-2.5 h-2.5 bg-slate-100 rounded-full" />}
                     </div>
-                    <span className="truncate max-w-[80px] xs:max-w-none">{s.competition}</span>
+                    <span className="truncate">{s.competition}</span>
                   </div>
                   <div className="text-center font-hl font-black text-[12px] text-slate-400">{s.matches}</div>
                   <div className="text-center font-hl font-black text-[14px] text-slate-900">{s.goals}</div>
@@ -268,17 +271,16 @@ interface CompetitionStatsTableProps {
 }
 
 export function CompetitionStatsTable({ playerA, playerB, statsA, statsB, labels }: CompetitionStatsTableProps) {
-  // Ultra-compact columns for side-by-side
-  const colsSm = '1fr 34px 34px 34px 44px'
+  // Balanced columns: Competition gets more weight, others are proportional
+  const colsSm = 'minmax(140px, 2.5fr) 1fr 1fr 1fr 1.2fr'
 
   return (
     <div className="glass-card shadow-2xl border-slate-200/50 !p-0 overflow-hidden bg-white">
-      <div className="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-slate-50/50">
-        <div className="flex flex-col gap-1">
-          <h3 className="font-hl font-black text-xl text-slate-900 drop-shadow-sm tracking-tight">
+      <div className="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-slate-50/50">
+        <div className="flex flex-col gap-0.5">
+          <h3 className="font-hl font-black text-lg text-slate-900 uppercase tracking-tight">
             {labels?.title ?? 'Statistiques par Compétition'}
           </h3>
-          <p className="label-caps !text-[10px] !text-slate-400 font-bold opacity-80 tracking-[0.1em]">VENTILATION DES PERFORMANCES</p>
         </div>
         
         <div className="flex items-center gap-6 p-2 px-4 bg-white rounded-2xl border border-slate-100 shadow-sm">

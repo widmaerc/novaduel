@@ -79,19 +79,23 @@ export default async function CompareIndexPage({ params }: Props) {
       </div>
       
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative z-10">
-        {/* Header */}
-        <div className="max-w-2xl mb-10">
-          <p className="label-caps !text-primary mb-2 opacity-80">{t('label')}</p>
-          <h1 className="font-hl font-black text-3xl md:text-5xl text-slate-900 leading-[1.1] mb-4 text-gradient">
-            {t('title')}
+        {/* Header - Elite Style */}
+        <div className="flex flex-col items-center text-center mb-16 px-4">
+          <div className="label-caps !text-[#004782] mb-6 tracking-[0.3em] font-black text-xs">
+            {t('label')}
+          </div>
+          <h1 className="font-hl font-black text-4xl md:text-6xl lg:text-7xl text-slate-900 leading-[1.05] mb-8 uppercase max-w-4xl tracking-tight">
+            {t('title').split(' ').slice(0, -2).join(' ')} 
+            <br />
+            <span className="text-[#004782]">{t('title').split(' ').slice(-2).join(' ')}</span>
           </h1>
-          <p className="text-sm md:text-base text-slate-500 font-medium leading-relaxed">
+          <p className="text-sm md:text-base text-slate-500 font-medium max-w-2xl leading-relaxed text-balance">
             {t('sub')}
           </p>
         </div>
 
-        {/* Search bar & Trends */}
-        <div className="max-w-4xl mx-auto mb-16">
+        {/* Search bar & Trends - Full Width */}
+        <div className="w-full mb-16 px-4 md:px-0">
           <CompareSearchBar locale={locale} isHero={true} />
           
           {/* Trending Comparisons Area */}
@@ -106,11 +110,11 @@ export default async function CompareIndexPage({ params }: Props) {
                   <a
                     key={tr.slug}
                     href={localizedHref(locale, `/compare/${tr.slug}`)}
-                    className="glass-card !rounded-full px-4 py-2 text-[11px] font-bold text-slate-800 hover:text-primary hover:border-primary transition-all flex items-center gap-2.5 group shadow-sm bg-white/50 border-slate-200/50"
+                    className="bg-white border border-slate-200 rounded-full px-5 py-2.5 text-[11px] font-bold text-slate-800 hover:text-[#004782] hover:border-[#004782] hover:shadow-md transition-all flex items-center gap-3 shadow-sm group"
                   >
-                    <span className="font-hl truncate max-w-[120px]">{tr.labelA}</span>
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-900 text-white text-[8px] font-black shadow-lg shadow-slate-900/10 group-hover:bg-primary transition-colors">VS</span>
-                    <span className="font-hl truncate max-w-[120px]">{tr.labelB}</span>
+                    <span className="font-hl truncate max-w-[120px] uppercase tracking-wide">{tr.labelA}</span>
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#004782] text-white text-[8px] font-black shadow-lg shadow-blue-900/10 transition-transform group-hover:scale-110">VS</span>
+                    <span className="font-hl truncate max-w-[120px] uppercase tracking-wide">{tr.labelB}</span>
                   </a>
                 ))}
               </div>
@@ -131,25 +135,27 @@ export default async function CompareIndexPage({ params }: Props) {
               <div className="h-px bg-slate-100 flex-1" />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {players.slice(0, 8).map((p, idx) => (
                 <a 
                   key={p.slug} 
                   href={`/${locale}/player/${p.slug}`}
-                  className="glass-card flex items-center gap-3 p-3 no-underline hover:bg-slate-50 transition-all group"
+                  className="bg-white border border-slate-200 rounded-2xl flex items-center gap-4 p-4 no-underline hover:border-[#004782] hover:shadow-xl transition-all group shadow-sm relative overflow-hidden"
                 >
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-slate-50 rotate-45 translate-x-8 -translate-y-8 group-hover:bg-blue-50 transition-colors" />
+                  
                   <div 
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center font-hl font-bold text-[10px] shrink-0 transition-all shadow-sm ${
-                      idx % 2 === 0 ? 'bg-primary/5 text-primary border border-primary/10' : 'bg-slate-100 text-slate-600'
-                    } group-hover:bg-primary group-hover:text-white group-hover:border-primary`}
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center font-hl font-bold text-[11px] shrink-0 transition-all shadow-sm relative z-10 ${
+                      idx % 2 === 0 ? 'bg-[#004782]/5 text-[#004782] border border-[#004782]/10' : 'bg-slate-100 text-slate-600'
+                    } group-hover:bg-[#004782] group-hover:text-white group-hover:border-[#004782]`}
                   >
                     {p.initials ?? p.name?.slice(0, 2).toUpperCase()}
                   </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-xs text-slate-800 truncate group-hover:text-primary transition-colors font-hl">
+                  <div className="min-w-0 relative z-10">
+                    <div className="font-black text-[13px] text-slate-900 truncate group-hover:text-[#004782] transition-colors font-hl uppercase tracking-tight">
                       {p.common_name || p.name}
                     </div>
-                    <div className="label-caps !text-[8px] !text-slate-400 truncate mt-0.5">
+                    <div className="label-caps !text-[9px] !text-slate-400 truncate mt-1 font-bold">
                       {p.team}
                     </div>
                   </div>

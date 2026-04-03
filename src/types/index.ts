@@ -48,6 +48,16 @@ export interface Player {
   detailed_position: string | null;
   is_featured: boolean;
   ai_insight: string | null;
+  insight_fr: string | null;
+  insight_en: string | null;
+  insight_es: string | null;
+  // Radar Metrics (0-100)
+  radar_finish: number;
+  radar_dribble: number;
+  radar_passes: number;
+  radar_vision: number;
+  radar_creativity: number;
+  ai_analysis: any; // Using any for JSONB to avoid deep nesting issues in page
   trophies_json: unknown;
   transfers_json: unknown; // also used to store sidelined data
   created_at: string;

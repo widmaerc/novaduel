@@ -7,8 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx scripts/seed-players.ts",
-    "seed:real": "tsx scripts/seed-players.ts",
+    "seed": "tsx --env-file .env.local scripts/seed-players.ts",
+    "seed:real": "tsx --env-file .env.local scripts/seed-players.ts",
+    "sync-players": "tsx --env-file .env.local scripts/test-sync.ts",
+    "sync-teams": "tsx --env-file .env.local scripts/run-sync-teams.ts",
+    "migrate-slugs": "tsx --env-file .env.local scripts/migrate-slugs-seo.ts",
+    "inspect-player": "tsx --env-file .env.local scripts/inspect-player.ts",
+    "inspect-teams": "tsx --env-file .env.local scripts/inspect-teams.ts",
+    "clear-cache": "tsx --env-file .env.local scripts/clear-redis.ts",
     "postbuild": "next-sitemap"
   },
   "dependencies": {

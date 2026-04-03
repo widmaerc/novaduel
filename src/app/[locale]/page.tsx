@@ -90,7 +90,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroSearch trends={trends} />
-      <StatsBar playersCount={playersCount ?? 0} leaguesCount={leagues?.length ?? 0} />
+      <StatsBar playersCount={playersCount ?? 0} leaguesCount={9} />
       <div className="max-w-[1280px] mx-auto px-3 sm:px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-5 my-8">
         <LeagueTable />
         <TopRatedPlayers />

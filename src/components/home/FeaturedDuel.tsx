@@ -265,20 +265,33 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
              ))}
           </div>
           
-          {/* Promo Card */}
-          <div className="mt-4 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
-             <div className="relative z-10">
-               <h4 className="font-hl font-black text-xl mb-2 leading-tight">{t('cta')}</h4>
-               <p className="text-white/70 text-xs mb-6 leading-relaxed opacity-80 uppercase tracking-widest text-[9px] font-bold">{t('description')}</p>
-               <Link href={localizedHref(locale, '/compare')} className="no-underline">
-                 <button className="w-full py-3 bg-white text-blue-600 rounded-xl font-hl font-black text-xs label-caps hover:bg-blue-50 transition-colors shadow-lg">
-                   {tc('buttons.launch_engine')}
-                 </button>
-               </Link>
-             </div>
-          </div>
+        </div>
+      </div>
 
+      {/* Promo Card - Full Width Banner */}
+      <div className="mt-12 lg:mt-16 bg-[#004782] rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-blue-900/20 group">
+        {/* Background Watermark like Newsletter */}
+        <div className="absolute top-1/2 right-[-5%] -translate-y-1/2 font-hl font-black text-[12rem] md:text-[18rem] text-white/[0.04] select-none pointer-events-none hidden lg:block leading-none transition-transform duration-700 group-hover:scale-110">
+          DUEL
+        </div>
+
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16">
+          <div className="flex-1 text-center lg:text-left">
+            <h4 className="font-hl font-black text-2xl md:text-3xl mb-3 leading-tight tracking-tight uppercase">
+              {t('cta')}
+            </h4>
+            <p className="text-white/70 text-[10px] md:text-xs leading-relaxed uppercase tracking-[0.2em] font-bold max-w-2xl">
+              {t('description')}
+            </p>
+          </div>
+          
+          <div className="shrink-0 w-full lg:w-auto">
+            <Link href={localizedHref(locale, '/compare')} className="no-underline">
+              <button className="w-full lg:w-auto px-12 py-5 bg-white text-[#004782] rounded-2xl font-hl font-black text-xs label-caps hover:bg-[#f0f7ff] transition-all shadow-xl shadow-black/10 active:scale-95 whitespace-nowrap tracking-[0.15em] cursor-pointer hover:-translate-y-0.5">
+                {tc('buttons.launch_engine')}
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

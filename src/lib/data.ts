@@ -7,7 +7,7 @@ import { supabaseAdmin } from './supabase';
 import { getPlayer, getFixtures } from './apifootball';
 import { cached, TTL } from './redis';
 import { getCurrentSeason } from './season';
-import type { Player } from '@/types';
+import type { Player } from '../types';
 
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -23,21 +23,22 @@ export function slugify(name: string): string {
 }
 
 /**
- * Construit un slug SEO propre.
- * - Si `name` est abrégé (contient un point, ex: "L. Messi") → utilise
- *   le 1er prénom + le 1er nom de famille : "Lionel Messi"
- * - Sinon → utilise `name` tel quel : "Kylian Mbappé"
+ * Construit un slug SEO propre (Nom Complet).
+ * - "L. Messi" -> "Lionel Messi" -> "lionel-messi"
+ * - "Bruno Fernandes" -> "bruno-fernandes"
+ * - Sécurisé : Pas d'ID brute dans l'URL.
  */
 export function buildSlug(name: string, _id: number, firstname?: string | null, lastname?: string | null): string {
-  // Toujours préférer prénom[0] + nom[0] : "Lionel Messi", "Cristiano Ronaldo"
-  if (firstname && lastname) {
-    const first = firstname.trim().split(/\s+/)[0]  // "Lionel" (pas "Andrés")
-    const last  = lastname.trim().split(/\s+/)[0]   // "Messi"  (pas "Cuccittini")
-    const s = slugify(`${first} ${last}`)
-    if (s) return s
+  // 1. Si le name est abrégé (contient un point)
+  if (name.includes('.') && firstname && lastname) {
+    const first = firstname.trim().split(/\s+/)[0]; 
+    const last  = lastname.trim().split(/\s+/)[0];
+    const s = slugify(`${first} ${last}`);
+    if (s) return s;
   }
-  // Fallback sur le name complet (mononym, données incomplètes)
-  return slugify(name) || 'joueur'
+
+  // 2. Sinon, prendre le name complet tel quel
+  return slugify(name) || 'joueur';
 }
 
 export function displayName(name: string, firstname?: string | null, lastname?: string | null): string {
@@ -106,6 +107,12 @@ export function mapApiFootballToPlayer(entry: any): Omit<Player, 'created_at' | 
     return parseFloat(raw.toString().replace('%', '')) || 0;
   })();
 
+  const m = mainStats.games?.appearences || 1;
+  const g90 = (mainStats.goals?.total || 0) / m;
+  const a90 = (mainStats.goals?.assists || 0) / m;
+  const kp90 = (mainStats.passes?.key || 0) / m;
+  const d90 = (mainStats.dribbles?.success || 0) / m;
+
   return {
     slug,
     name:             shortName || `Player ${p.id}`,
@@ -150,6 +157,16 @@ export function mapApiFootballToPlayer(entry: any): Omit<Player, 'created_at' | 
     avatar_color:     '#004782',
     is_featured:      false,
     ai_insight:       null,
+    // Radar Metrics Calculation (0-100)
+    radar_finish:     Math.min(100, Math.round((Math.min(g90, 0.8) / 0.8 * 60) + ((mainStats.shots?.on || 0) / (mainStats.shots?.total || 1) * 40))),
+    radar_dribble:    Math.min(100, Math.round((Math.min(d90, 3) / 3 * 70) + ((mainStats.dribbles?.success || 0) / (mainStats.dribbles?.attempts || 1) * 30))),
+    radar_passes:     Math.min(100, Math.round(passAcc)),
+    radar_vision:     Math.min(100, Math.round((Math.min(kp90, 2) / 2 * 70) + (passAcc * 0.3))),
+    radar_creativity: Math.min(100, Math.round((Math.min(a90, 0.4) / 0.4 * 50) + (Math.min(kp90, 2) / 2 * 50))),
+    ai_analysis:      null,
+    insight_fr:       null,
+    insight_en:       null,
+    insight_es:       null,
     trophies_json:    null,
     transfers_json:   null,
   };
@@ -227,6 +244,7 @@ export async function getPlayerBySlug(slug: string, locale: string = 'fr'): Prom
         if (dnRow.insight_fr)     playerObj.insight_fr     = dnRow.insight_fr;
         if (dnRow.insight_en)     playerObj.insight_en     = dnRow.insight_en;
         if (dnRow.insight_es)     playerObj.insight_es     = dnRow.insight_es;
+        if (dnRow.ai_analysis)    playerObj.ai_analysis    = dnRow.ai_analysis;
         if (dnRow.trophies_json)  playerObj.trophies_json  = dnRow.trophies_json;
         if (dnRow.transfers_json) playerObj.transfers_json = dnRow.transfers_json;
       } else {
@@ -276,7 +294,33 @@ export async function getPlayerBySlug(slug: string, locale: string = 'fr'): Prom
   );
 }
 
+// ─── getSimilarPlayers ────────────────────────────────────────────────────────
+
+export async function getSimilarPlayers(playerId: number, limit: number = 4): Promise<Player[]> {
+  return cached(
+    `players:similar:v4:${playerId}:${limit}`,
+    async () => {
+      const { data, error } = await supabaseAdmin.rpc('get_similar_players', {
+        target_id: playerId,
+        limit_count: limit
+      });
+
+      if (error) {
+        console.error('[Supabase] get_similar_players:', error.message);
+        return [];
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data || []).map((row: any) => 
+        mapApiFootballToPlayer(dnRowToApiEntry(row))
+      ) as unknown as Player[];
+    },
+    TTL.player
+  );
+}
+
 // ─── getComparisonBySlug ──────────────────────────────────────────────────────
+
 
 export async function getComparisonBySlug(slug: string, locale: string = 'fr') {
   return cached(

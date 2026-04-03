@@ -9,12 +9,17 @@ export async function GET(req: NextRequest) {
   const sort     = req.nextUrl.searchParams.get('sort')     ?? 'rating'
   const from     = (page - 1) * perPage
 
-  // Fetch tous les joueurs (2500 max) — nécessaire pour filtrer et trier côté serveur sur JSONB
+  // 1. Récupérer le nombre RÉEL total en base (sans limite de ligne)
+  const { count: totalBase } = await supabaseAdmin
+    .from('dn_players')
+    .select('*', { count: 'exact', head: true })
+
+  // 2. Fetch les données (avec limite pour le traitement mémoire)
   const { data, error } = await supabaseAdmin
     .from('dn_players')
     .select('id, name, firstname, lastname, nationality, photo, statistics')
     .order('name', { ascending: true })
-    .limit(3000)
+    .limit(5000) // Augmenté pour couvrir la base actuelle
 
   if (error) return NextResponse.json({ players: [], total: 0 }, { status: 500 })
 
@@ -25,8 +30,8 @@ export async function GET(req: NextRequest) {
     return {
       id:           p.id,
       slug:         buildSlug(p.name, p.id, p.firstname, p.lastname),
-      name:         dn,
-      common_name:  dn,
+      name:         p.name,
+      display_name: dn,
       team:         mainStat.team?.name           ?? '',
       position:     mapPosition(mainStat.games?.position ?? ''),
       league:       mainStat.league?.name         ?? '',
@@ -53,10 +58,14 @@ export async function GET(req: NextRequest) {
   if (sort === 'goals')   players.sort((a, b) => b.goals   - a.goals)
   if (sort === 'assists') players.sort((a, b) => b.assists - a.assists)
   if (sort === 'matches') players.sort((a, b) => b.matches - a.matches)
-  // sort === 'name' : déjà trié par Supabase
 
-  const total = players.length
+  const totalFiltered = players.length
   const paged = players.slice(from, from + perPage)
 
-  return NextResponse.json({ players: paged, total, page, perPage })
+  return NextResponse.json({ 
+    players: paged, 
+    total: position ? totalFiltered : (totalBase ?? totalFiltered), 
+    page, 
+    perPage 
+  })
 }

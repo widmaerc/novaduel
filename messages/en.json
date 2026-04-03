@@ -170,6 +170,7 @@
       "cta": "DUEL →",
       "cta_mobile": "START DUEL →",
       "trends": "Trends:",
+      "promo_title": "COMPARE MESSI, RONALDO, MBAPPÉ, HAALAND & 2,500+ PLAYERS",
       "seo_h2": "Compare Messi, Ronaldo, Mbappé, Haaland & 2,500+ players"
     },
     "featured": {
@@ -180,10 +181,10 @@
       "top_passers": "Top Passers"
     },
     "Duel": {
-      "title": "LIVE DUEL",
+      "title": "FEATURED DUEL",
       "trending_title": "TRENDING",
       "cta": "Create your own duel",
-      "description": "Compare any player among more than 150,000 profiles updated daily.",
+      "description": "Advanced stats, goals, assists, ratings, and AI analysis for every player. Premier League, Liga, Bundesliga, Ligue 1, Serie A and more.",
       "analyse_cta": "Analyze Duel"
     },
     "performance": {
@@ -216,8 +217,8 @@
       }
     },
     "newsletter": {
-      "title": "GET THE EDGE.",
-      "subtitle": "Weekly reports, transfer market analysis, exclusive AI predictions. Join 50k+ professionals.",
+      "title": "GET\nTHE EDGE.",
+      "subtitle": "AI Insights · Transfer Market · 50k+ Professionals",
       "placeholder": "your@email.com",
       "cta": "Subscribe",
       "success": "✓ You're subscribed — see you soon!"
@@ -342,6 +343,7 @@
       "tactical_roles": "Tactical Roles",
       "strengths_weaknesses": "Strengths & Weaknesses",
       "similar_profiles": "Similar Profiles",
+      "similar_profiles_footer": "Based on statistical proximity analysis of seasonal performances.",
       "trophies": "Trophies & Honours",
       "no_trophies": "No trophies on record",
       "trophies_winner": "Winner",
@@ -426,8 +428,9 @@
     "less_is_better": "Less = Better",
     "perf_title": "Performance Analysis",
     "ai": {
-      "title": "NovaDuel AI Insight",
-      "badge": "Claude · AI",
+      "title": "NovaDuel AI Analysis",
+      "badge": "Claude 3.5 · IA",
+      "generating": "Generating analysis...",
       "verdict": "Global Verdict"
     },
     "share": "Share this duel",
@@ -441,13 +444,11 @@
     "inactive": "Inactive"
   },
   "Radar": {
-    "speed": "SPEED",
-    "dribble": "DRIBBLE",
-    "passes": "PASSES",
-    "tech": "TECH",
     "finish": "FINISHING",
-    "creativity": "Creativity",
-    "vision": "Vision"
+    "dribble": "DRIBBLE",
+    "passes": "PASSING",
+    "vision": "VISION",
+    "creativity": "CREATIVITY"
   },
   "NotFound": {
     "title": "404 - Page Not Found",
@@ -455,5 +456,10 @@
     "go_home": "Back to Home",
     "search_button": "Search",
     "search_placeholder": "New search..."
+  },
+  "Player": {
+    "ai": {
+      "generating": "Generating analysis..."
+    }
   }
 }

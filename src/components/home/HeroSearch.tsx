@@ -72,7 +72,7 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
 
           <div className="space-y-3 md:space-y-4 lg:space-y-3">
             <h2 className="label-caps tracking-[0.25em] opacity-60 uppercase whitespace-pre-line text-[10px] sm:text-[11px]">
-               {td('title')}
+               {ts('promo_title')}
             </h2>
             <p className="text-slate-500 text-sm md:text-lg lg:text-base xl:text-lg leading-relaxed max-w-lg font-medium">
               {td('description')}

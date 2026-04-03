@@ -7,7 +7,7 @@ import PlayerAvatar from './PlayerAvatar'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface DBPlayer {
-  id: number; slug: string; name: string; common_name: string
+  id: number; slug: string; name: string; display_name: string
   team: string; position: string; image_url: string | null
   initials: string; avatar_bg: string; avatar_color: string; rating: number
 }
@@ -104,8 +104,8 @@ function Slot({
           </button>
         </div>
       ) : (
-        <div className={`flex items-center gap-3 px-4 h-10 md:h-12 transition-all bg-white border rounded-xl overflow-hidden
-          ${open ? 'ring-2 ring-primary/10 border-primary/50 shadow-lg shadow-primary/5' : 'border-slate-200 shadow-sm hover:border-slate-300'}`}>
+        <div className={`flex items-center gap-3 px-4 h-12 md:h-14 transition-all bg-white border-2 rounded-2xl overflow-hidden
+          ${open ? 'ring-4 ring-slate-100 border-[#004782]/40 shadow-xl shadow-blue-900/5' : 'border-slate-100 shadow-sm hover:border-slate-200'}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-slate-300 flex-shrink-0">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
@@ -174,7 +174,7 @@ function Slot({
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-slate-900 truncate">
-                        {p.common_name || p.name}
+                        {p.name}
                       </div>
                       <div className="label-caps !text-[8.5px] !text-slate-400 mt-0 truncate">{p.team}</div>
                     </div>
@@ -321,69 +321,78 @@ export default function CompareSearchBar({ locale: propLocale, initialPlayerA, i
     <button 
       onClick={launch} 
       disabled={isNotFound ? (!pA && !pB) : (!pA || !pB)}
-      className={`relative overflow-hidden w-full md:w-auto bg-primary text-white px-10 py-5 rounded-2xl font-hl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 hover:bg-blue-700 hover:-translate-y-0.5 group`}
+      className={`relative overflow-hidden w-full md:w-auto bg-[#004782] text-white px-12 py-5 rounded-2xl font-hl font-black text-xs uppercase tracking-[0.25em] shadow-2xl shadow-blue-900/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 hover:bg-[#003561] hover:shadow-blue-900/30 hover:-translate-y-0.5 cursor-pointer group`}
     >
       <span className="relative z-10">{defaultCta}</span>
-      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+      <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
     </button>
   )
 
   return (
-    <div className={`bg-white ${isHero ? 'p-3 md:p-4' : 'p-2 md:p-3'} rounded-[1.25rem] md:rounded-[2rem] 
-      ${isHero ? 'shadow-[0_20px_60px_rgba(0,40,100,0.06)] border-[#eef0f2]' : 'shadow-xl border-gray-100'} 
-      border flex flex-col ${inlineButton ? 'md:flex-row md:items-center' : 'items-stretch'} gap-2 md:gap-4 w-full transition-all`}>
-      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3 w-full flex-1 min-w-0">
-        <Slot
-          isA={true} player={pA} query={qA} filtered={filteredA}
-          open={oA} focused={fA} loading={loadingInit || loadingA} totalCount={totalCount}
-          wRef={wA} iRef={iA}
-          onQuery={setQA} onOpen={setOA} onFocus={setFA}
-          onSelect={p => select('A', p)} onClear={() => clear('A')}
-          onKey={makeKeyHandler('A')}
-          isHero={isHero}
-          t={t}
-          tc={tc}
-
-        />
-        <div className="flex items-center justify-center shrink-0 z-10 mx-[-8px] md:mx-[-4px]">
-          <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-hl font-black text-[8px] md:text-[10px] shadow-xl shadow-slate-900/10 border-2 border-white ring-4 ring-slate-50 select-none">
-            VS
+    <div className={`bg-white ${isHero ? 'p-5 md:p-7' : 'p-2 md:p-3'} rounded-2xl md:rounded-3xl 
+      ${isHero ? 'shadow-[0_40px_80px_-20px_rgba(0,40,100,0.12)] border-[#eef0f2]' : 'shadow-xl border-gray-100'} 
+      border-2 flex flex-col items-stretch gap-4 md:gap-6 w-full transition-all`}>
+      {/* Row 1: Inputs & Button */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 w-full">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3 flex-1 min-w-0">
+          <Slot
+            isA={true} player={pA} query={qA} filtered={filteredA}
+            open={oA} focused={fA} loading={loadingInit || loadingA} totalCount={totalCount}
+            wRef={wA} iRef={iA}
+            onQuery={setQA} onOpen={setOA} onFocus={setFA}
+            onSelect={p => select('A', p)} onClear={() => clear('A')}
+            onKey={makeKeyHandler('A')}
+            isHero={isHero}
+            t={t}
+            tc={tc}
+          />
+          <div className="flex items-center justify-center shrink-0 z-10 mx-[-8px] md:mx-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-hl font-black text-[8px] md:text-[10px] shadow-xl shadow-slate-900/10 border-2 border-white ring-4 ring-slate-50 select-none">
+              VS
+            </div>
           </div>
+          <Slot
+            isA={false} player={pB} query={qB} filtered={filteredB}
+            open={oB} focused={fB} loading={loadingInit || loadingB} totalCount={totalCount}
+            wRef={wB} iRef={iB}
+            onQuery={setQB} onOpen={setOB} onFocus={setFB}
+            onSelect={p => select('B', p)} onClear={() => clear('B')}
+            onKey={makeKeyHandler('B')}
+            isHero={isHero}
+            t={t}
+            tc={tc}
+          />
         </div>
-        <Slot
-          isA={false} player={pB} query={qB} filtered={filteredB}
-          open={oB} focused={fB} loading={loadingInit || loadingB} totalCount={totalCount}
-          wRef={wB} iRef={iB}
-          onQuery={setQB} onOpen={setOB} onFocus={setFB}
-          onSelect={p => select('B', p)} onClear={() => clear('B')}
-          onKey={makeKeyHandler('B')}
-          isHero={isHero}
-          t={t}
-          tc={tc}
-
-        />
-        {inlineButton && duelButton}
+        <div className="shrink-0">
+          {duelButton}
+        </div>
       </div>
 
-      {!inlineButton && (
-        <div className={`flex flex-col md:flex-row items-center ${isHero ? 'justify-center w-full' : 'justify-start'} gap-2 mt-2`}>
-          {duelButton}
-          {!hideMode && (
-            <>
-              <div className="hidden sm:block w-px h-8 bg-slate-100 flex-shrink-0 mx-2" />
-              <div className="flex bg-slate-100 rounded-xl p-1.5 gap-1 flex-shrink-0 border border-slate-200/50">
-                {(['joueurs', 'equipes'] as const).map(m => (
-                  <button 
-                    key={m} 
-                    onClick={() => setMode(m)}
-                    className={`px-4 py-2 rounded-lg text-[10px] label-caps transition-all ${mode === m ? 'bg-white text-primary font-black shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
-                    {m === 'joueurs' ? t('mode_players') : t('mode_teams')}
-                  </button>
-                ))}
+      {/* Row 2: Radio Buttons Only */}
+      {!hideMode && (
+        <div className="flex items-center justify-start gap-6 pt-2 border-t border-slate-50">
+          {(['joueurs', 'equipes'] as const).map(m => (
+            <label 
+              key={m} 
+              className="flex items-center gap-2.5 cursor-pointer group select-none"
+            >
+              <div className="relative w-5 h-5 rounded-full border-2 border-slate-200 flex items-center justify-center transition-all group-hover:border-[#004782]/40">
+                <input 
+                  type="radio" 
+                  name="compare-mode"
+                  checked={mode === m}
+                  onChange={() => setMode(m)}
+                  className="sr-only"
+                />
+                {mode === m && (
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#004782] animate-in zoom-in-50 duration-200 shadow-sm" />
+                )}
               </div>
-            </>
-          )}
+              <span className={`text-[11px] label-caps font-black tracking-[0.15em] transition-colors ${mode === m ? 'text-[#004782]' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                {m === 'joueurs' ? t('mode_players') : t('mode_teams')}
+              </span>
+            </label>
+          ))}
         </div>
       )}
     </div>

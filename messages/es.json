@@ -170,6 +170,7 @@
       "cta": "DUELO →",
       "cta_mobile": "INICIAR DUELO →",
       "trends": "Tendencias:",
+      "promo_title": "COMPARA A MESSI, RONALDO, MBAPPÉ, HAALAND Y MÁS DE 2.500 JUGADORES",
       "seo_h2": "Compara a Messi, Ronaldo, Mbappé, Haaland y más de 2 500 jugadores"
     },
     "featured": {
@@ -180,10 +181,10 @@
       "top_passers": "Máximos Asistentes"
     },
     "Duel": {
-      "title": "DUELO EN VIVO",
+      "title": "DUELO DESTACADO",
       "trending_title": "TENDENCIAS",
       "cta": "Crea tu propio duelo",
-      "description": "Compara cualquier jugador entre más de 150.000 perfiles actualizados diariamente.",
+      "description": "Estadísticas avanzadas, goles, asistencias, calificaciones y análisis de IA para cada jugador. Premier League, Liga, Bundesliga, Ligue 1, Serie A y más.",
       "analyse_cta": "Analizar Duelo"
     },
     "performance": {
@@ -216,8 +217,8 @@
       }
     },
     "newsletter": {
-      "title": "CONSIGUE LA VENTAJA.",
-      "subtitle": "Informes semanales, análisis del mercado de fichajes, predicciones IA exclusivas. Únete a 50k+ profesionales.",
+      "title": "CONSIGUE\nLA VENTAJA.",
+      "subtitle": "Análisis IA · Mercado de Fichajes · 50k+ Profesionales",
       "placeholder": "tu@email.com",
       "cta": "Suscribirse",
       "success": "✓ Estás suscrito/a — ¡hasta pronto!"
@@ -342,6 +343,7 @@
       "tactical_roles": "Roles Tácticos",
       "strengths_weaknesses": "Fortalezas y Debilidades",
       "similar_profiles": "Perfiles Similares",
+      "similar_profiles_footer": "Basado en el análisis de proximidad estadística de los rendimientos de la temporada.",
       "trophies": "Trofeos & Palmarés",
       "no_trophies": "Sin trofeos registrados",
       "trophies_winner": "Campeón",
@@ -426,8 +428,9 @@
     "less_is_better": "Menos = Mejor",
     "perf_title": "Análisis de Rendimiento",
     "ai": {
-      "title": "NovaDuel AI Insight",
-      "badge": "Claude · IA",
+      "title": "NovaDuel AI Analysis",
+      "badge": "Claude 3.5 · IA",
+      "generating": "Generando análisis...",
       "verdict": "Veredicto Global"
     },
     "share": "Compartir este duelo",
@@ -441,13 +444,11 @@
     "inactive": "Inactiva"
   },
   "Radar": {
-    "speed": "VELOCIDAD",
+    "finish": "FINALIZACIÓN",
     "dribble": "REGATE",
-    "passes": "PASES",
-    "tech": "TÉCNICA",
-    "finish": "REMATE",
-    "creativity": "Creatividad",
-    "vision": "Visión"
+    "passes": "PASE",
+    "vision": "VISIÓN",
+    "creativity": "CREATIVIDAD"
   },
   "NotFound": {
     "title": "404 - Página no encontrada",
@@ -455,5 +456,10 @@
     "go_home": "Volver al inicio",
     "search_button": "Buscar",
     "search_placeholder": "Nueva búsqueda..."
+  },
+  "Player": {
+    "ai": {
+      "generating": "Generando análisis..."
+    }
   }
 }

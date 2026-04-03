@@ -170,6 +170,7 @@
       "cta": "DUEL →",
       "cta_mobile": "LANCER LE DUEL →",
       "trends": "Tendances :",
+      "promo_title": "COMPAREZ MESSI, RONALDO, MBAPPÉ, HAALAND ET PLUS DE 2 500 JOUEURS",
       "seo_h2": "Comparez Messi, Ronaldo, Mbappé, Haaland et 2 500+ joueurs"
     },
     "featured": {
@@ -180,10 +181,10 @@
       "top_passers": "Top Passeurs"
     },
     "Duel": {
-      "title": "DUEL EN DIRECT",
+      "title": "DUEL À LA UNE",
       "trending_title": "TENDANCES",
       "cta": "Crée ton propre duel",
-      "description": "Compare n'importe quels joueurs parmi plus de 150 000 profils mis à jour quotidiennement.",
+      "description": "Statistiques avancées, buts, passes décisives, notes et analyse IA pour chaque joueur. Premier League, Liga, Bundesliga, Ligue 1, Serie A et plus encore.",
       "analyse_cta": "Analyser le duel"
     },
     "performance": {
@@ -216,8 +217,8 @@
       }
     },
     "newsletter": {
-      "title": "RECEVEZ L'AVANTAGE.",
-      "subtitle": "Rapports hebdomadaires, analyses du marché des transferts, prédictions IA exclusives. Rejoignez 50k+ professionnels.",
+      "title": "RECEVEZ\nL'AVANTAGE.",
+      "subtitle": "Analyses IA · Mercato Insider · 50k+ Professionnels",
       "placeholder": "votre@email.com",
       "cta": "S'abonner",
       "success": "✓ Vous êtes inscrit(e) — à très vite !"
@@ -342,6 +343,7 @@
       "tactical_roles": "Rôles tactiques",
       "strengths_weaknesses": "Points forts & faibles",
       "similar_profiles": "Profils similaires",
+      "similar_profiles_footer": "Basé sur l'analyse de proximité statistique des performances de la saison.",
       "trophies": "Trophées & Palmarès",
       "no_trophies": "Aucun trophée enregistré",
       "trophies_winner": "Vainqueur",
@@ -426,8 +428,9 @@
     "less_is_better": "Moins = mieux",
     "perf_title": "Analyse de performance",
     "ai": {
-      "title": "NovaDuel AI Insight",
-      "badge": "Claude · IA",
+      "title": "NovaDuel AI Analysis",
+      "badge": "Claude 3.5 · IA",
+      "generating": "Génération de l'analyse...",
       "verdict": "Verdict global"
     },
     "share": "Partager ce duel",
@@ -441,13 +444,11 @@
     "inactive": "Inactive"
   },
   "Radar": {
-    "speed": "VITESSE",
+    "finish": "FINITION",
     "dribble": "DRIBBLE",
     "passes": "PASSES",
-    "tech": "TECH",
-    "finish": "FINITION",
-    "creativity": "Créativité",
-    "vision": "Vision"
+    "vision": "VISION",
+    "creativity": "CRÉATIVITÉ"
   },
   "NotFound": {
     "title": "404 - Page Introuvable",
@@ -455,5 +456,10 @@
     "go_home": "Retour à l'accueil",
     "search_button": "Lancer",
     "search_placeholder": "Nouvelle recherche..."
+  },
+  "Player": {
+    "ai": {
+      "generating": "Génération de l'analyse..."
+    }
   }
 }

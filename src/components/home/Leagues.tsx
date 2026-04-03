@@ -56,9 +56,12 @@ export default function Leagues() {
         <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-c mb-4">
           {t('label')}
         </div>
-        <h2 className="font-hl font-bold text-3xl md:text-5xl mt-6 mb-20 md:mb-28 text-dark uppercase tracking-tighter">
+        <h2 className="font-hl font-bold text-3xl md:text-5xl mt-6 text-dark uppercase tracking-tighter">
           {t('title').split(' ')[0]} <span className="text-[#004782]">{t('title').split(' ').slice(1).join(' ')}</span>
         </h2>
+        
+        {/* Explicit Spacer - Reduced by half as requested */}
+        <div className="h-10 md:h-16" />
 
         {loading ? (
           <div className="text-center text-gray-500 text-sm py-10">{t('loading')}</div>

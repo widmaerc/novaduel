@@ -45,8 +45,8 @@ export async function GET(req: NextRequest) {
     return {
       id:           p.id,
       slug:         p.slug || buildSlug(p.name, p.id, p.firstname, p.lastname),
-      name:         mkDisplay(p.name, p.firstname, p.lastname),
-      common_name:  mkDisplay(p.name, p.firstname, p.lastname),
+      name:         p.name, // Nom brut de la DB (ex: L. Messi)
+      display_name: mkDisplay(p.name, p.firstname, p.lastname), // Nom formaté (ex: Lionel Messi)
       team:         best?.team?.name ?? '—',
       position,
       image_url:    null,
