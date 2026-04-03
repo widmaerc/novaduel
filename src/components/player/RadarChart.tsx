@@ -150,12 +150,22 @@ export default function RadarChart({ data, labels }: RadarChartProps) {
           )}
         </AnimatePresence>
 
-        {/* Labels */}
-        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="50" y="8" textAnchor="middle">{statLabels[0]}</text>
-        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="92" y="42" textAnchor="start">{statLabels[1]}</text>
-        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="72" y="90" textAnchor="middle">{statLabels[2]}</text>
-        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="28" y="90" textAnchor="middle">{statLabels[3]}</text>
-        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="8" y="42" textAnchor="end">{statLabels[4]}</text>
+        {/* Labels with Footnote References */}
+        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="50" y="8" textAnchor="middle">
+          {statLabels[0]}<tspan dy="-1.5" fontSize="2.5px" fill="var(--color-primary)" opacity="0.8">[2]</tspan>
+        </text>
+        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="92" y="42" textAnchor="start">
+          {statLabels[1]}<tspan dy="-1.5" fontSize="2.5px" fill="var(--color-primary)" opacity="0.8">[5]</tspan>
+        </text>
+        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="72" y="90" textAnchor="middle">
+          {statLabels[2]}<tspan dy="-1.5" fontSize="2.5px" fill="var(--color-primary)" opacity="0.8">[3]</tspan>
+        </text>
+        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="28" y="90" textAnchor="middle">
+          {statLabels[3]}<tspan dy="-1.5" fontSize="2.5px" fill="var(--color-primary)" opacity="0.8">[3]</tspan>
+        </text>
+        <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="8" y="42" textAnchor="end">
+          {statLabels[4]}<tspan dy="-1.5" fontSize="2.5px" fill="var(--color-primary)" opacity="0.8">[3]</tspan>
+        </text>
       </svg>
     </div>
   );

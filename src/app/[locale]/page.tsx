@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { buildAlternates } from '@/lib/hreflang';
 import { mapPosition } from '@/lib/data';
 import { getLeagues } from '@/lib/apifootball';
@@ -14,6 +14,7 @@ import TopPlayersLists from '@/components/home/TopPlayersLists';
 import Editorial       from '@/components/home/Editorial';
 import Leagues        from '@/components/home/Leagues';
 import Newsletter      from '@/components/home/Newsletter';
+import StatFootnotes   from '@/components/shared/StatFootnotes';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 120
 
 export default async function HomePage() {
-  const [leagues, { count: playersCount }, { data: topComparisons }] = await Promise.all([
+  const [leagues, { count: playersCount }, { data: topComparisons }, locale] = await Promise.all([
     getLeagues(),
     supabaseAdmin.from('dn_players').select('id', { count: 'exact', head: true }),
     supabaseAdmin
@@ -40,6 +41,7 @@ export default async function HomePage() {
       .gt('views', 0)
       .order('views', { ascending: false })
       .limit(6),
+    getLocale(),
   ])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -101,6 +103,7 @@ export default async function HomePage() {
       <Leagues />
       <Editorial />
       <Newsletter />
+      <StatFootnotes locale={locale} />
     </>
   );
 }

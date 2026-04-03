@@ -19,6 +19,7 @@ import { AIInsightBlock, SkillRadar, SimilarDuels }           from '@/components
 import PlayerProfileCard           from '@/components/compare/PlayerProfileCard'
 import CompareAITrigger            from '@/components/compare/CompareAITrigger'
 import SimilarDuelsSection         from '@/components/compare/SimilarDuelsSection'
+import StatFootnotes               from '@/components/shared/StatFootnotes'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -162,6 +163,10 @@ export default async function ComparePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      <h1 className="sr-only">
+        {t('seo.title', { name1: pA.common_name || pA.name, name2: pB.common_name || pB.name })}
+      </h1>
+
       <Breadcrumbs 
         locale={locale}
         items={[
@@ -269,6 +274,10 @@ export default async function ComparePage({ params }: Props) {
             </Suspense>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8">
+        <StatFootnotes locale={locale} />
       </div>
     </div>
   )

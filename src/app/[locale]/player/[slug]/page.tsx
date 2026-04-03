@@ -16,6 +16,7 @@ import AITrigger from '@/components/player/AITrigger';
 import PlayerCareerSection from '@/components/player/PlayerCareerSection';
 import TrophiesAccordion from '@/components/player/TrophiesAccordion';
 import RadarChart from '@/components/player/RadarChart';
+import StatFootnotes from '@/components/shared/StatFootnotes';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -397,7 +398,12 @@ export default async function PlayerPage({ params }: Props) {
               <div className="ai-gradient text-white p-5 flex items-center gap-3">
                 <span className="material-symbols-outlined text-[24px] !text-white">auto_awesome</span>
                 <div className="flex flex-col">
-                  <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">{t('ai.title')}</h3>
+                  <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">
+                    {t('ai.title')}
+                    <a href="#foot-6" className="ml-1 text-white/40 hover:text-white transition-colors no-underline">
+                      <sup className="text-[8px] font-black"> [6]</sup>
+                    </a>
+                  </h3>
                   <span className="text-[10px] text-white/70 font-bold tracking-wider">
                     {tc('labels.season')} {currentSeason}
                   </span>
@@ -487,6 +493,7 @@ export default async function PlayerPage({ params }: Props) {
 
         </div>
       </main>
+      <StatFootnotes />
     </>
   );
 }

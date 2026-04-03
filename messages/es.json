@@ -14,15 +14,26 @@
       "tagline": "LA PROFUNDIDAD DE LOS DATOS.",
       "tagline2": "Analítica de Rendimiento Fútbol Élite.",
       "explore": "Explorar",
-      "api": "API Avanzada",
-      "partners": "Socios de Datos",
+      "leagues": {
+        "premier_league": "Stats Premier League",
+        "ligue_1": "Stats Ligue 1",
+        "la_liga": "Stats La Liga",
+        "serie_a": "Stats Serie A",
+        "bundesliga": "Stats Bundesliga"
+      },
+      "platform": "Plataforma",
+      "about": "Sobre NovaDuel",
+      "methodology": "Metodología de datos",
+      "contact": "Contacto",
       "legal": "Legal",
       "privacy": "Privacidad",
-      "terms": "Términos",
+      "terms": "Condiciones de Uso",
+      "legal_mentions": "Menciones Legales",
       "support": "Soporte",
       "languages": "Idiomas",
       "support_center": "Centro de Soporte",
-      "copyright": "© 2026 NovaDuel Analytics. Todos los derechos reservados."
+      "copyright": "© 2026 NovaDuel Analytics. Datos impulsados por API-Football.",
+      "api_disclosure": "Todas las estadísticas se proporcionan con fines informativos y provienen de fuentes de datos deportivos certificadas."
     },
     "stats": {
       "attack": "Ataque",
@@ -144,6 +155,24 @@
       "view_full": "Ver ficha completa",
       "nationality": "Nacionalidad",
       "legend_symbol": "(†)"
+    },
+    "footnotes": {
+      "title": "Metodología y Definiciones SEO",
+      "rating": "Nota Global: El índice de rendimiento exclusivo de NovaDuel, calculado en una escala de 0 a 100 agregando más de 20 variables estadísticas por partido, incluyendo el impacto defensivo y la eficiencia ofensiva.",
+      "xg": "xG (Goles Esperados): Probabilidad de que un tiro se convierta en gol basada en la posición del tirador, el ángulo y la presión defensiva. Un indicador clave para evaluar la calidad de las ocasiones creadas.",
+      "goals": "Goles: Número total de goles marcados por el jugador. Indicador primario de eficiencia ofensiva y finalización.",
+      "assists": "Asistencias: Pases que conducen directamente a un gol. Refleja la creatividad, la visión y la capacidad de servir a los compañeros de equipo.",
+      "passes": "Precisión de Pases: Porcentaje de pases exitosos. Para los centrocampistas, una alta precisión indica maestría técnica y una visión de juego superior.",
+      "duels": "Duelos Ganados: Capacidad de un jugador para ganar confrontaciones directas (aéreas o terrestres). Crucial para la recuperación del balón y la dominancia física.",
+      "dribbles": "Éxito en Regates: Capacidad para superar a un oponente directo con el balón en los pies. Una alta tasa de éxito suele correlacionarse con una gran agilidad y técnica de ataque.",
+      "ai_insight": "Análisis IA: Análisis narrativo generado por nuestra IA, cruzando datos brutos para extraer tendencias tácticas y recomendaciones de scouting.",
+      "disclaimer": "Todos los datos se sincronizan a través de API-Football en tiempo real. Los análisis narrativos son producidos por NovaDuel AI para proporcionar un contexto táctico exclusivo a los aficionados al fútbol y analistas de datos."
+    },
+    "Alt": {
+      "player_stats": "Estadísticas de {name} {team}",
+      "team_logo": "Logo del equipo {name}",
+      "league_logo": "Estadísticas de la competición {name}",
+      "competition_logo": "Logo de la competición {name}"
     }
   },
   "HomePage": {
@@ -163,7 +192,7 @@
     },
     "search": {
       "badge": "Datos en Vivo · Análisis IA",
-      "title": "Comparación de Jugadores\nde Fútbol —\nEstadísticas en Tiempo Real",
+      "title": "Comparador de Estadísticas\nde fútbol —\nDatos en Tiempo Real",
       "subtitle": "Estadísticas avanzadas, goles, asistencias, notas y análisis IA para cada jugador. Premier League, Liga, Bundesliga, Ligue 1, Serie A y más.",
       "placeholder": "Buscar un jugador — ej: Messi, Ronaldo...",
       "placeholder_a": "Jugador A — ej: Messi",

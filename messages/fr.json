@@ -12,17 +12,28 @@
     },
     "footer": {
       "tagline": "LA PROFONDEUR DES DONNÉES.",
-      "tagline2": "Performance Analytics Football.",
+      "tagline2": "Analytique de Performance Football Élite.",
       "explore": "Explorer",
-      "api": "API Avancée",
-      "partners": "Partenaires de données",
+      "leagues": {
+        "premier_league": "Stats Premier League",
+        "ligue_1": "Stats Ligue 1",
+        "la_liga": "Stats La Liga",
+        "serie_a": "Stats Serie A",
+        "bundesliga": "Stats Bundesliga"
+      },
+      "platform": "Plateforme",
+      "about": "À propos de NovaDuel",
+      "methodology": "Méthodologie des données",
+      "contact": "Contact",
       "legal": "Légal",
       "privacy": "Confidentialité",
-      "terms": "CGU",
+      "terms": "Conditions d'Utilisation",
+      "legal_mentions": "Mentions Légales",
       "support": "Support",
       "languages": "Langues",
-      "support_center": "Centre de support",
-      "copyright": "© 2026 NovaDuel Analytics. Tous droits réservés."
+      "support_center": "Centre d'aide",
+      "copyright": "© 2026 NovaDuel Analytics. Données propulsées par API-Football.",
+      "api_disclosure": "Toutes les statistiques sont fournies à titre informatif et proviennent de sources de données sportives certifiées."
     },
     "stats": {
       "attack": "Attaque",
@@ -144,6 +155,24 @@
       "view_full": "Voir la fiche complète",
       "nationality": "Nationalité",
       "legend_symbol": "(†)"
+    },
+    "footnotes": {
+      "title": "Méthodologie & Définitions SEO",
+      "rating": "Note Globale : L'index de performance exclusif de NovaDuel, calculé sur une échelle de 0 à 100 en agrégeant plus de 20 variables statistiques par match, incluant l'impact défensif et l'efficacité offensive.",
+      "xg": "xG (Expected Goals) : Probabilité qu'un tir se transforme en but selon la position du tireur, l'angle, et la pression défensive. Un indicateur clé pour évaluer la qualité des occasions créées.",
+      "goals": "Buts : Nombre total de buts marqués par le joueur. Indicateur primaire de l'efficacité offensive et de la finition.",
+      "assists": "Passes décisives : Passes menant directement à un but. Reflète la créativité, la vision de jeu et la capacité à servir ses coéquipiers.",
+      "passes": "Précision des passes : Pourcentage de passes réussies. Pour les milieux de terrain, une précision élevée indique une maîtrise technique et une vision de jeu supérieure.",
+      "duels": "Duels gagnés : Capacité d'un joueur à remporter ses affrontements directs (aériens ou au sol). Crucial pour la récupération du ballon et la domination physique.",
+      "dribbles": "Succès des dribbles : Capacité à éliminer un adversaire direct balle au pied. Un taux de réussite élevé est souvent corrélé à une grande agilité et une technique de percussion.",
+      "ai_insight": "AI Insight : Analyse narrative générée par notre intelligence artificielle, croisant les données brutes pour extraire des tendances tactiques et des recommandations de scouting.",
+      "disclaimer": "Toutes les données sont synchronisées via l'API-Football en temps réel. Les analyses narratives sont produites par NovaDuel AI pour fournir un contexte tactique exclusif aux fans de football et aux analystes de données."
+    },
+    "Alt": {
+      "player_stats": "Statistiques de {name} {team}",
+      "team_logo": "Logo de l'équipe {name}",
+      "league_logo": "Statistiques de la compétition {name}",
+      "competition_logo": "Logo de la compétition {name}"
     }
   },
   "HomePage": {
@@ -163,7 +192,7 @@
     },
     "search": {
       "badge": "Données Live · Analyse IA",
-      "title": "Comparaison de joueurs\nde football —\nStats en temps réel",
+      "title": "Comparateur de statistiques\nde football —\nStats en temps réel",
       "subtitle": "Statistiques avancées, buts, passes D., notes et analyse IA pour chaque joueur. Premier League, Liga, Bundesliga, Ligue 1, Serie A et plus.",
       "placeholder": "Rechercher un joueur — ex: Messi, Ronaldo...",
       "placeholder_a": "Joueur A — ex: Messi",
@@ -458,9 +487,23 @@
     "search_button": "Lancer",
     "search_placeholder": "Nouvelle recherche..."
   },
-  "Player": {
-    "ai": {
-      "generating": "Génération de l'analyse..."
+  "About": {
+    "title": "À propos de NovaDuel",
+    "description": "NovaDuel est la plateforme de référence pour la comparaison avancée de joueurs de football et l'analyse de performance basée sur l'IA.",
+    "mission": "Notre Mission",
+    "mission_text": "Fournir aux passionnés, recruteurs et analystes des outils de comparaison précis, objectifs et innovants pour décrypter les performances du football mondial.",
+    "values": {
+      "data": "Données Certifiées",
+      "data_text": "Nous utilisons les flux officiels de Opta et API-Football pour garantir une précision maximale.",
+      "ai": "Analyse Prédictive",
+      "ai_text": "Nos modèles d'IA analysent plus de 50 métriques par joueur pour offrir un verdict impartial."
     }
+  },
+  "Methodology": {
+    "title": "Méthodologie des Données",
+    "source": "Nos Sources",
+    "source_text": "Toutes nos données proviennent de API-Football, un fournisseur leader de données sportives en temps réel. Les statistiques sont synchronisées quotidiennement.",
+    "metrics": "Calcul des Scores",
+    "metrics_text": "Le 'Global Rating' de NovaDuel est calculé via un algorithme pondéré prenant en compte : l'impact offensif, la fiabilité défensive, l'influence sur le jeu et la régularité sur les 5 dernières saisons."
   }
 }

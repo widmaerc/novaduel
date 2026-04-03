@@ -10,8 +10,9 @@ interface Props {
 export default async function SimilarProfilesWidget({ playerId }: Props) {
   const pid = Number(playerId);
 
-  const [t, locale, similar] = await Promise.all([
+  const [t, tc, locale, similar] = await Promise.all([
     getTranslations('PlayerPage'),
+    getTranslations('Common'),
     getLocale(),
     getSimilarPlayers(pid, 4)
   ]);
@@ -61,7 +62,7 @@ export default async function SimilarProfilesWidget({ playerId }: Props) {
                 {s.team_logo_url && (
                   <img 
                     src={s.team_logo_url} 
-                    alt="team" 
+                    alt={tc('Alt.team_logo', { name: s.team || '' })} 
                     className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white border border-slate-100 shadow-sm p-0.5"
                   />
                 )}

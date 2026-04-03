@@ -92,10 +92,13 @@ function PlayerCard({ player, side, winnerSlug, locale, t, tc, isMobile }: { pla
           />
           {player.rating > 0 && (
             <div 
-              className="absolute -top-1 -right-1 px-1 sm:px-1.5 py-0.5 sm:py-1 rounded-lg text-[8px] sm:text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all z-20"
+              className="absolute -top-1 -right-1 px-1 sm:px-1.5 py-0.5 sm:py-1 rounded-lg text-[8px] sm:text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all z-20 flex items-center gap-0.5"
               style={{ color: player.rating >= 8 ? '#15803d' : '#1e40af' }}
             >
-              {player.rating.toFixed(1)}
+              <span>{player.rating.toFixed(1)}</span>
+              <a href="#foot-1" className="text-[6px] opacity-40 hover:opacity-100 transition-opacity no-underline">
+                <sup>[1]</sup>
+              </a>
             </div>
           )}
         </a>

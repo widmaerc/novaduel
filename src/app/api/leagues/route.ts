@@ -6,6 +6,7 @@ export interface League {
   name:       string;
   image_path: string;
   type:       string;
+  country:    string;
   active:     boolean;
 }
 
@@ -26,6 +27,7 @@ export async function GET() {
       name:       l.league?.name ?? l.name ?? '',
       image_path: l.league?.logo ?? '',
       type:       l.league?.type ?? '',
+      country:    l.country?.name ?? l.league?.country ?? '',
       active:     l.seasons?.some((s: any) => s.current) ?? false,
     }))
     // Trier dans l'ordre de MAJOR_LEAGUE_IDS

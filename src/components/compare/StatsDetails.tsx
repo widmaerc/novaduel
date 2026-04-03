@@ -5,7 +5,7 @@ import type { Player, StatCategory } from './types'
 interface StatRow {
   emoji: string; label: string
   keyA: keyof Player; keyB: keyof Player
-  unit?: string; lowerIsBetter?: boolean
+  unit?: string; lowerIsBetter?: boolean; idRef?: number
   format?: (v: number) => string
   compute?: (p: Player) => number
 }
@@ -21,10 +21,10 @@ interface StatsDetailsProps {
 }
 
 function MirrorStatRow({ 
-  label, v1, v2, lowerIsBetter = false, emoji, unit = '', format, labels
+  label, v1, v2, lowerIsBetter = false, idRef, unit = '', format, labels
 }: { 
   label: string; v1: number; v2: number; lowerIsBetter?: boolean; 
-  emoji?: string; unit?: string; format?: (v: number) => string;
+  idRef?: number; unit?: string; format?: (v: number) => string;
   labels?: any
 }) {
   const display1 = format ? format(v1) : String(v1);
@@ -51,8 +51,13 @@ function MirrorStatRow({
 
         {/* Label & Bar Center */}
         <div className="flex-1 flex flex-col items-center gap-1.5 px-2 min-w-0">
-          <span className="label-caps !text-[11px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-2 font-black tracking-tight">
+          <span className="label-caps !text-[11px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-1 font-black tracking-tight">
             <span className="font-hl uppercase">{label}</span>
+            {idRef && (
+              <a href={`#foot-${idRef}`} className="text-secondary hover:text-primary transition-colors no-underline">
+                <sup className="text-[7px] font-black pointer-events-auto">[{idRef}]</sup>
+              </a>
+            )}
           </span>
 
           <div className="w-full flex h-2 rounded-full overflow-hidden bg-slate-100/50 border border-slate-200/20 shadow-inner">
@@ -98,27 +103,27 @@ export default function StatsDetails({ playerA, playerB, labels }: StatsDetailsP
 
   const STATS: Record<StatCategory, StatRow[]> = {
     attack: [
-      { emoji: '⚽', label: ROW_LABELS.goals,           keyA: 'goals',    keyB: 'goals'    },
-      { emoji: '🎯', label: ROW_LABELS.assists,         keyA: 'assists',  keyB: 'assists'  },
+      { emoji: '⚽', label: ROW_LABELS.goals,           keyA: 'goals',    keyB: 'goals',    idRef: 3 },
+      { emoji: '🎯', label: ROW_LABELS.assists,         keyA: 'assists',  keyB: 'assists',  idRef: 4 },
       { emoji: '📋', label: ROW_LABELS.matches,         keyA: 'matches',  keyB: 'matches'  },
-      { emoji: '📈', label: ROW_LABELS.xg,              keyA: 'xg',       keyB: 'xg',      format: v => v.toFixed(1) },
-      { emoji: '🔄', label: ROW_LABELS.dribbles,        keyA: 'dribbles', keyB: 'dribbles', format: v => v.toFixed(1) },
+      { emoji: '📈', label: ROW_LABELS.xg,              keyA: 'xg',       keyB: 'xg',      format: v => v.toFixed(1), idRef: 2 },
+      { emoji: '🔄', label: ROW_LABELS.dribbles,        keyA: 'dribbles', keyB: 'dribbles', format: v => v.toFixed(1), idRef: 7 },
       { emoji: '⏱',  label: ROW_LABELS.minutes_per_goal, keyA: 'minutes',  keyB: 'minutes',
         compute: p => p.goals > 0 ? Math.round(p.minutes / p.goals) : 0 },
     ],
     passing: [
-      { emoji: '📊', label: ROW_LABELS.pass_accuracy,   keyA: 'pass_accuracy', keyB: 'pass_accuracy', unit: '%', format: v => v.toFixed(1) },
-      { emoji: '🎯', label: ROW_LABELS.assists,         keyA: 'assists',       keyB: 'assists'       },
-      { emoji: '🔄', label: ROW_LABELS.dribbles,        keyA: 'dribbles',      keyB: 'dribbles',     format: v => v.toFixed(1) },
+      { emoji: '📊', label: ROW_LABELS.pass_accuracy,   keyA: 'pass_accuracy', keyB: 'pass_accuracy', unit: '%', format: v => v.toFixed(1), idRef: 5 },
+      { emoji: '🎯', label: ROW_LABELS.assists,         keyA: 'assists',       keyB: 'assists', idRef: 4 },
+      { emoji: '🔄', label: ROW_LABELS.dribbles,        keyA: 'dribbles',      keyB: 'dribbles',     format: v => v.toFixed(1), idRef: 7 },
     ],
     defense: [
-      { emoji: '🤺', label: ROW_LABELS.duels_won,       keyA: 'duels_won',    keyB: 'duels_won',    unit: '%' },
+      { emoji: '🤺', label: ROW_LABELS.duels_won,       keyA: 'duels_won',    keyB: 'duels_won',    unit: '%', idRef: 6 },
       { emoji: '🟨', label: ROW_LABELS.yellow_cards,    keyA: 'yellow_cards', keyB: 'yellow_cards', lowerIsBetter: true },
       { emoji: '🟥', label: ROW_LABELS.red_cards,       keyA: 'red_cards',    keyB: 'red_cards',    lowerIsBetter: true },
     ],
     physical: [
       { emoji: '⚡', label: ROW_LABELS.shots_on_target, keyA: 'shots_on_target', keyB: 'shots_on_target', format: v => v.toFixed(1) },
-      { emoji: '🤺', label: ROW_LABELS.duels_won,       keyA: 'duels_won',       keyB: 'duels_won',       unit: '%' },
+      { emoji: '🤺', label: ROW_LABELS.duels_won,       keyA: 'duels_won',       keyB: 'duels_won',       unit: '%', idRef: 6 },
       { emoji: '⏱',  label: ROW_LABELS.minutes,        keyA: 'minutes',         keyB: 'minutes'          },
     ],
   }
@@ -187,7 +192,7 @@ export default function StatsDetails({ playerA, playerB, labels }: StatsDetailsP
             v1={val(playerA, row)}
             v2={val(playerB, row)}
             lowerIsBetter={row.lowerIsBetter}
-            emoji={row.emoji}
+            idRef={row.idRef}
             unit={row.unit}
             format={row.format}
             labels={labels}

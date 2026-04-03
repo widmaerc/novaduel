@@ -278,3 +278,51 @@ a {
 .transition-colors {
   transition: color 0.15s ease;
 }
+/* Leagues Covered Section Styles */
+.league-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.league-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.league-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  opacity: 1; /* Match the provided style's intention but with a cleaner transition */
+  background: transparent;
+  transition: background 0.3s, opacity 0.3s;
+}
+
+.l-l1:hover::before { background: #dafe00; }
+.l-pl:hover::before { background: #3d195b; }
+.l-ll:hover::before { background: #ee2e24; }
+.l-sa:hover::before { background: #003366; }
+.l-b:hover::before { background: #d20515; }
+.l-mls:hover::before { background: #000000; }
+.l-ucl:hover::before { background: #003399; }
+.l-uel:hover::before { background: #fde047; }
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Base specificity for footer contrast (harmonized) */
+footer a, footer h5 {
+  color: theme('colors.slate.500');
+  transition: all 0.3s ease;
+}
+
+footer a:hover {
+  color: theme('colors.white');
+}

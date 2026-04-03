@@ -60,6 +60,19 @@ function PillSelect({ value, onChange, disabled, children }: {
   )
 }
 
+function StatLabel({ label, idRef }: { label: string; idRef?: number }) {
+  return (
+    <div className="flex items-center gap-1 justify-center">
+      <span>{label}</span>
+      {idRef && (
+        <a href={`#foot-${idRef}`} className="text-secondary hover:text-primary transition-colors no-underline">
+          <sup className="text-[7px] font-black pointer-events-auto">[{idRef}]</sup>
+        </a>
+      )}
+    </div>
+  )
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function PlayerStatsSection({ slug, initialStats, currentSeason, isMissingData = false }: Props) {
@@ -167,19 +180,22 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
       label: tc('stats.pass_acc'),        
       value: isMissingData ? 'N/D' : `${s.pass_accuracy}%`,     
       pct: s.pass_accuracy,
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
+      idRef: 3
     },
     { 
       label: tc('stats.dribbles_match'),  
       value: isMissingData ? 'N/D' : String(s.dribbles),        
       pct: Math.min(100, s.dribbles * 20),
-      color: 'bg-amber-400'
+      color: 'bg-amber-400',
+      idRef: 5
     },
     { 
       label: tc('stats.duels_won'),       
       value: isMissingData ? 'N/D' : `${s.duels_won}%`,         
       pct: s.duels_won,
-      color: 'bg-amber-500'
+      color: 'bg-amber-500',
+      idRef: 4
     },
     { 
       label: tc('stats.shots_on_target'), value: isMissingData ? 'N/D' : String(s.shots_on_target), 
@@ -307,11 +323,13 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
           { label: tp('stats.kpi_goals'),   value: isMissingData ? 'N/D' : s.goals,   sub: `${goalsPerMatch} / ${tc('units.match')}`, color: 'group-hover:text-emerald-500', bar: 'bg-emerald-500/30' },
           { label: tp('stats.kpi_assists'),  value: isMissingData ? 'N/D' : s.assists, sub: `${assistsPerMatch} / ${tc('units.match')}`, color: 'group-hover:text-blue-500', bar: 'bg-blue-500/30' },
           { label: tp('stats.kpi_matches'),  value: isMissingData ? 'N/D' : s.matches, sub: seasonDisplay, color: 'group-hover:text-slate-900', bar: 'bg-slate-400/30' },
-          { label: tc('stats.rating'),       value: isMissingData ? 'N/D' : (s.rating ? Number(s.rating).toFixed(1) : '—'), sub: '/ 10', color: 'group-hover:text-primary', bar: 'bg-primary/30' },
+          { label: tc('stats.rating'),       value: isMissingData ? 'N/D' : (s.rating ? Number(s.rating).toFixed(1) : '—'), sub: '/ 10', color: 'group-hover:text-primary', bar: 'bg-primary/30', idRef: 1 },
         ].map((kpi) => (
           <div key={kpi.label} className="glass-card p-2.5 text-center relative overflow-hidden group hover:scale-[1.02] transition-all border-white/60 bg-white/40 backdrop-blur-sm">
             {loading && <div className="absolute inset-0 bg-white/10 backdrop-blur-sm z-10 flex items-center justify-center" />}
-            <div className="label-caps mb-2 opacity-60 text-[9px] tracking-[0.15em]">{kpi.label}</div>
+            <div className="label-caps mb-2 opacity-60 text-[9px] tracking-[0.15em]">
+              <StatLabel label={kpi.label} idRef={(kpi as any).idRef} />
+            </div>
             <div className={`count font-hl font-extrabold text-[32px] leading-none text-slate-900 transition-all ${kpi.color} drop-shadow-sm ${loading ? 'opacity-10' : ''}`}>{kpi.value}</div>
             <div className="label-caps text-[9px] mt-2 opacity-40 lowercase font-medium">{kpi.sub}</div>
             <div className={`absolute bottom-0 left-0 h-1 ${kpi.bar} w-0 group-hover:w-full transition-all duration-500`} />
@@ -329,7 +347,9 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
           {loading && <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl z-10" />}
           {statsBars.map((bar) => (
             <div key={bar.label} className="flex items-center gap-4 group/bar py-0.5">
-              <span className="label-caps !text-slate-500 w-[160px] shrink-0 !text-[10px] group-hover/bar:!text-slate-900 transition-colors tracking-widest">{bar.label}</span>
+              <span className="label-caps !text-slate-500 w-[160px] shrink-0 !text-[10px] group-hover/bar:!text-slate-900 transition-colors tracking-widest text-left">
+                <StatLabel label={bar.label} idRef={(bar as any).idRef} />
+              </span>
               <div className="flex-1 h-2.5 bg-slate-100/50 rounded-full overflow-hidden shadow-inner p-[1.5px] border border-slate-200/20">
                 <div className={`bar-grow h-full ${bar.color} rounded-full transition-all duration-1000 ease-out`} style={{ width: `${bar.pct}%` }} />
               </div>

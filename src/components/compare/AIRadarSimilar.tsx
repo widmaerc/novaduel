@@ -1,8 +1,9 @@
 'use client'
 import { useParams } from 'next/navigation'
-import { FormattedInsight } from '../FormattedInsight'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { localizedHref } from '@/lib/localizedPaths'
+import { FormattedInsight } from '@/components/FormattedInsight'
 import type { Player, RadarSkills, SimilarDuel, Locale } from './types'
 
 // ── AIInsightBlock ────────────────────────────────────────────────────────────
@@ -35,9 +36,17 @@ export function AIInsightBlock({ insight, playerA, playerB, winnerSlug, labels }
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
           </div>
-          <span className="label-caps !text-[11px] !text-white !font-black !opacity-100 tracking-[0.15em]">
-            {labels?.title ?? 'AI Scouting Insight'}
-          </span>
+          <div className="flex flex-col">
+            <span className="label-caps !text-[11px] !text-white !font-black !opacity-100 tracking-[0.12em]">
+              {labels?.title ?? 'AI Scouting Insight'}
+              <a href="#foot-8" className="ml-1 text-white/40 hover:text-white transition-colors no-underline">
+                <sup className="text-[8px] font-black"> [8]</sup>
+              </a>
+            </span>
+            <span className="text-[9px] text-white/50 font-bold tracking-wider">
+               {useTranslations('Common')('labels.season')} {playerA.season}
+            </span>
+          </div>
           <span className="ml-auto text-[8px] font-black uppercase tracking-[.15em] px-2.5 py-1 rounded-full bg-white/20 text-white border border-white/10 backdrop-blur-md">
             {labels?.badge ?? 'NovaDuel Engine'}
           </span>
@@ -173,10 +182,20 @@ export function SkillRadar({ playerA, playerB, skillsA, skillsB, compact = false
           {ANGLES.map((a, i) => {
             const { x, y } = polar(a, maxR + LABEL_OFFSET)
             const anchor = x < cx - 10 ? 'end' : x > cx + 10 ? 'start' : 'middle'
+            
+            // Map skill index to footnote ID
+            // 0: FINITION -> 3, 1: DRIBBLE -> 7, 2: PASSES -> 5, 3: PHYSIQUE -> 6, 4: VISION -> 4
+            const idRef = i === 0 ? 3 : i === 1 ? 7 : i === 2 ? 5 : i === 3 ? 6 : i === 4 ? 4 : null;
+
             return (
               <text key={i} x={x} y={y} textAnchor={anchor} dominantBaseline="central"
                 fill="#475569" fontFamily="'Manrope', sans-serif" fontWeight="900" fontSize={TEXT_SIZE} className="uppercase tracking-[0.05em]">
-                {SKILL_LABELS[i]}
+                <tspan>{SKILL_LABELS[i]}</tspan>
+                {idRef && (
+                  <tspan dx="2" dy="-4" fontSize={TEXT_SIZE * 0.7} fill="#3b82f6" fontWeight="900" className="cursor-pointer">
+                    [{idRef}]
+                  </tspan>
+                )}
               </text>
             )
           })}

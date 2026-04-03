@@ -1,4 +1,5 @@
 import React from 'react'
+import { getTranslations } from 'next-intl/server'
 import type { Player, Trophy, CompetitionStat } from './types'
 
 // ── TrophyList ──────────────────────────────────────────────────────────────
@@ -196,10 +197,11 @@ function RatingPill({ rating }: { rating: number | null }) {
 // ── CompSection ──────────────────────────────────────────────────────────
 function CompSection({ 
   player, stats, accent, colsMobile, colsSm, 
-  labels 
+  labels, tc 
 }: { 
   player: Player; stats: CompetitionStat[]; accent: string; colsMobile: string; colsSm: string;
-  labels?: string[]
+  labels?: string[];
+  tc: any;
 }) {
   const headers = labels ?? ['Compétition', 'Note', 'MJ', 'B', 'A', 'JA', 'JR']
   return (
@@ -220,17 +222,27 @@ function CompSection({
       <div className="overflow-x-auto no-scrollbar">
         {/* Table View (shared desktop/mobile simplified) */}
         <div className="min-w-full">
-          <thead>
-            <div className="grid px-6 py-3 border-b border-slate-100 bg-slate-50/50 items-center"
+          <div className="border-b border-slate-100 bg-slate-50/50">
+            <div className="grid px-6 py-3 items-center"
               style={{ gridTemplateColumns: colsSm }}>
               <span className="label-caps !text-[9px] !text-slate-400 font-black tracking-[0.15em]">{headers[0]}</span>
               <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">{headers[2]}</span>
               <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">{headers[3]}</span>
-              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">{headers[4]}</span>
-              <span className="label-caps !text-[9px] !text-slate-400 text-right font-black tracking-[0.15em]">{headers[1]}</span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-center font-black tracking-[0.15em]">
+                {headers[4]}
+                <a href="#foot-4" className="ml-0.5 text-blue-500 opacity-60 hover:opacity-100 transition-opacity">
+                  <sup>[4]</sup>
+                </a>
+              </span>
+              <span className="label-caps !text-[9px] !text-slate-400 text-right font-black tracking-[0.15em]">
+                {headers[1]}
+                <a href="#foot-1" className="ml-0.5 text-blue-500 opacity-60 hover:opacity-100 transition-opacity">
+                  <sup>[1]</sup>
+                </a>
+              </span>
             </div>
-          </thead>
-          <tbody>
+          </div>
+          <div className="flex flex-col">
             {stats.length > 0 ? (
               stats.map((s, i) => (
                 <div key={i}
@@ -239,7 +251,11 @@ function CompSection({
                   <div className="flex items-center gap-3 font-hl font-bold text-[12px] text-slate-800 truncate pr-2">
                     <div className="w-6 h-6 bg-white rounded-lg border border-slate-100 flex items-center justify-center shadow-sm shrink-0 overflow-hidden group-hover/row:scale-110 transition-transform">
                       {s.competition_logo
-                        ? <img src={s.competition_logo} alt="" className="w-4 h-4 object-contain" />
+                        ? <img 
+                            src={s.competition_logo} 
+                            alt={tc('Alt.competition_logo', { name: s.competition })} 
+                            className="w-4 h-4 object-contain" 
+                          />
                         : <div className="w-2.5 h-2.5 bg-slate-100 rounded-full" />}
                     </div>
                     <span className="truncate">{s.competition}</span>
@@ -256,7 +272,7 @@ function CompSection({
                 <span className="label-caps !text-[8px] tracking-widest">Aucune donnée</span>
               </div>
             )}
-          </tbody>
+          </div>
         </div>
       </div>
     </div>
@@ -270,7 +286,8 @@ interface CompetitionStatsTableProps {
   labels?: { title: string; headers: string[] }
 }
 
-export function CompetitionStatsTable({ playerA, playerB, statsA, statsB, labels }: CompetitionStatsTableProps) {
+export async function CompetitionStatsTable({ playerA, playerB, statsA, statsB, labels }: CompetitionStatsTableProps) {
+  const tc = await getTranslations('Common');
   // Balanced columns: Competition gets more weight, others are proportional
   const colsSm = 'minmax(140px, 2.5fr) 1fr 1fr 1fr 1.2fr'
 
@@ -298,11 +315,11 @@ export function CompetitionStatsTable({ playerA, playerB, statsA, statsB, labels
       
       <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100/80">
         <div className="relative">
-          <CompSection player={playerA} stats={statsA} accent="#1e40af" colsMobile={colsSm} colsSm={colsSm} labels={labels?.headers} />
+          <CompSection player={playerA} stats={statsA} accent="#1e40af" colsMobile={colsSm} colsSm={colsSm} labels={labels?.headers} tc={tc} />
           <div className="absolute top-0 right-0 h-full w-4 bg-gradient-to-l from-slate-50/10 to-transparent pointer-events-none hidden lg:block" />
         </div>
         <div className="relative bg-slate-50/[0.02]">
-          <CompSection player={playerB} stats={statsB} accent="#dc2626" colsMobile={colsSm} colsSm={colsSm} labels={labels?.headers} />
+          <CompSection player={playerB} stats={statsB} accent="#dc2626" colsMobile={colsSm} colsSm={colsSm} labels={labels?.headers} tc={tc} />
         </div>
       </div>
     </div>

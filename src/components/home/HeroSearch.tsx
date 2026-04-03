@@ -64,7 +64,10 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
             <span className="label-caps !text-white tracking-[0.2em] text-[10px]">{ts('badge')}</span>
           </div>
 
-          <h1 className="font-hl font-black text-4xl md:text-6xl lg:text-[2.8rem] xl:text-[3.5rem] 2xl:text-[4.5rem] leading-[1.05] tracking-tighter text-slate-900">
+          <h1 
+            aria-label={(ts('title') || '').replace(/\n/g, ' ')}
+            className="font-hl font-black text-4xl md:text-6xl lg:text-[2.8rem] xl:text-[3.5rem] 2xl:text-[4.5rem] leading-[1.05] tracking-tighter text-slate-900"
+          >
             {titleLines.map((line, i) => (
               <span key={i} className={`block ${i === titleLines.length - 1 ? 'text-primary' : ''}`}>{line}</span>
             ))}
@@ -131,7 +134,7 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
                 <div className="flex-1 flex items-center justify-center relative w-full h-full">
                   <img
                     src="/images/fp1.png"
-                    alt="Player KM"
+                    alt={tc('Alt.player_stats', { name: 'Kylian Mbappé', team: 'Real Madrid' })}
                     className="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain drop-shadow-2xl brightness-110"
                   />
                 </div>
@@ -166,7 +169,7 @@ export default function HeroSearch({ trends = [] }: { trends?: Trend[] }) {
                 <div className="flex-1 flex items-center justify-center relative w-full h-full">
                   <img
                     src="/images/fp4.png"
-                    alt="Player EH"
+                    alt={tc('Alt.player_stats', { name: 'Erling Haaland', team: 'Manchester City' })}
                     className="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain drop-shadow-2xl brightness-110"
                   />
                 </div>

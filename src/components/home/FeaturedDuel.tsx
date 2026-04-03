@@ -21,7 +21,7 @@ type Player = {
 
 type StatCategory = 'attack' | 'passing' | 'defense' | 'physical';
 
-function MirrorStat({ label, v1, v2, lowerIsBetter = false, emoji, unit = '' }: { label: string; v1: number | string; v2: number | string; lowerIsBetter?: boolean; emoji?: string; unit?: string }) {
+function MirrorStat({ label, v1, v2, lowerIsBetter = false, idRef, unit = '' }: { label: string; v1: number | string; v2: number | string; lowerIsBetter?: boolean; idRef?: number; unit?: string }) {
   const n1 = typeof v1 === 'number' ? v1 : parseFloat(String(v1)) || 0;
   const n2 = typeof v2 === 'number' ? v2 : parseFloat(String(v2)) || 0;
   
@@ -47,9 +47,13 @@ function MirrorStat({ label, v1, v2, lowerIsBetter = false, emoji, unit = '' }: 
 
         {/* Label center - Dark & Clear */}
         <div className="flex-1 flex flex-col items-center gap-1.5 px-2 min-w-0">
-          <span className="label-caps !text-[9px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-2 font-bold">
-            {emoji && <span className="opacity-100">{emoji}</span>}
+          <span className="label-caps !text-[9px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-1 font-bold">
             <span className="font-extrabold">{label}</span>
+            {idRef && (
+              <a href={`#foot-${idRef}`} className="text-primary hover:text-blue-700 transition-colors no-underline">
+                <sup className="text-[7px] font-black pointer-events-auto">[{idRef}]</sup>
+              </a>
+            )}
           </span>
 
           {/* Mirror Bars - Signature Colors */}
@@ -144,20 +148,20 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
 
   const STATS: Record<StatCategory, any[]> = {
     attack: [
-      { label: tc('stats.goals'), v1: p1.goals, v2: p2.goals },
-      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists },
+      { label: tc('stats.goals'), v1: p1.goals, v2: p2.goals, idRef: 3 },
+      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists, idRef: 3 },
       { label: tc('stats.matches'), v1: p1.matches, v2: p2.matches },
-      { label: tc('stats.xg'), v1: '0.0', v2: '0.0' },
-      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles },
+      { label: tc('stats.xg'), v1: '0.0', v2: '0.0', idRef: 2 },
+      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles, idRef: 5 },
       { label: tc('stats.minutes_per_goal'), v1: p1.goals > 0 ? Math.round(p1.minutes / p1.goals) : 0, v2: p2.goals > 0 ? Math.round(p2.minutes / p2.goals) : 0, lowerIsBetter: true },
     ],
     passing: [
-      { label: tc('stats.pass_accuracy'), v1: p1.pass_accuracy, v2: p2.pass_accuracy, unit: '%' },
-      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists },
-      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles },
+      { label: tc('stats.pass_accuracy'), v1: p1.pass_accuracy, v2: p2.pass_accuracy, unit: '%', idRef: 3 },
+      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists, idRef: 3 },
+      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles, idRef: 5 },
     ],
     defense: [
-      { label: tc('stats.duels_won'), v1: p1.duels_won, v2: p2.duels_won, unit: '%' },
+      { label: tc('stats.duels_won'), v1: p1.duels_won, v2: p2.duels_won, unit: '%', idRef: 4 },
       { label: tc('stats.yellow_cards'), v1: p1.yellow_cards, v2: p2.yellow_cards, lowerIsBetter: true },
       { label: tc('stats.red_cards'), v1: p1.red_cards, v2: p2.red_cards, lowerIsBetter: true },
     ],
