@@ -51,8 +51,8 @@ function MirrorStatRow({
 
         {/* Label & Bar Center */}
         <div className="flex-1 flex flex-col items-center gap-1.5 px-2 min-w-0">
-          <span className="label-caps !text-[9px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-1.5 font-bold">
-            <span className="font-extrabold tracking-wider">{label}</span>
+          <span className="label-caps !text-[11px] !text-slate-900 text-center w-full truncate flex items-center justify-center gap-2 font-black tracking-tight">
+            <span className="font-hl uppercase">{label}</span>
           </span>
 
           <div className="w-full flex h-2 rounded-full overflow-hidden bg-slate-100/50 border border-slate-200/20 shadow-inner">
@@ -80,21 +80,6 @@ function MirrorStatRow({
   )
 }
 
-function PlayerMiniAvatar({ player, isB = false }: { player: Player; isB?: boolean }) {
-  return (
-    <div className={`flex items-center gap-2.5 ${isB ? 'flex-row-reverse text-right' : ''}`}>
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-hl font-black text-[11px] border-2 border-white shadow-sm shrink-0 ${
-        isB ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'
-      }`}>
-        {player.initials}
-      </div>
-      <div className="min-w-0">
-        <div className="label-caps !text-[10px] font-black text-slate-800 leading-none truncate">{player.common_name}</div>
-        <div className="text-[8px] text-slate-400 label-caps mt-0.5 truncate uppercase tracking-widest leading-none font-bold">{player.team}</div>
-      </div>
-    </div>
-  )
-}
 
 export default function StatsDetails({ playerA, playerB, labels }: StatsDetailsProps) {
   const [cat, setCat] = useState<StatCategory>('attack')
@@ -151,28 +136,41 @@ export default function StatsDetails({ playerA, playerB, labels }: StatsDetailsP
 
       {/* Header section (Title & Legend) */}
       <div className="flex flex-col gap-6 mb-8 relative z-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-             <div className="w-1.5 h-8 bg-primary rounded-full shadow-lg shadow-primary/20" />
-              <div>
-                <h3 className="font-hl font-black text-xl text-slate-900 uppercase tracking-tight leading-none">
-                  {labels?.title ?? 'Tablero comparativo'}
-                </h3>
-              </div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div className="flex flex-col gap-0.5">
+          <h3 className="font-hl font-black text-lg text-slate-900 uppercase tracking-tight">
+            {labels?.title ?? 'Tablero comparativo'}
+          </h3>
+        </div>
+
+        {/* New Pill Legend - Exact match with Performance section */}
+        <div className="flex items-center gap-6 p-2 px-4 bg-white rounded-2xl border border-slate-100 shadow-sm self-end sm:self-auto">
+          {/* Player A Legend */}
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-600/30" />
+            <span className="label-caps !text-[9px] !text-slate-900 font-black truncate max-w-[90px]">
+              {playerA.common_name}
+            </span>
           </div>
 
-          <div className="flex items-center gap-6 self-end sm:self-auto">
-            <PlayerMiniAvatar player={playerA} />
-            <div className="w-px h-8 bg-slate-100" />
-            <PlayerMiniAvatar player={playerB} isB />
+          {/* Divider */}
+          <div className="w-px h-3 bg-slate-200" />
+
+          {/* Player B Legend */}
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-600 shadow-lg shadow-red-600/30" />
+            <span className="label-caps !text-[9px] !text-slate-900 font-black truncate max-w-[90px]">
+              {playerB.common_name}
+            </span>
           </div>
         </div>
+      </div>
 
         {/* Tabs System */}
         <div className="flex bg-slate-100/60 p-1.5 rounded-2xl gap-1 border border-slate-200/30 self-start">
           {(Object.keys(CAT_LABELS) as StatCategory[]).map(c => (
             <button key={c} onClick={() => setCat(c)}
-              className={`px-5 py-2.5 rounded-xl text-[10px] label-caps transition-all whitespace-nowrap font-extrabold ${
+              className={`px-5 py-2.5 rounded-xl text-[11px] label-caps transition-all whitespace-nowrap font-black tracking-tight ${
                 cat === c ? 'bg-white text-primary shadow-md border border-slate-200/30' : 'text-slate-400 hover:text-slate-600'}`}>
               {CAT_LABELS[c]}
             </button>

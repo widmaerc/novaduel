@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { localizedHref } from '@/lib/localizedPaths'
 import PlayerAvatar from './PlayerAvatar'
 import type { Player, FormResult } from './types'
+import { useBreakpoint } from '@/lib/useBreakpoint'
 
 // ── SeasonFilterTabs ─────────────────────────────────────────────────────────
 interface SeasonFilterTabsProps {
@@ -57,10 +58,19 @@ function FormDots({ form, t }: { form: string; t: any }) {
   )
 }
 
+function calculateAge(dob: string) {
+  if (!dob) return 0
+  const b = new Date(dob), now = new Date()
+  let a = now.getFullYear() - b.getFullYear()
+  if (now.getMonth() - b.getMonth() < 0 || (now.getMonth() === b.getMonth() && now.getDate() < b.getDate())) a--
+  return a
+}
+
 // ── PlayerCard ────────────────────────────────────────────────────────────────
-function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Player; side: 'left' | 'right'; winnerSlug: string; locale: string; t: any; tc: any }) {
+function PlayerCard({ player, side, winnerSlug, locale, t, tc, isMobile }: { player: Player; side: 'left' | 'right'; winnerSlug: string; locale: string; t: any; tc: any, isMobile?: boolean }) {
   const isWinner = player.slug === winnerSlug
   const posKey = (player.position === 'MIL' ? 'mid' : player.position).toLowerCase();
+  const playerAge = calculateAge(player.date_of_birth)
   
   const posStyle = {
     ATT: { background: 'rgba(239, 68, 68, 0.08)', color: '#dc2626' },
@@ -69,18 +79,20 @@ function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Playe
     GK:  { background: 'rgba(109, 40, 217, 0.08)', color: '#6d28d9' },
   }[player.position] || { background: '#f8fafc', color: '#64748b' }
 
+  const avatarSize = isMobile ? 54 : 74;
+
   return (
-    <div className="flex flex-col items-center text-center gap-2 group">
+    <div className="flex flex-col items-center text-center gap-1 sm:gap-2 group">
       <div className="relative shrink-0">
         <a href={localizedHref(locale, `/player/${player.slug}`)} className="block relative transition-transform hover:scale-105 duration-300">
           <PlayerAvatar
             initials={player.initials}
             avatarBg={player.avatar_bg} avatarColor={player.avatar_color}
-            size={74} showBadge={false}
+            size={avatarSize} showBadge={false}
           />
           {player.rating > 0 && (
             <div 
-              className="absolute -top-1 -right-1 px-1.5 py-1 rounded-lg text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all z-20"
+              className="absolute -top-1 -right-1 px-1 sm:px-1.5 py-0.5 sm:py-1 rounded-lg text-[8px] sm:text-[10px] font-black leading-none bg-white border border-slate-100 shadow-md group-hover:shadow-primary/20 transition-all z-20"
               style={{ color: player.rating >= 8 ? '#15803d' : '#1e40af' }}
             >
               {player.rating.toFixed(1)}
@@ -89,24 +101,44 @@ function PlayerCard({ player, side, winnerSlug, locale, t, tc }: { player: Playe
         </a>
       </div>
       
-      <div className="flex-1 min-w-0 w-full px-2">
+      <div className="flex-1 min-w-0 w-full px-1">
         <a href={localizedHref(locale, `/player/${player.slug}`)} className="no-underline">
-          <h2 className="font-hl font-black text-lg sm:text-xl text-slate-900 truncate leading-tight hover:text-primary transition-colors">
+          <h2 className="font-hl font-black text-[14px] sm:text-lg lg:text-xl text-slate-900 truncate leading-tight hover:text-primary transition-colors uppercase tracking-tight">
             {player.common_name || player.name}
           </h2>
         </a>
-        <div className="flex items-center justify-center gap-2 mt-0.5 flex-wrap">
-          <span className="label-caps !text-[9px] !text-slate-400 opacity-80">{player.flag_emoji} {player.team}</span>
-          <span className="label-caps !text-[8.5px] px-2 py-0.5 rounded-lg whitespace-nowrap" style={posStyle}>
-            {tc(`positions.${posKey}`) || player.position}
-          </span>
+
+        {/* High-Density Player Info */}
+        <div className="flex flex-col gap-1.5 sm:gap-2 items-center mt-2">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 flex-wrap">
+            <span className="label-caps !text-[11px] sm:!text-[13px] px-2 py-1 bg-slate-100 text-slate-600 rounded-md font-bold transition-transform hover:scale-105">
+              {playerAge} {tc('units.years') || 'ans'}
+            </span>
+            <span className="label-caps !text-[11px] sm:!text-[13px] px-2 py-1 bg-slate-100 text-slate-600 rounded-md font-bold transition-transform hover:scale-105">
+              {player.height} {tc('units.cm') || 'cm'}
+            </span>
+            <span className="hidden sm:inline-block label-caps !text-[12px] px-2 py-1 bg-slate-100 text-slate-600 rounded-md font-bold transition-transform hover:scale-105">
+              {player.preferred_foot}
+            </span>
+          </div>
+          
+          <div className="flex flex-col items-center gap-1 sm:gap-1.5 mt-1">
+            <span className="label-caps !text-[11px] sm:!text-[13px] !text-slate-500 flex items-center gap-1 sm:gap-1.5 font-bold">
+              <span className="text-[14px] sm:text-[16px] drop-shadow-sm">{player.flag_emoji}</span> 
+              <span className="truncate max-w-[120px] sm:max-w-none">{player.team}</span>
+            </span>
+            <span className="label-caps !text-[10px] sm:!text-[11px] px-2 sm:px-3 py-0.5 rounded-lg whitespace-nowrap shadow-sm font-black border border-white/20" style={posStyle}>
+              {tc(`positions.${posKey}`) || player.position}
+            </span>
+          </div>
         </div>
-        <div className="flex justify-center">
+
+        <div className="flex justify-center mt-1.5 sm:mt-2 scale-75 sm:scale-100 origin-center">
           <FormDots form={player.recent_form} t={tc} />
         </div>
         {isWinner && (
-          <div className="mt-1.5 flex justify-center">
-            <span className="label-caps !text-[8.5px] bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1.5 pl-1.5 pr-2 py-0.5 rounded-lg shadow-sm">
+          <div className="mt-1 sm:mt-1.5 flex justify-center">
+            <span className="label-caps !text-[8px] sm:!text-[10px] bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1 sm:gap-1.5 pl-1 sm:pl-1.5 pr-1.5 sm:pr-2 py-0.5 rounded-md sm:rounded-lg shadow-sm">
               <span className="text-[10px] leading-none">⭐</span> {t('hero.winner')}
             </span>
           </div>
@@ -132,45 +164,37 @@ export default function ComparisonHero({
   const tc = useTranslations('Common')
   const params = useParams()
   const locale = (params?.locale as string) ?? 'fr'
-  
-  const seasonTabs = Object.values(t.raw('hero.tabs')) as string[]
-  const [internalTab, setInternalTab] = useState(seasonTabs[0])
-  const activeTab = ctab ?? internalTab
-
-  function handleTab(tab: string) { setInternalTab(tab); onTabChange?.(tab) }
+  const { isMobile } = useBreakpoint()
   
   return (
     <div className="glass-card !p-0 overflow-hidden mb-3 border-slate-200/50 shadow-2xl shadow-slate-200/50 relative">
-      {/* Premium Background Elements */}
       <div className="absolute inset-0 hero-mesh opacity-30 pointer-events-none" />
       <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-red-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col md:flex-row items-stretch md:items-center gap-8 md:gap-4 px-6 md:px-10 py-4 md:py-6">
-        <div className="flex-1 min-w-0 order-1 md:order-1">
-          <PlayerCard player={playerA} side="left" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} />
+      <div className="relative z-10 flex flex-row items-center gap-1 sm:gap-4 px-2 sm:px-10 py-4 sm:py-6 overflow-hidden">
+        <div className="flex-1 min-w-0 order-1">
+          <PlayerCard player={playerA} side="left" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} isMobile={isMobile} />
         </div>
 
-        <div className="flex flex-col items-center gap-3 shrink-0 order-3 md:order-2 px-6 relative">
+        <div className="flex flex-col items-center gap-2 sm:gap-3 shrink-0 order-2 px-1 sm:px-6 relative">
           <div className="relative group">
-            <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 animate-pulse group-hover:bg-primary/30 transition-all" />
-            <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-slate-900 flex items-center justify-center border-4 border-white shadow-2xl z-10 transform -rotate-12 group-hover:rotate-0 transition-all duration-500">
-              <span className="font-hl font-black text-white text-xl md:text-2xl italic tracking-tighter">VS</span>
+            <div className="absolute inset-0 bg-primary/20 blur-xl sm:blur-2xl rounded-full scale-125 sm:scale-150 animate-pulse group-hover:bg-primary/30 transition-all" />
+            <div className="relative w-8 h-8 sm:w-16 sm:h-16 rounded-full bg-slate-900 flex items-center justify-center border-2 sm:border-4 border-white shadow-xl sm:shadow-2xl z-10 transform -rotate-12 group-hover:rotate-0 transition-all duration-500">
+              <span className="font-hl font-black text-white text-xs sm:text-2xl italic tracking-tighter">VS</span>
             </div>
           </div>
-          <div className="px-3 py-1 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
-            <span className="label-caps !text-[8px] !text-slate-400 whitespace-nowrap">
+          <div className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-50 border border-slate-100 shadow-sm hidden xs:flex">
+            <span className="label-caps !text-[6px] sm:!text-[8px] !text-slate-400 whitespace-nowrap">
               {t('hero.career_badge')}
             </span>
           </div>
         </div>
 
-        <div className="flex-1 min-w-0 order-2 md:order-3">
-          <PlayerCard player={playerB} side="right" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} />
+        <div className="flex-1 min-w-0 order-3">
+          <PlayerCard player={playerB} side="right" winnerSlug={winnerSlug} locale={locale} t={t} tc={tc} isMobile={isMobile} />
         </div>
       </div>
-      
-      <SeasonFilterTabs tabs={seasonTabs} active={activeTab} onChange={handleTab} />
     </div>
   )
 }

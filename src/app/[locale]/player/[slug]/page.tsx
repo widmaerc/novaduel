@@ -256,13 +256,17 @@ export default async function PlayerPage({ params }: Props) {
 
           {/* Right: identity */}
           <div className="pb-3">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="bg-primary/10 text-primary border border-primary/20 rounded-full text-[10px] font-bold uppercase tracking-wider py-1 px-4">{p.positionLabel}</span>
-              <span className="flex items-center gap-2 text-[13px] text-slate-600 font-medium">
-                <TeamBadge teamId={0} teamName={player.team ?? ''} size={20} />
-                {p.team} <span className="text-slate-300 mx-1">·</span> {p.league}
-              </span>
-              <span className="text-2xl drop-shadow-sm">{p.flag}</span>
+            <div className="flex flex-col gap-3 mb-8">
+              <div className="flex items-center gap-2.5 text-[18px] text-slate-700 font-bold">
+                <TeamBadge teamId={0} teamName={player.team ?? ''} size={24} />
+                {p.team} <span className="text-slate-300 mx-2">·</span> {p.league}
+                <span className="ml-1 text-3xl drop-shadow-sm tracking-normal">{p.flag}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="bg-primary/10 text-primary border border-primary/20 rounded-full text-[13px] font-black uppercase tracking-[0.1em] py-1 px-5 shadow-sm">
+                  {p.positionLabel}
+                </span>
+              </div>
             </div>
 
             <h1 className="font-hl font-black text-[48px] md:text-[54px] lg:text-[64px] leading-[0.9] -tracking-[0.03em] text-slate-900 uppercase mb-3">
@@ -280,8 +284,8 @@ export default async function PlayerPage({ params }: Props) {
                 { label: t('profile.value'), value: p.marketValue, blue: true },
               ].map((item) => (
                 <div key={item.label}>
-                  <div className="label-caps mb-1.5">{item.label}</div>
-                  <div className={`text-[15px] font-semibold ${item.blue ? 'text-primary' : 'text-slate-900'}`}>{item.value}</div>
+                  <div className="label-caps mb-1.5 !text-[10px]">{item.label}</div>
+                  <div className={`text-[19px] sm:text-[22px] font-black tracking-tight ${item.blue ? 'text-primary' : 'text-slate-900'}`}>{item.value}</div>
                 </div>
               ))}
             </div>
@@ -329,9 +333,9 @@ export default async function PlayerPage({ params }: Props) {
                   { label: tc('stats.red_cards'), value: String(p.redCards) },
                   { label: tc('stats.min_per_goal'), value: p.minutesPerGoal, blue: true },
                 ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 -mx-2 rounded-lg transition-colors">
-                    <span className="text-[12px] text-slate-500 font-medium">{row.label}</span>
-                    <span className={`text-[12px] font-semibold ${row.blue ? 'text-primary' : 'text-slate-900'}`}>{row.value}</span>
+                  <div key={row.label} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 -mx-2 rounded-lg transition-colors">
+                    <span className="text-[14px] text-slate-500 font-medium">{row.label}</span>
+                    <span className={`text-[15px] font-bold ${row.blue ? 'text-primary' : 'text-slate-900'}`}>{row.value}</span>
                   </div>
                 ))}
               </div>

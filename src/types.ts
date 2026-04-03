@@ -46,8 +46,17 @@ export interface Player {
   avatar_color: string | null;
   is_featured: boolean;
   ai_insight: string | null;
+  insight_fr: string | null;
+  insight_en: string | null;
+  insight_es: string | null;
+  ai_analysis: any | null;
+  radar_finish: number;
+  radar_dribble: number;
+  radar_passes: number;
+  radar_vision: number;
+  radar_creativity: number;
   detailed_position: string | null;
-  trophies_json: { name: string; season: string; times: number }[] | null;
+  trophies_json: { emoji?: string; name: string; season?: string; count?: number; times?: number }[] | null;
   transfers_json: { from: string; to: string; date: string; fee: number | null; type: string }[] | null;
   created_at: string;
   updated_at: string;

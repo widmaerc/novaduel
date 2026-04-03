@@ -4,7 +4,7 @@ import { getTranslations }    from 'next-intl/server'
 import { buildAlternates }    from '@/lib/hreflang'
 import { localizedHref }      from '@/lib/localizedPaths'
 import { getComparisonBySlug } from '@/lib/data'
-import { getTrophies, getCompetStats, getRadarSkills } from '@/lib/compareHelpers'
+import { getCompetStats, getRadarSkills } from '@/lib/compareHelpers'
 import type { Player as DBPlayer } from '@/types'
 import type { Player as CmpPlayer, Locale } from '@/components/compare/types'
 import { Suspense } from 'react'
@@ -14,7 +14,7 @@ import ComparisonHero              from '@/components/compare/ComparisonHero'
 import Breadcrumbs from '@/components/layout/Breadcrumbs'
 import ViewCounter                 from '@/components/compare/ViewCounter'
 import StatsDetails                from '@/components/compare/StatsDetails'
-import { PalmaresCard, GlobalVerdict, CompetitionStatsTable } from '@/components/compare/PalmaresVerdictCompetition'
+import { CompetitionStatsTable } from '@/components/compare/PalmaresVerdictCompetition'
 import { AIInsightBlock, SkillRadar, SimilarDuels }           from '@/components/compare/AIRadarSimilar'
 import PlayerProfileCard           from '@/components/compare/PlayerProfileCard'
 import CompareAITrigger            from '@/components/compare/CompareAITrigger'
@@ -114,9 +114,7 @@ export default async function ComparePage({ params }: Props) {
   const winnerSlug = comparison.winner_slug
     ?? (pA.rating >= pB.rating ? pA.slug : pB.slug)
 
-  const [tropheesA, tropheesB, skillsA, skillsB] = await Promise.all([
-    Promise.resolve(getTrophies(dbA)),
-    Promise.resolve(getTrophies(dbB)),
+  const [skillsA, skillsB] = await Promise.all([
     Promise.resolve(getRadarSkills(dbA)),
     Promise.resolve(getRadarSkills(dbB)),
   ])
@@ -212,16 +210,6 @@ export default async function ComparePage({ params }: Props) {
             }}
           />
 
-          <PalmaresCard 
-            playerA={pA} playerB={pB} 
-            tropheesA={tropheesA} tropheesB={tropheesB} 
-            labels={{
-              title: t('palmares.title'),
-              subtitle: t('palmares.subtitle'),
-              footer: t('palmares.footer')
-            }}
-          />
-
           <CompetitionStatsTable 
             playerA={pA} playerB={pB} 
             statsA={statsA} statsB={statsB} 
@@ -274,58 +262,6 @@ export default async function ComparePage({ params }: Props) {
             }}
           />
           <CompareAITrigger slug={slug} locale={locale} hasInsight={!!insight} />
-
-          <GlobalVerdict
-            playerA={pA} playerB={pB}
-            winnerSlug={winnerSlug}
-            verdictScorer={comparison.verdict_scorer ?? winnerSlug}
-            verdictAssist={comparison.verdict_assist ?? winnerSlug}
-            verdictPhysical={comparison.verdict_physical ?? winnerSlug}
-            verdictTechnical={comparison.verdict_technical ?? winnerSlug}
-            labels={{
-              title: t('verdict.title'),
-              winner: t('verdict.winner'),
-              best_scorer: t('verdict.best_scorer'),
-              best_passer: t('verdict.best_passer'),
-              physics: tc('stats.physical'),
-              technique: tc('radar.passing'), // Using passing as technical proxy
-              analysis_footer: t('palmares.analysis_footer')
-            }}
-          />
-
-          <PlayerProfileCard 
-            player={pA} side="A" locale={locale} 
-            labels={{
-              born: tc('profile.born'),
-              age: tc('profile.age'),
-              years: tc('units.years'),
-              legend: tc('profile.legend_symbol'),
-              height: tc('profile.height'),
-              heightUnit: tc('units.cm'),
-              foot: tc('profile.foot'),
-              club: tc('profile.club'),
-              rating: tc('profile.avg_rating'),
-              form: tc('profile.form'),
-              viewProfile: tc('profile.view_full')
-            }}
-          />
-
-          <PlayerProfileCard 
-            player={pB} side="B" locale={locale} 
-            labels={{
-              born: tc('profile.born'),
-              age: tc('profile.age'),
-              years: tc('units.years'),
-              legend: tc('profile.legend_symbol'),
-              height: tc('profile.height'),
-              heightUnit: tc('units.cm'),
-              foot: tc('profile.foot'),
-              club: tc('profile.club'),
-              rating: tc('profile.avg_rating'),
-              form: tc('profile.form'),
-              viewProfile: tc('profile.view_full')
-            }}
-          />
 
           <div className="hidden lg:block">
             <Suspense fallback={<div className="h-32 bg-slate-50 rounded-2xl animate-pulse" />}>

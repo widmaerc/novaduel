@@ -69,10 +69,10 @@ export default async function SimilarProfilesWidget({ playerId }: Props) {
 
               {/* Name & Position */}
               <div className="flex flex-col">
-                <span className="text-[13px] font-bold text-slate-900 group-hover/player:text-primary transition-colors truncate max-w-[120px] tracking-tight">
+                <span className="text-[14px] font-bold text-slate-900 group-hover/player:text-primary transition-colors truncate max-w-[120px] tracking-tight">
                   {s.name}
                 </span>
-                <span className="text-[9px] font-bold text-slate-400 label-caps tracking-widest mt-0.5">
+                <span className="text-[10px] font-bold text-slate-400 label-caps tracking-widest mt-0.5">
                   {s.position}
                 </span>
               </div>

@@ -354,12 +354,12 @@ export default function PlayersPage() {
                         <div className="flex items-center gap-4">
                           <Avatar initials={p.initials} position={p.position} size={42} />
                           <div className="min-w-0">
-                            <div className="font-hl font-extrabold text-[15px] text-slate-900 group-hover:text-primary transition-colors truncate">
+                            <div className="font-hl font-extrabold text-[16px] text-slate-900 group-hover:text-primary transition-colors truncate">
                               {p.common_name || p.name}
                             </div>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-lg leading-none">{p.flag_emoji}</span>
-                              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">
+                              <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-wider truncate">
                                 {p.nationality}
                               </span>
                             </div>
@@ -367,12 +367,12 @@ export default function PlayersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-3 hidden md:table-cell">
-                        <div className="text-[13px] font-semibold text-slate-600 truncate max-w-[160px]">
+                        <div className="text-[14px] font-semibold text-slate-600 truncate max-w-[160px]">
                           {p.team}
                         </div>
                       </td>
                       <td className="px-6 py-3 text-center">
-                        <span className="inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded-lg border shadow-sm transition-transform group-hover:scale-110"
+                        <span className="inline-block text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border shadow-sm transition-transform group-hover:scale-110"
                           style={{ background: posS.bg, color: posS.color, borderColor: posS.border }}>
                           {tc(`positions.${(p.position === 'MIL' ? 'mid' : p.position).toLowerCase()}`)}
                         </span>
