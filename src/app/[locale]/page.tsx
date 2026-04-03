@@ -96,7 +96,7 @@ export default async function HomePage() {
         <TopRatedPlayers />
       </div>
       <FeaturedDuel featuredDuel={featuredDuel} trends={sidebarTrends} />
-      <PerformanceSurge />
+      {/* <PerformanceSurge /> */}
       <TopPlayersLists />
       <Leagues />
       <Editorial />

@@ -15,6 +15,7 @@ import SimilarProfilesWidget from '@/components/player/SimilarProfilesWidget';
 import AITrigger from '@/components/player/AITrigger';
 import PlayerCareerSection from '@/components/player/PlayerCareerSection';
 import TrophiesAccordion from '@/components/player/TrophiesAccordion';
+import RadarChart from '@/components/player/RadarChart';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -318,104 +319,47 @@ export default async function PlayerPage({ params }: Props) {
 
           {/* ─ LEFT SIDEBAR (Order 2 on mobile, 1 on desktop) ─ */}
           <div className="flex flex-col gap-4 order-2 lg:order-1">
-
-            {/* Radar (Moved from Right) */}
+            {/* Radar */}
             <div className="glass-card bg-white p-6 shadow-sm overflow-hidden">
               <div className="flex items-center justify-center gap-2 mb-8">
                 <span className="material-symbols-outlined text-primary text-[20px]">radar</span>
                 <h3 className="label-caps text-primary text-[11px]">{t('sections.skill_matrix')}</h3>
               </div>
-              <div className="relative h-[240px] flex items-center justify-center -mt-4">
-                {(() => {
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const rScale = 0.35; // Max radius roughly 35 units from center (50,50)
-                  const center = 50;
-                  
-                  // Helper to get coords for a specific axis (0-4) and value (0-100)
-                  const getCoords = (angleDeg: number, val: number) => {
-                    const r = (val / 100) * 35;
-                    const angleRad = (angleDeg - 90) * Math.PI / 180;
-                    return {
-                      x: center + r * Math.cos(angleRad),
-                      y: center + r * Math.sin(angleRad)
-                    };
-                  };
-
-                  const pts = [
-                    getCoords(0,   player.radar_finish),
-                    getCoords(72,  player.radar_dribble),
-                    getCoords(144, player.radar_passes),
-                    getCoords(216, player.radar_vision),
-                    getCoords(288, player.radar_creativity)
-                  ];
-                  
-                  const pointsStr = pts.map(p => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
-
-                  return (
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" className="drop-shadow-[0_8px_32px_rgba(30,64,175,0.2)] overflow-visible">
-                      <defs>
-                        <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
-                          <stop offset="100%" stopColor="#1e40af" stopOpacity="0.1" />
-                        </radialGradient>
-                        <filter id="glow">
-                          <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-                          <feMerge>
-                            <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
-                          </feMerge>
-                        </filter>
-                      </defs>
-                      
-                      {/* Grid Layers */}
-                      {[1, 0.75, 0.5, 0.25].map(scale => {
-                        const gridPts = [0, 72, 144, 216, 288].map(a => getCoords(a, scale * 100));
-                        return <polygon key={scale} points={gridPts.map(p => `${p.x},${p.y}`).join(' ')} fill="none" stroke="#e2e8f0" strokeWidth="0.3" />;
-                      })}
-                      
-                      {/* Radar Area (Filled) */}
-                      <polygon points={pointsStr} 
-                        fill="url(#radarGradient)" 
-                        stroke="var(--color-primary)" 
-                        strokeWidth="1.5" 
-                        filter="url(#glow)"
-                        className="radar-area-current shadow-xl transition-all duration-1000" />
-                      
-                      {/* Data Points */}
-                      {pts.map((pt, i) => (
-                        <circle key={i} cx={pt.x} cy={pt.y} r="1.2" fill="var(--color-primary)" stroke="white" strokeWidth="0.4" />
-                      ))}
-                      
-                      {/* Labels */}
-                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="50" y="8" textAnchor="middle">{tRadar('finish')}</text>
-                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="92" y="42" textAnchor="start">{tRadar('dribble')}</text>
-                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="72" y="90" textAnchor="middle">{tRadar('passes')}</text>
-                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="28" y="90" textAnchor="middle">{tRadar('vision')}</text>
-                      <text className="label-caps font-black opacity-40 capitalize" style={{ fontSize: '4px' }} x="8" y="42" textAnchor="end">{tRadar('creativity')}</text>
-                    </svg>
-                  );
-                })()}
-              </div>
+              <RadarChart 
+                data={{
+                  finish: player.radar_finish,
+                  dribble: player.radar_dribble,
+                  passes: player.radar_passes,
+                  vision: player.radar_vision,
+                  creativity: player.radar_creativity
+                }}
+                labels={{
+                  finish: tRadar('finish'),
+                  dribble: tRadar('dribble'),
+                  passes: tRadar('passes'),
+                  vision: tRadar('vision'),
+                  creativity: tRadar('creativity')
+                }}
+              />
               <div className="grid grid-cols-2 gap-3 mt-4">
                 <div className="text-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
                   <div className="label-caps mb-1 opacity-70 text-[9px]">{tRadar('creativity')}</div>
-                  <div className="font-hl font-black text-[22px] text-primary">{p.radar.creativity}</div>
+                  <div className="font-hl font-black text-[22px] text-primary">{player.radar_creativity}</div>
                 </div>
                 <div className="text-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
                   <div className="label-caps mb-1 opacity-70 text-[9px]">{tRadar('vision')}</div>
-                  <div className="font-hl font-black text-[22px] text-primary">{p.radar.vision}</div>
+                  <div className="font-hl font-black text-[22px] text-primary">{player.radar_vision}</div>
                 </div>
               </div>
             </div>
 
             <SimilarProfilesWidget playerId={player.id} />
 
-            {/* Trophées & Palmarès (Moved from Right) */}
             <div className="glass-card bg-white p-6 overflow-hidden shadow-sm">
               <div className="flex items-center gap-2 mb-6">
                 <span className="material-symbols-outlined text-primary text-[20px]">emoji_events</span>
                 <h3 className="label-caps text-primary text-[11px]">{t('sections.trophies')}</h3>
               </div>
-              
               <TrophiesAccordion 
                 wins={trophyWins} 
                 runners={trophyRunners} 
@@ -426,13 +370,10 @@ export default async function PlayerPage({ params }: Props) {
                 }}
               />
             </div>
-
           </div>
 
           {/* ─ MIDDLE COLUMN (Order 1 on mobile, 2 on desktop) ─ */}
           <div className="flex flex-col gap-5 order-1 lg:order-2">
-
-            {/* Stats filtrable : Saison / Ligue / Équipe + KPI + Barres */}
             <PlayerStatsSection
               slug={slug}
               currentSeason={currentSeason}
@@ -452,29 +393,38 @@ export default async function PlayerPage({ params }: Props) {
               }}
             />
 
-            {/* AI Insight */}
             <div className="glass-card bg-white p-0 shadow-sm relative overflow-hidden border-blue-100/50">
               <div className="ai-gradient text-white p-5 flex items-center gap-3">
                 <span className="material-symbols-outlined text-[24px] !text-white">auto_awesome</span>
-                <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">{t('ai.title')}</h3>
+                <div className="flex flex-col">
+                  <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">{t('ai.title')}</h3>
+                  <span className="text-[10px] text-white/70 font-bold tracking-wider">
+                    {tc('labels.season')} {currentSeason}
+                  </span>
+                </div>
                 <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-wider py-1 px-3 rounded-full ml-auto backdrop-blur-md border border-white/10">{t('ai.badge')}</span>
               </div>
               <div className="p-8 relative z-1 bg-gradient-to-b from-blue-50/30 to-transparent">
                 <FormattedInsight text={p.aiInsight} />
                 <AITrigger 
-                  playerId={player.id} 
-                  locale={locale} 
-                  slug={slug} 
-                  hasInsight={!!p.aiInsight} 
+                   playerId={player.id} 
+                   locale={locale} 
+                   slug={slug} 
+                   hasInsight={!!p.aiInsight} 
                 />
               </div>
             </div>
+
+            {/* Career History (DESKTOP ONLY: Under Insight) */}
+            <div className="hidden lg:block">
+              <Suspense fallback={<div className="h-20" />}>
+                <PlayerCareerSection playerId={player.id} locale={locale} />
+              </Suspense>
+            </div>
           </div>
 
-          {/* ─ RIGHT SIDEBAR (Order 3 on all) ─ */}
+          {/* ─ RIGHT SIDEBAR (Order 3) ─ */}
           <div className="flex flex-col gap-4 order-3 lg:order-3">
-
-            {/* Tactical roles */}
             <div className="glass-card bg-slate-50/80 p-6 overflow-hidden border-slate-200/50">
               <div className="flex items-center gap-2 mb-6">
                 <span className="material-symbols-outlined text-primary text-[20px]">tactic</span>
@@ -495,7 +445,6 @@ export default async function PlayerPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Strengths & weaknesses */}
             <div className="glass-card bg-white p-6 overflow-hidden shadow-sm">
               <div className="flex items-center gap-2 mb-6">
                 <span className="material-symbols-outlined text-primary text-[20px]">insights</span>
@@ -517,7 +466,6 @@ export default async function PlayerPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Pro CTA */}
             <div className="rounded-3xl p-7 text-white bg-slate-900 relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
               <div className="relative z-1">
@@ -528,34 +476,15 @@ export default async function PlayerPage({ params }: Props) {
                 </button>
               </div>
             </div>
-
           </div>
 
-          {/* ─ CAREER HISTORY (Order Last on mobile, centered on desktop column 2) ─ */}
-          <div className="order-last lg:order-4 lg:col-start-2 lg:col-end-3">
-            <Suspense fallback={
-              <div className="flex flex-col gap-3 mt-4">
-                <div className="flex items-center gap-2 px-1">
-                  <span className="material-symbols-outlined text-primary/30 text-[20px]">history_edu</span>
-                  <div className="h-3 w-32 bg-slate-100 rounded animate-pulse" />
-                </div>
-                {[1, 2].map(i => (
-                  <div key={i} className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-                    <div className="px-4 py-3 bg-slate-50/30 border-b border-gray-50">
-                      <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
-                    </div>
-                    <div className="p-4 flex flex-col gap-2">
-                      {[1, 2, 3].map(j => (
-                        <div key={j} className="h-8 bg-slate-50 rounded animate-pulse" />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            }>
+          {/* Career History (MOBILE ONLY: Absolute end) */}
+          <div className="lg:hidden order-last">
+            <Suspense fallback={<div className="h-20" />}>
               <PlayerCareerSection playerId={player.id} locale={locale} />
             </Suspense>
           </div>
+
         </div>
       </main>
     </>

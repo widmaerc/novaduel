@@ -144,26 +144,26 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
 
   const STATS: Record<StatCategory, any[]> = {
     attack: [
-      { label: tc('stats.goals'), v1: p1.goals, v2: p2.goals, emoji: '⚽' },
-      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists, emoji: '🎯' },
-      { label: tc('stats.matches'), v1: p1.matches, v2: p2.matches, emoji: '📋' },
-      { label: tc('stats.xg'), v1: '0.0', v2: '0.0', emoji: '📈' },
-      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles, emoji: '🔄' },
-      { label: tc('stats.minutes_per_goal'), v1: p1.goals > 0 ? Math.round(p1.minutes / p1.goals) : 0, v2: p2.goals > 0 ? Math.round(p2.minutes / p2.goals) : 0, lowerIsBetter: true, emoji: '⏱' },
+      { label: tc('stats.goals'), v1: p1.goals, v2: p2.goals },
+      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists },
+      { label: tc('stats.matches'), v1: p1.matches, v2: p2.matches },
+      { label: tc('stats.xg'), v1: '0.0', v2: '0.0' },
+      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles },
+      { label: tc('stats.minutes_per_goal'), v1: p1.goals > 0 ? Math.round(p1.minutes / p1.goals) : 0, v2: p2.goals > 0 ? Math.round(p2.minutes / p2.goals) : 0, lowerIsBetter: true },
     ],
     passing: [
-      { label: tc('stats.pass_accuracy'), v1: p1.pass_accuracy, v2: p2.pass_accuracy, unit: '%', emoji: '📊' },
-      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists, emoji: '🎯' },
-      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles, emoji: '🔄' },
+      { label: tc('stats.pass_accuracy'), v1: p1.pass_accuracy, v2: p2.pass_accuracy, unit: '%' },
+      { label: tc('stats.assists'), v1: p1.assists, v2: p2.assists },
+      { label: tc('stats.dribbles'), v1: p1.dribbles, v2: p2.dribbles },
     ],
     defense: [
-      { label: tc('stats.duels_won'), v1: p1.duels_won, v2: p2.duels_won, unit: '%', emoji: '🤺' },
-      { label: tc('stats.yellow_cards'), v1: p1.yellow_cards, v2: p2.yellow_cards, lowerIsBetter: true, emoji: '🟨' },
-      { label: tc('stats.red_cards'), v1: p1.red_cards, v2: p2.red_cards, lowerIsBetter: true, emoji: '🟥' },
+      { label: tc('stats.duels_won'), v1: p1.duels_won, v2: p2.duels_won, unit: '%' },
+      { label: tc('stats.yellow_cards'), v1: p1.yellow_cards, v2: p2.yellow_cards, lowerIsBetter: true },
+      { label: tc('stats.red_cards'), v1: p1.red_cards, v2: p2.red_cards, lowerIsBetter: true },
     ],
     physical: [
-      { label: tc('stats.shots_on_target'), v1: p1.shots_on_target, v2: p2.shots_on_target, emoji: '⚡' },
-      { label: tc('stats.minutes'), v1: p1.minutes, v2: p2.minutes, emoji: '⏱' },
+      { label: tc('stats.shots_on_target'), v1: p1.shots_on_target, v2: p2.shots_on_target },
+      { label: tc('stats.minutes'), v1: p1.minutes, v2: p2.minutes },
     ]
   };
 
