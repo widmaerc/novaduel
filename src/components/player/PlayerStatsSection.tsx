@@ -283,15 +283,18 @@ export default function PlayerStatsSection({ slug, initialStats, currentSeason, 
               <span className="text-[10px] font-bold text-slate-400 animate-pulse uppercase tracking-wider">{tp('filters.loading')}...</span>
             ) : stats ? (
               <>
-                <span className="text-[10px] font-black text-primary bg-primary/10 rounded-full px-3 py-1 uppercase tracking-wider border border-primary/10">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em]">
                   {stats.league_name ?? tp('filters.all_leagues_context')}
                 </span>
                 {stats.team_name && (
-                  <span className="text-[10px] font-black text-slate-600 bg-slate-100 rounded-full px-3 py-1 uppercase tracking-wider border border-slate-200/50">
-                    {stats.team_name}
-                  </span>
+                  <>
+                    <span className="text-slate-300 mx-0.5">·</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em]">
+                      {stats.team_name}
+                    </span>
+                  </>
                 )}
-                <span className="label-caps text-slate-400 ml-1">· {seasonDisplay}</span>
+                <span className="text-[9px] font-bold text-slate-300 uppercase tracking-[0.12em] ml-1">· {seasonDisplay}</span>
               </>
             ) : null}
           </div>

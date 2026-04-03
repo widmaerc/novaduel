@@ -14,6 +14,7 @@ import PlayerStatsSection from '@/components/player/PlayerStatsSection';
 import SimilarProfilesWidget from '@/components/player/SimilarProfilesWidget';
 import AITrigger from '@/components/player/AITrigger';
 import PlayerCareerSection from '@/components/player/PlayerCareerSection';
+import TrophiesAccordion from '@/components/player/TrophiesAccordion';
 import { Suspense } from 'react';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -85,7 +86,7 @@ export default async function PlayerPage({ params }: Props) {
     foot: player.preferred_foot || '—',
     number: player.shirt_number ? `${tc('units.number_abbr')} ${player.shirt_number}` : '—',
     contract: '—',
-    birth: player.date_of_birth ? new Date(`${player.date_of_birth}T00:00:00Z`).toLocaleDateString(locale === 'fr' ? 'fr-FR' : locale === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) : '—',
+    birth: player.date_of_birth ? player.date_of_birth.replace(/-/g, '/') : '—',
     weight: player.weight ? `${player.weight} ${tc('units.kg')}` : '—',
     yellowCards: isMissingData ? 'N/D' : player.yellow_cards,
     redCards: isMissingData ? 'N/D' : player.red_cards,
@@ -179,7 +180,7 @@ export default async function PlayerPage({ params }: Props) {
         <div className="hero-mesh" />
 
         {/* ── HERO ─────────────────────────────────────────── */}
-        <section className="relative z-10 grid grid-cols-[420px_1fr] gap-12 items-end py-4 pb-6 border-b border-slate-200/40 mb-3">
+        <section className="relative z-10 grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-8 lg:gap-12 items-center lg:items-end py-4 lg:py-6 pb-6 border-b border-slate-200/40 mb-3">
 
           {/* Left: player visual */}
           <div className="relative">
@@ -202,7 +203,7 @@ export default async function PlayerPage({ params }: Props) {
               }
               const pal = avatarPalette[player.position] ?? { from: '#f8fafc', to: '#f1f5f9', text: '#334155' }
               return (
-            <div className="glass-card relative rounded-3xl overflow-hidden h-[480px] flex items-center justify-center shadow-2xl group border-white/60"
+            <div className="glass-card relative rounded-3xl overflow-hidden h-[380px] sm:h-[480px] flex items-center justify-center shadow-2xl group border-white/60 w-full"
               style={{ background: `linear-gradient(135deg, ${pal.from} 0%, ${pal.to} 100%)` }}>
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.7),transparent)]" />
 
@@ -255,7 +256,7 @@ export default async function PlayerPage({ params }: Props) {
           </div>
 
           {/* Right: identity */}
-          <div className="pb-3">
+          <div className="pb-3 w-full">
             <div className="flex flex-col gap-3 mb-8">
               <div className="flex items-center gap-2.5 text-[18px] text-slate-700 font-bold">
                 <TeamBadge teamId={0} teamName={player.team ?? ''} size={24} />
@@ -275,17 +276,21 @@ export default async function PlayerPage({ params }: Props) {
             </h1>
             <div className="text-[16px] text-slate-500 font-medium italic mb-10 pl-1">{p.nicknames}</div>
 
-            {/* Quick info grid */}
-            <div className="grid grid-cols-4 gap-6 glass-card p-6 px-8 mb-10 max-w-2xl bg-white/40 border-white/60">
+            {/* Slim Identity Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6 glass-card p-4 px-6 mb-6 max-w-3xl bg-white/40 border-white/60">
               {[
                 { label: t('profile.nationality'), value: p.nationality },
                 { label: t('profile.age'), value: `${p.age} ${tc('units.years')}` },
-                { label: t('profile.position'), value: tc(`positions.${(player.position === 'MIL' ? 'mid' : player.position).toLowerCase()}`) },
-                { label: t('profile.value'), value: p.marketValue, blue: true },
+                { label: t('profile.position'), value: p.positionLabel },
+                { label: t('profile.height'), value: p.height },
+                { label: t('profile.weight'), value: p.weight },
+                { label: t('profile.number'), value: p.number },
+                { label: t('profile.birth'), value: p.birth },
+                { label: tc('stats.minutes'), value: p.minutesTotal },
               ].map((item) => (
-                <div key={item.label}>
-                  <div className="label-caps mb-1.5 !text-[10px]">{item.label}</div>
-                  <div className={`text-[19px] sm:text-[22px] font-black tracking-tight ${item.blue ? 'text-primary' : 'text-slate-900'}`}>{item.value}</div>
+                <div key={item.label} className="min-w-0">
+                  <div className="label-caps mb-1 !text-[9px] truncate opacity-50">{item.label}</div>
+                  <div className="text-[16px] sm:text-[17px] font-black tracking-tight truncate text-slate-900">{item.value}</div>
                 </div>
               ))}
             </div>
@@ -309,113 +314,12 @@ export default async function PlayerPage({ params }: Props) {
         </section>
 
         {/* ── BENTO GRID ──────────────────────────────────── */}
-        <div className="grid grid-cols-1 xl:grid-cols-[280px_1fr_280px] gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_280px] gap-6 items-start">
 
-          {/* ─ LEFT SIDEBAR ─ */}
-          <div className="flex flex-col gap-4">
+          {/* ─ LEFT SIDEBAR (Order 2 on mobile, 1 on desktop) ─ */}
+          <div className="flex flex-col gap-4 order-2 lg:order-1">
 
-            {/* Quick scout */}
-            <div className="glass-card bg-white p-5 overflow-hidden">
-              <div className="flex items-center gap-2 mb-6">
-                <span className="material-symbols-outlined text-primary text-[20px]">fact_check</span>
-                <h3 className="label-caps text-primary text-[11px]">{t('profile.quick_scout_title')}</h3>
-              </div>
-              <div className="flex flex-col space-y-1">
-                {[
-                  { label: t('profile.height'), value: p.height },
-                  { label: t('profile.weight'), value: p.weight },
-                  { label: t('profile.foot'), value: p.foot },
-                  { label: t('profile.number'), value: p.number },
-                  { label: t('profile.contract'), value: p.contract },
-                  { label: t('profile.birth'), value: p.birth },
-                  { label: tc('stats.minutes'), value: p.minutesTotal },
-                  { label: t('stats.yellow_cards'), value: String(p.yellowCards) },
-                  { label: tc('stats.red_cards'), value: String(p.redCards) },
-                  { label: tc('stats.min_per_goal'), value: p.minutesPerGoal, blue: true },
-                ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 px-2 -mx-2 rounded-lg transition-colors">
-                    <span className="text-[14px] text-slate-500 font-medium">{row.label}</span>
-                    <span className={`text-[15px] font-bold ${row.blue ? 'text-primary' : 'text-slate-900'}`}>{row.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Similar profiles (Autonomous Widget) */}
-            <SimilarProfilesWidget playerId={player.id} />
-
-          </div>
-
-          {/* ─ MIDDLE COLUMN ─ */}
-          <div className="flex flex-col gap-5">
-
-            {/* Stats filtrable : Saison / Ligue / Équipe + KPI + Barres */}
-            <PlayerStatsSection
-              slug={slug}
-              currentSeason={currentSeason}
-              isMissingData={isMissingData}
-              initialStats={{
-                goals:           isMissingData ? 0 : player.goals,
-                assists:         isMissingData ? 0 : player.assists,
-                matches:         isMissingData ? 0 : player.matches,
-                minutes:         isMissingData ? 0 : player.minutes,
-                rating:          isMissingData ? 0 : Number(player.rating) || 0,
-                pass_accuracy:   isMissingData ? 0 : Number(player.pass_accuracy) || 0,
-                dribbles:        isMissingData ? 0 : Number(player.dribbles) || 0,
-                duels_won:       isMissingData ? 0 : Number(player.duels_won) || 0,
-                shots_on_target: isMissingData ? 0 : Number(player.shots_on_target) || 0,
-                yellow_cards:    isMissingData ? 0 : player.yellow_cards,
-                red_cards:       isMissingData ? 0 : player.red_cards,
-              }}
-            />
-
-            {/* AI Insight */}
-            <div className="glass-card bg-white p-0 shadow-sm relative overflow-hidden border-blue-100/50">
-              <div className="ai-gradient text-white p-5 flex items-center gap-3">
-                <span className="material-symbols-outlined text-[24px] !text-white">auto_awesome</span>
-                <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">{t('ai.title')}</h3>
-                <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-wider py-1 px-3 rounded-full ml-auto backdrop-blur-md border border-white/10">{t('ai.badge')}</span>
-              </div>
-              <div className="p-8 relative z-1 bg-gradient-to-b from-blue-50/30 to-transparent">
-                <FormattedInsight text={p.aiInsight} />
-                <AITrigger 
-                  playerId={player.id} 
-                  locale={locale} 
-                  slug={slug} 
-                  hasInsight={!!p.aiInsight} 
-                />
-              </div>
-            </div>
-
-            {/* Career — chargement différé via Suspense */}
-            <Suspense fallback={
-              <div className="flex flex-col gap-3 mt-4">
-                <div className="flex items-center gap-2 px-1">
-                  <span className="material-symbols-outlined text-primary/30 text-[20px]">history_edu</span>
-                  <div className="h-3 w-32 bg-slate-100 rounded animate-pulse" />
-                </div>
-                {[1, 2].map(i => (
-                  <div key={i} className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-                    <div className="px-4 py-3 bg-slate-50/30 border-b border-gray-50">
-                      <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
-                    </div>
-                    <div className="p-4 flex flex-col gap-2">
-                      {[1, 2, 3].map(j => (
-                        <div key={j} className="h-8 bg-slate-50 rounded animate-pulse" />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            }>
-              <PlayerCareerSection playerId={player.id} locale={locale} />
-            </Suspense>
-          </div>
-
-          {/* ─ RIGHT SIDEBAR ─ */}
-          <div className="flex flex-col gap-4">
-
-            {/* Radar */}
+            {/* Radar (Moved from Right) */}
             <div className="glass-card bg-white p-6 shadow-sm overflow-hidden">
               <div className="flex items-center justify-center gap-2 mb-8">
                 <span className="material-symbols-outlined text-primary text-[20px]">radar</span>
@@ -423,6 +327,7 @@ export default async function PlayerPage({ params }: Props) {
               </div>
               <div className="relative h-[240px] flex items-center justify-center -mt-4">
                 {(() => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const rScale = 0.35; // Max radius roughly 35 units from center (50,50)
                   const center = 50;
                   
@@ -502,6 +407,73 @@ export default async function PlayerPage({ params }: Props) {
               </div>
             </div>
 
+            <SimilarProfilesWidget playerId={player.id} />
+
+            {/* Trophées & Palmarès (Moved from Right) */}
+            <div className="glass-card bg-white p-6 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-[20px]">emoji_events</span>
+                <h3 className="label-caps text-primary text-[11px]">{t('sections.trophies')}</h3>
+              </div>
+              
+              <TrophiesAccordion 
+                wins={trophyWins} 
+                runners={trophyRunners} 
+                translations={{
+                  winner: t('sections.trophies_winner'),
+                  runner_up: t('sections.trophies_runner_up'),
+                  no_trophies: t('sections.no_trophies')
+                }}
+              />
+            </div>
+
+          </div>
+
+          {/* ─ MIDDLE COLUMN (Order 1 on mobile, 2 on desktop) ─ */}
+          <div className="flex flex-col gap-5 order-1 lg:order-2">
+
+            {/* Stats filtrable : Saison / Ligue / Équipe + KPI + Barres */}
+            <PlayerStatsSection
+              slug={slug}
+              currentSeason={currentSeason}
+              isMissingData={isMissingData}
+              initialStats={{
+                goals:           isMissingData ? 0 : player.goals,
+                assists:         isMissingData ? 0 : player.assists,
+                matches:         isMissingData ? 0 : player.matches,
+                minutes:         isMissingData ? 0 : player.minutes,
+                rating:          isMissingData ? 0 : Number(player.rating) || 0,
+                pass_accuracy:   isMissingData ? 0 : Number(player.pass_accuracy) || 0,
+                dribbles:        isMissingData ? 0 : Number(player.dribbles) || 0,
+                duels_won:       isMissingData ? 0 : Number(player.duels_won) || 0,
+                shots_on_target: isMissingData ? 0 : Number(player.shots_on_target) || 0,
+                yellow_cards:    isMissingData ? 0 : player.yellow_cards,
+                red_cards:       isMissingData ? 0 : player.red_cards,
+              }}
+            />
+
+            {/* AI Insight */}
+            <div className="glass-card bg-white p-0 shadow-sm relative overflow-hidden border-blue-100/50">
+              <div className="ai-gradient text-white p-5 flex items-center gap-3">
+                <span className="material-symbols-outlined text-[24px] !text-white">auto_awesome</span>
+                <h3 className="label-caps !text-white text-[12px] !opacity-100 tracking-[0.12em] font-black">{t('ai.title')}</h3>
+                <span className="bg-white/20 text-white text-[9px] font-black uppercase tracking-wider py-1 px-3 rounded-full ml-auto backdrop-blur-md border border-white/10">{t('ai.badge')}</span>
+              </div>
+              <div className="p-8 relative z-1 bg-gradient-to-b from-blue-50/30 to-transparent">
+                <FormattedInsight text={p.aiInsight} />
+                <AITrigger 
+                  playerId={player.id} 
+                  locale={locale} 
+                  slug={slug} 
+                  hasInsight={!!p.aiInsight} 
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ─ RIGHT SIDEBAR (Order 3 on all) ─ */}
+          <div className="flex flex-col gap-4 order-3 lg:order-3">
+
             {/* Tactical roles */}
             <div className="glass-card bg-slate-50/80 p-6 overflow-hidden border-slate-200/50">
               <div className="flex items-center gap-2 mb-6">
@@ -545,43 +517,6 @@ export default async function PlayerPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Trophées & Palmarès */}
-            <div className="glass-card bg-white p-6 overflow-hidden shadow-sm">
-              <div className="flex items-center gap-2 mb-6">
-                <span className="material-symbols-outlined text-primary text-[20px]">emoji_events</span>
-                <h3 className="label-caps text-primary text-[11px]">{t('sections.trophies')}</h3>
-                {trophyWins.length > 0 && (
-                  <span className="ml-auto ai-gradient text-white text-[10px] font-black py-0.5 px-2.5 rounded-full shadow-sm ring-4 ring-blue-50">
-                    {trophyWins.length}
-                  </span>
-                )}
-              </div>
-              {trophyList.length === 0 ? (
-                <p className="text-[12px] text-slate-400 italic px-1">{t('sections.no_trophies')}</p>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {trophyWins.map((trophy, i) => (
-                    <div key={`w-${i}`} className="flex items-center gap-3 p-2.5 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
-                      <span className="text-xl drop-shadow-sm group-hover:scale-110 transition-transform">🏆</span>
-                      <div className="min-w-0">
-                        <div className="text-[12px] font-semibold text-slate-900 truncate">{trophy.league}</div>
-                        <div className="label-caps text-primary text-[8px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_winner')}</div>
-                      </div>
-                    </div>
-                  ))}
-                  {trophyRunners.map((trophy, i) => (
-                    <div key={`r-${i}`} className="flex items-center gap-3 p-2.5 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-slate-200 transition-all">
-                      <span className="text-xl drop-shadow-sm opacity-60">🥈</span>
-                      <div className="min-w-0">
-                        <div className="text-[12px] font-semibold text-slate-700 truncate">{trophy.league}</div>
-                        <div className="label-caps text-slate-400 text-[8px] mt-0.5">{trophy.season} <span className="opacity-40 mx-1">·</span> {t('sections.trophies_runner_up')}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
             {/* Pro CTA */}
             <div className="rounded-3xl p-7 text-white bg-slate-900 relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
@@ -593,6 +528,33 @@ export default async function PlayerPage({ params }: Props) {
                 </button>
               </div>
             </div>
+
+          </div>
+
+          {/* ─ CAREER HISTORY (Order Last on mobile, centered on desktop column 2) ─ */}
+          <div className="order-last lg:order-4 lg:col-start-2 lg:col-end-3">
+            <Suspense fallback={
+              <div className="flex flex-col gap-3 mt-4">
+                <div className="flex items-center gap-2 px-1">
+                  <span className="material-symbols-outlined text-primary/30 text-[20px]">history_edu</span>
+                  <div className="h-3 w-32 bg-slate-100 rounded animate-pulse" />
+                </div>
+                {[1, 2].map(i => (
+                  <div key={i} className="glass-card !bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+                    <div className="px-4 py-3 bg-slate-50/30 border-b border-gray-50">
+                      <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
+                    </div>
+                    <div className="p-4 flex flex-col gap-2">
+                      {[1, 2, 3].map(j => (
+                        <div key={j} className="h-8 bg-slate-50 rounded animate-pulse" />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            }>
+              <PlayerCareerSection playerId={player.id} locale={locale} />
+            </Suspense>
           </div>
         </div>
       </main>
