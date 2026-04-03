@@ -93,11 +93,11 @@ export default async function HomePage() {
     <>
       <HeroSearch trends={trends} />
       <StatsBar playersCount={playersCount ?? 0} leaguesCount={9} />
+      <FeaturedDuel featuredDuel={featuredDuel} trends={sidebarTrends} />
       <div className="max-w-[1280px] mx-auto px-3 sm:px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-5 my-8">
         <LeagueTable />
         <TopRatedPlayers />
       </div>
-      <FeaturedDuel featuredDuel={featuredDuel} trends={sidebarTrends} />
       {/* <PerformanceSurge /> */}
       <TopPlayersLists />
       <Leagues />

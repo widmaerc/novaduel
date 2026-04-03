@@ -172,7 +172,7 @@ export default function FeaturedDuel({ featuredDuel, trends }: { featuredDuel: a
   };
 
   return (
-    <section className="max-w-[1280px] mx-auto px-4 lg:px-6 mb-12">
+    <section className="max-w-[1280px] mx-auto px-4 lg:px-6 mt-16 mb-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Main Duel Content */}
