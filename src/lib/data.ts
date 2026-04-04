@@ -28,24 +28,41 @@ export function slugify(name: string): string {
  * - "Bruno Fernandes" -> "bruno-fernandes"
  * - Sécurisé : Pas d'ID brute dans l'URL.
  */
-export function buildSlug(name: string, _id: number, firstname?: string | null, lastname?: string | null): string {
-  // 1. Si le name est abrégé (contient un point)
-  if (name.includes('.') && firstname && lastname) {
-    const first = firstname.trim().split(/\s+/)[0]; 
-    const last  = lastname.trim().split(/\s+/)[0];
-    const s = slugify(`${first} ${last}`);
-    if (s) return s;
+export function buildSlug(name: string, _id: number, firstname?: string | null, _lastname?: string | null): string {
+  // 1. Name complet (pas d'abréviation) → on l'utilise directement
+  if (!name.includes('.')) {
+    return slugify(name) || 'joueur';
   }
 
-  // 2. Sinon, prendre le name complet tel quel
+  // 2. Name abrégé (ex: "L. Messi") → trouver le prénom qui commence par la bonne lettre
+  if (firstname) {
+    const abbrevLetter = name.trim()[0]?.toUpperCase();
+    const matchingFirst = firstname.trim().split(/[\s-]+/)
+      .find(w => w[0]?.toUpperCase() === abbrevLetter);
+    if (matchingFirst) {
+      // "L. Messi" → "Lionel Messi"
+      const expanded = name.replace(/^\S+\.\s*/, `${matchingFirst} `).trim();
+      const s = slugify(expanded);
+      if (s) return s;
+    }
+  }
+
+  // 3. Fallback : name tel quel
   return slugify(name) || 'joueur';
 }
 
 export function displayName(name: string, firstname?: string | null, lastname?: string | null): string {
   if (firstname && lastname) {
-    const first = firstname.trim().split(/\s+/)[0]
-    const last  = lastname.trim().split(/\s+/)[0]
-    if (first && last) return `${first} ${last}`
+    // Si name est abrégé (ex: "V. van Dijk"), trouver le bon prénom
+    if (name.includes('.')) {
+      const abbrevLetter = name.trim()[0]?.toUpperCase();
+      const matchingFirst = firstname.trim().split(/[\s-]+/)
+        .find(w => w[0]?.toUpperCase() === abbrevLetter);
+      if (matchingFirst) return `${matchingFirst} ${lastname.trim()}`;
+    }
+    // Name complet → prénom court + nom complet
+    const first = firstname.trim().split(/\s+/)[0];
+    if (first) return `${first} ${lastname.trim()}`;
   }
   return name
 }

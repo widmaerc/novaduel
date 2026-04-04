@@ -15,7 +15,6 @@ export function Nav({ locale }: NavProps) {
   const t = useTranslations('Common.nav');
   const tb = useTranslations('Common.buttons');
   const pathname = usePathname();
-  const [search, setSearch] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
 
   const links = [
@@ -26,13 +25,6 @@ export function Nav({ locale }: NavProps) {
 
   const isActive = (href: string) =>
     href === `/${locale}` ? pathname === href : pathname.startsWith(href);
-
-  function handleSearchEnter(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && search.trim()) {
-      const slug = search.trim().toLowerCase().replace(/\s+/g, '-');
-      window.location.href = `/${locale}/player/${slug}`;
-    }
-  }
 
   return (
     <section id="nav-wrapper" className="sticky top-0 z-50">
@@ -80,34 +72,6 @@ export function Nav({ locale }: NavProps) {
 
           {/* Desktop & Mobile Actions */}
           <div className="flex items-center gap-3 lg:gap-5">
-            <div className="hidden lg:flex items-center" style={{
-              background: '#f1f3f4',
-              borderRadius: '100px',
-              padding: '7px 16px',
-              border: '1px solid #e8eaed'
-            }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#727782', marginRight: '6px' }}>search</span>
-              <input
-                type="text"
-                placeholder={t('search_placeholder')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={handleSearchEnter}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '13px',
-                  color: '#191c1d',
-                  width: '140px',
-                  fontFamily: 'var(--font-inter), sans-serif',
-                  transition: 'width 0.2s ease',
-                }}
-                onFocus={(e) => e.currentTarget.style.width = '180px'}
-                onBlur={(e) => e.currentTarget.style.width = '140px'}
-              />
-            </div>
-            
             <div className="hidden md:block flex-shrink-0">
               <LangSwitcher locale={locale} />
             </div>
@@ -138,21 +102,6 @@ export function Nav({ locale }: NavProps) {
       {menuOpen && (
         <div className="animate-in fade-in slide-in-from-top-4 duration-300 md:hidden sticky top-[57px] z-40 bg-white/95 backdrop-blur-2xl border-b border-gray-100 shadow-xl overflow-hidden"
         >
-          {/* Mobile search */}
-          <div className="px-5 py-3 border-b border-gray-100">
-            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5">
-              <span className="material-symbols-outlined text-gray-400 text-[18px]">search</span>
-              <input
-                type="text"
-                placeholder={t('search_placeholder')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => { handleSearchEnter(e); if (e.key === 'Enter') setMenuOpen(false); }}
-                className="bg-transparent border-none outline-none text-sm text-dark flex-1 font-inter"
-              />
-            </div>
-          </div>
-
           {/* Mobile nav links */}
           <div className="py-2">
             {links.map((link) => (

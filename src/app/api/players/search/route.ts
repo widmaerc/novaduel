@@ -7,33 +7,9 @@ export async function GET(req: NextRequest) {
 
   if (q.length < 2) return NextResponse.json({ results: [] })
 
-  const [byName, byLastname, byFirstname] = await Promise.all([
-    supabaseAdmin
-      .from('dn_players')
-      .select('id, name, firstname, lastname, slug, photo, statistics')
-      .ilike('name', `%${q}%`)
-      .limit(10),
-    supabaseAdmin
-      .from('dn_players')
-      .select('id, name, firstname, lastname, slug, photo, statistics')
-      .ilike('lastname', `%${q}%`)
-      .limit(10),
-    supabaseAdmin
-      .from('dn_players')
-      .select('id, name, firstname, lastname, slug, photo, statistics')
-      .ilike('firstname', `%${q}%`)
-      .limit(10),
-  ])
+  const results_raw = await supabaseAdmin.rpc('search_players', { q });
 
-  // Fusionner et dédoublonner par id
-  const seen = new Set<number>()
-  const merged = [...(byName.data ?? []), ...(byLastname.data ?? []), ...(byFirstname.data ?? [])].filter((p: any) => {
-    if (seen.has(p.id)) return false
-    seen.add(p.id)
-    return true
-  }).slice(0, 10)
-
-  const data = merged
+  const data = results_raw.data ?? [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results = (data ?? []).map((p: any) => {

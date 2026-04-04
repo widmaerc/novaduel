@@ -77,7 +77,16 @@
       "Bash(python3 -c \":*)",
       "Bash(sed -n '264,320p' c:/Users/Wid/Documents/widmaer_org/novaduel/messages/en.json)",
       "Bash(sed -n '264,320p' c:/Users/Wid/Documents/widmaer_org/novaduel/messages/es.json)",
-      "Bash(python3 -c ':*)"
+      "Bash(python3 -c ':*)",
+      "Bash(npm show:*)",
+      "Bash(npm install:*)",
+      "Bash(node -e \"const m = require\\('dataforseo-client'\\); console.log\\(Object.keys\\(m\\).slice\\(0,20\\)\\)\")",
+      "Bash(npm uninstall:*)",
+      "WebFetch(domain:serper.dev)",
+      "WebFetch(domain:freeapihub.com)",
+      "WebFetch(domain:docs.trajectdata.com)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('statistics',[{}]\\)[0].get\\('games',{}\\), indent=2\\)\\)\")",
+      "Bash(node -e ':*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\Wid\\Documents\\widmaer_org\\novaduel\\.next"
