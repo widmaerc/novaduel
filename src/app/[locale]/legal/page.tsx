@@ -1,5 +1,28 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { buildAlternates } from '@/lib/hreflang';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
+
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const descriptions: Record<string, string> = {
+    fr: 'Mentions légales de NovaDuel — éditeur, hébergement, propriété intellectuelle et données sportives.',
+    en: 'NovaDuel Legal Mentions — publisher, hosting, intellectual property and sports data.',
+    es: 'Menciones legales de NovaDuel — editor, alojamiento, propiedad intelectual y datos deportivos.',
+  };
+  const titles: Record<string, string> = {
+    fr: 'Mentions Légales',
+    en: 'Legal Mentions',
+    es: 'Menciones Legales',
+  };
+  return {
+    title: titles[locale] ?? titles.en,
+    description: descriptions[locale] ?? descriptions.en,
+    alternates: buildAlternates('/legal', locale),
+  };
+}
 
 export default async function LegalPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -89,8 +89,33 @@ export default async function HomePage() {
   const sidebarTrends = topList.slice(1, 6).map((t, i) => ({ ...t, rank: i + 1 }))
   const trends        = topList.slice(0, 3)
 
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://novaduel.com';
+
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'NovaDuel',
+    url: siteUrl,
+    logo: `${siteUrl}/novaduel-logo.png`,
+    description: 'Football player comparison and AI analytics platform covering Premier League, La Liga, Bundesliga, Ligue 1, Serie A and more.',
+    sameAs: ['https://twitter.com/novaduel', 'https://linkedin.com/company/novaduel'],
+  };
+
+  const searchActionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: siteUrl,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${siteUrl}/${locale}/players?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(searchActionSchema) }} />
       <HeroSearch trends={trends} />
       <StatsBar playersCount={playersCount ?? 0} leaguesCount={9} />
       <FeaturedDuel featuredDuel={featuredDuel} trends={sidebarTrends} />

@@ -1,5 +1,19 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { buildAlternates } from '@/lib/hreflang';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
+
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Methodology' });
+  return {
+    title: t('title'),
+    description: t('source_text'),
+    alternates: buildAlternates('/methodology', locale),
+  };
+}
 
 export default async function MethodologyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -94,15 +94,9 @@ module.exports = {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/*?*', // No query parameters (avoid duplicate content)
           '/api/',
           '/*/search',
-          '/*/compare/*' // By default, don't crawl random comparisons, only those in sitemap
         ],
-      },
-      {
-        userAgent: 'GPTBot',
-        disallow: '/', // Selective blocking of AI crawlers if desired
       },
     ],
     additionalSitemaps: [

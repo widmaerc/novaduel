@@ -1,8 +1,10 @@
 import { getTranslations } from 'next-intl/server';
+import { getLocale } from 'next-intl/server';
 import Link from 'next/link';
 
 export async function Footer() {
   const t = await getTranslations('Common.footer');
+  const locale = await getLocale();
 
   return (
     <footer className="w-full bg-[#0a0f16] pt-24 pb-12 border-t border-white/5 mt-24">
@@ -38,11 +40,11 @@ export async function Footer() {
                 {t('explore')}
               </h5>
               <ul className="flex flex-col gap-4">
-                <FooterLink href="/leagues/39">{t('leagues.premier_league')}</FooterLink>
-                <FooterLink href="/leagues/61">{t('leagues.ligue_1')}</FooterLink>
-                <FooterLink href="/leagues/140">{t('leagues.la_liga')}</FooterLink>
-                <FooterLink href="/leagues/135">{t('leagues.serie_a')}</FooterLink>
-                <FooterLink href="/leagues/78">{t('leagues.bundesliga')}</FooterLink>
+                <FooterLink href={`/${locale}/leagues/39`}>{t('leagues.premier_league')}</FooterLink>
+                <FooterLink href={`/${locale}/leagues/61`}>{t('leagues.ligue_1')}</FooterLink>
+                <FooterLink href={`/${locale}/leagues/140`}>{t('leagues.la_liga')}</FooterLink>
+                <FooterLink href={`/${locale}/leagues/135`}>{t('leagues.serie_a')}</FooterLink>
+                <FooterLink href={`/${locale}/leagues/78`}>{t('leagues.bundesliga')}</FooterLink>
               </ul>
             </div>
 
@@ -50,9 +52,9 @@ export async function Footer() {
             <div className="flex flex-col gap-6">
               <h5 className="text-[11px] font-black text-white uppercase tracking-[0.25em]">{t('platform')}</h5>
               <ul className="flex flex-col gap-4">
-                <FooterLink href="/about">{t('about')}</FooterLink>
-                <FooterLink href="/methodology">{t('methodology')}</FooterLink>
-                <FooterLink href="/contact">{t('contact')}</FooterLink>
+                <FooterLink href={`/${locale}/about`}>{t('about')}</FooterLink>
+                <FooterLink href={`/${locale}/methodology`}>{t('methodology')}</FooterLink>
+                <FooterLink href={`/${locale}/contact`}>{t('contact')}</FooterLink>
               </ul>
             </div>
 
@@ -60,9 +62,9 @@ export async function Footer() {
             <div className="flex flex-col gap-6">
               <h5 className="text-[11px] font-black text-white uppercase tracking-[0.25em]">{t('legal')}</h5>
               <ul className="flex flex-col gap-4">
-                <FooterLink href="/legal">{t('legal_mentions')}</FooterLink>
-                <FooterLink href="/privacy">{t('privacy')}</FooterLink>
-                <FooterLink href="/terms">{t('terms')}</FooterLink>
+                <FooterLink href={`/${locale}/legal`}>{t('legal_mentions')}</FooterLink>
+                <FooterLink href={`/${locale}/privacy`}>{t('privacy')}</FooterLink>
+                <FooterLink href={`/${locale}/terms`}>{t('terms')}</FooterLink>
               </ul>
             </div>
 
@@ -70,8 +72,8 @@ export async function Footer() {
             <div className="flex flex-col gap-6">
               <h5 className="text-[11px] font-black text-white uppercase tracking-[0.25em]">{t('support')}</h5>
               <ul className="flex flex-col gap-4">
-                <FooterLink href="/support">{t('support_center')}</FooterLink>
-                <FooterLink href="/languages">{t('languages')}</FooterLink>
+                <FooterLink href={`/${locale}/support`}>{t('support_center')}</FooterLink>
+                <FooterLink href={`/${locale}/languages`}>{t('languages')}</FooterLink>
               </ul>
             </div>
           </div>

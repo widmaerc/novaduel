@@ -63,7 +63,28 @@ export default async function CompareIndexPage({ params }: Props) {
   }))
   const players  = await getFeaturedPlayers()
 
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://novaduel.com';
+
+  const collectionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: t('title'),
+    description: t('sub'),
+    url: `${siteUrl}/${locale}/compare`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: trends.slice(0, 10).map((tr, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        name: `${tr.labelA} vs ${tr.labelB}`,
+        url: `${siteUrl}${localizedHref(locale, `/compare/${tr.slug}`)}`,
+      })),
+    },
+  };
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
     <div className="relative overflow-hidden">
       {/* Background decoration */}
       <div className="hero-mesh absolute inset-0 opacity-40 pointer-events-none" />
@@ -166,5 +187,6 @@ export default async function CompareIndexPage({ params }: Props) {
         )}
       </div>
     </div>
+    </>
   )
 }

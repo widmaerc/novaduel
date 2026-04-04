@@ -1,5 +1,28 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { buildAlternates } from '@/lib/hreflang';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
+
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const descriptions: Record<string, string> = {
+    fr: 'Politique de confidentialité de NovaDuel — protection de vos données personnelles et cookies.',
+    en: 'NovaDuel Privacy Policy — how we protect your personal data and use cookies.',
+    es: 'Política de privacidad de NovaDuel — protección de datos personales y cookies.',
+  };
+  const titles: Record<string, string> = {
+    fr: 'Politique de Confidentialité',
+    en: 'Privacy Policy',
+    es: 'Política de Privacidad',
+  };
+  return {
+    title: titles[locale] ?? titles.en,
+    description: descriptions[locale] ?? descriptions.en,
+    alternates: buildAlternates('/privacy', locale),
+  };
+}
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
