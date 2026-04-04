@@ -21,18 +21,45 @@ import { Suspense } from 'react';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
+// Pre-render top players for all locales at build time
+export async function generateStaticParams() {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const topData = require('../../../../../data/top-comparisons.json') as { top_players: string[] };
+  const locales = ['fr', 'en', 'es'];
+  return locales.flatMap(locale =>
+    topData.top_players.map(slug => ({ locale, slug }))
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params;
   const player = await getPlayerBySlug(slug, locale);
   const t = await getTranslations('PlayerPage');
   const tc = await getTranslations('Common');
-  
+
   if (!player) return { title: tc('labels.not_available') };
-  
+
+  const name = player.common_name || player.name;
+  const title = `${name} ${new Date().getFullYear()} — ${t('seo.suffix')}`;
+  const description = t('seo.title', { name, season: player.season });
+  const url = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://novaduel.com'}/${locale}/player/${slug}`;
+
   return {
-    title: `${player.name} ${new Date().getFullYear()} — ${t('seo.suffix')}`,
-    description: t('seo.title', { name: player.name, season: player.season }),
-    alternates: buildAlternates(`/player/${slug}`),
+    title,
+    description,
+    alternates: buildAlternates(`/player/${slug}`, locale),
+    openGraph: {
+      type: 'profile',
+      title,
+      description,
+      url,
+      siteName: 'NovaDuel',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   };
 }
 

@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t('seo_index.title'),
     description: t('seo_index.description'),
-    alternates: buildAlternates('/compare'),
+    alternates: buildAlternates('/compare', locale),
   }
 }
 

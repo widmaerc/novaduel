@@ -22,6 +22,16 @@ export const metadata: Metadata = {
   title: { default: 'NovaDuel — Football Player Comparison & AI Analysis', template: '%s | NovaDuel' },
   description: 'Compare football players with advanced stats, goals, assists, ratings and AI insights. Premier League, Liga, Bundesliga, Ligue 1, Serie A and more.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://novaduel.com'),
+  openGraph: {
+    type: 'website',
+    siteName: 'NovaDuel',
+    title: 'NovaDuel — Football Player Comparison & AI Analysis',
+    description: 'Compare football players with advanced stats, goals, assists, ratings and AI insights. Premier League, Liga, Bundesliga, Ligue 1, Serie A and more.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@novaduel',
+  },
 };
 
 export default async function LocaleLayout({
@@ -35,6 +45,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${manrope.variable} ${inter.variable}`} data-scroll-behavior="smooth">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" />
       </head>
       <body className="bg-[#f8f9fa] text-[#191c1d] antialiased overflow-x-hidden min-h-screen" style={{ margin: 0 }}>

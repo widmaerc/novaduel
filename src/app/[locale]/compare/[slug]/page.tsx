@@ -23,6 +23,19 @@ import StatFootnotes               from '@/components/shared/StatFootnotes'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
+// Pre-render top comparisons for all locales at build time
+export async function generateStaticParams() {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const topData = require('../../../../../data/top-comparisons.json') as { top_comparisons: [string, string][] };
+  const locales = ['fr', 'en', 'es'];
+  return locales.flatMap(locale =>
+    topData.top_comparisons.map(([a, b]) => ({
+      locale,
+      slug: [a, b].sort().join('-vs-'),
+    }))
+  );
+}
+
 // ── Mapper DB Player → Compare Player ────────────────────────────────────────
 function toComparePlayer(p: DBPlayer): CmpPlayer {
   return {
@@ -78,11 +91,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!comparison?.player_a || !comparison?.player_b) return { title: 'NovaDuel' }
   const A = comparison.player_a
   const B = comparison.player_b
-  
+
+  const nameA = A.common_name || A.name
+  const nameB = B.common_name || B.name
+  const title = t('seo.title', { name1: nameA, name2: nameB })
+  const description = t('seo.description', { name1: nameA, name2: nameB })
+  const url = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://novaduel.com'}${localizedHref(locale, `/compare/${slug}`)}`
+
   return {
-    title: t('seo.title', { name1: A.common_name || A.name, name2: B.common_name || B.name }),
-    description: t('seo.description', { name1: A.name, name2: B.name }),
-    alternates: buildAlternates(`/compare/${slug}`),
+    title,
+    description,
+    alternates: buildAlternates(`/compare/${slug}`, locale),
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      siteName: 'NovaDuel',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   }
 }
 
@@ -131,29 +162,45 @@ export default async function ComparePage({ params }: Props) {
   const initB = { slug: pB.slug, name: pB.name, club: pB.team, position: pB.position,
     initials: pB.initials, avatar_bg: pB.avatar_bg, avatar_color: pB.avatar_color, image_url: pB.image_url }
 
+  const BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'https://novaduel.com'
+  const pageUrl = `${BASE}${localizedHref(locale, `/compare/${slug}`)}`
+
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    'itemListElement': [
+    '@graph': [
       {
-        '@type': 'ListItem',
-        'position': 1,
-        'name': tc('nav.home'),
-        'item': `https://novaduel.com/${locale}`
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': tc('nav.home'),                  'item': `${BASE}/${locale}` },
+          { '@type': 'ListItem', 'position': 2, 'name': t('breadcrumb.comparisons'),     'item': `${BASE}${localizedHref(locale, '/compare')}` },
+          { '@type': 'ListItem', 'position': 3, 'name': `${pA.common_name} vs ${pB.common_name}`, 'item': pageUrl },
+        ],
       },
       {
-        '@type': 'ListItem',
-        'position': 2,
-        'name': t('breadcrumb.comparisons'),
-        'item': `https://novaduel.com${localizedHref(locale, '/compare')}`
+        '@type': 'Article',
+        'headline': `${pA.common_name} vs ${pB.common_name}`,
+        'url': pageUrl,
+        'publisher': { '@type': 'Organization', 'name': 'NovaDuel', 'url': BASE },
+        'about': [
+          {
+            '@type': 'Person',
+            'name': pA.common_name || pA.name,
+            'url': `${BASE}${localizedHref(locale, `/player/${pA.slug}`)}`,
+            'sport': 'Football',
+            'nationality': pA.nationality || undefined,
+            'memberOf': pA.team ? { '@type': 'SportsOrganization', 'name': pA.team, 'sport': 'Football' } : undefined,
+          },
+          {
+            '@type': 'Person',
+            'name': pB.common_name || pB.name,
+            'url': `${BASE}${localizedHref(locale, `/player/${pB.slug}`)}`,
+            'sport': 'Football',
+            'nationality': pB.nationality || undefined,
+            'memberOf': pB.team ? { '@type': 'SportsOrganization', 'name': pB.team, 'sport': 'Football' } : undefined,
+          },
+        ],
       },
-      {
-        '@type': 'ListItem',
-        'position': 3,
-        'name': `${pA.common_name} vs ${pB.common_name}`,
-        'item': `https://novaduel.com${localizedHref(locale, `/compare/${slug}`)}`
-      }
-    ]
+    ],
   };
 
   return (
