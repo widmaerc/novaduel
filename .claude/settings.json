@@ -86,7 +86,8 @@
       "WebFetch(domain:freeapihub.com)",
       "WebFetch(domain:docs.trajectdata.com)",
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('statistics',[{}]\\)[0].get\\('games',{}\\), indent=2\\)\\)\")",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash([ -d \"c:/Users/Wid/Documents/widmaer_org/novaduel/src/app/[locale]/$f\" ])"
     ],
     "additionalDirectories": [
       "C:\\Users\\Wid\\Documents\\widmaer_org\\novaduel\\.next"
